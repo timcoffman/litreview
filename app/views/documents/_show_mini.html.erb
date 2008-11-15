@@ -1,0 +1,19 @@
+<div class="head">
+	<div class="title">
+		<%= link_to document.title, url %>
+	</div>
+	<div class="authors">
+		<%=h document.authors %>
+	</div>
+	<div>
+		<span class="journal"> <%=h document.journal %> </span>
+		<span class="date"> <%=h document.when_published %> </span>
+	</div>
+</div>
+<% unless document.tags.empty? %>
+<div class="foot">
+	<% for tag in document.tags %>
+		<%= link_to tag.words, tag, :class => :tag %>
+	<% end %>
+</div>
+<% end %>

@@ -1,0 +1,67 @@
+<h2> User: <%=h @user.full_name %> </h2>
+
+<% for manager in @user.managers %>
+	<p> <%= personal_link_to manager.user, 'is managing' %> <%= link_to manager.project.title, user_project_manager_path(@user, manager.project, manager) %>. </p>
+<% end %>
+
+
+<% for stage_reviewer in @user.stage_reviewers %>
+	<p> <%= personal_link_to stage_reviewer.user, 'is reviewing' %> <%= link_to stage_reviewer.review_stage.project.title, user_project_path(@user,stage_reviewer.review_stage.project) %>, <%=link_to stage_reviewer.review_stage.name, user_project_review_stage_stage_reviewer_path( @user, stage_reviewer.review_stage.project, stage_reviewer.review_stage, stage_reviewer) %> </p>
+<% end %>
+
+<% if current_project && current_project.administered_by?( current_user ) && ! current_project.managed_by?( @user ) %>
+	<p>
+	<%= link_to "Assign as Manager for #{current_project.title}", new_user_project_manager_path( @user, current_project ) %>
+	</p>
+<% end %>
+
+<% for project in current_user.managed_projects %>
+	<p>
+	Assign as
+	<% delimited_list project.review_stages.reject { |rs| rs.reviewed_by?( @user ) }, :connector => "or" do |review_stage| %>	
+		<%= link_to "Reviewer for #{review_stage.project.title}, #{review_stage.name}", new_user_project_review_stage_stage_reviewer_path( @user, review_stage.project, review_stage, 'stage_reviewer[user_id]' => @user.id ) %>
+	<% end %>
+<% end %>
+
+<%= render :partial => 'show', :locals => { :user => @user } %>
+
+<h2>Tags</h2>
+<p>
+	<% if @user.custom_tags.empty? %>
+		<span class="missing">no custom tags</span>
+	<% else %>
+		<% for tag in @user.custom_tags %>
+			<%= link_to tag.words, tag, :class => :tag %>
+		<% end %>
+	<% end %>
+</p>
+
+<h2>Projects</h2>
+
+<h3>Manging:</h3>
+
+<ul>
+
+
+
+<% if current_user.is_admin %>
+	<% for project in Project.find( :all ) %>
+		<li>
+			<%= link_to "Assign to #{project.title}", new_user_project_manager_path( @user, project ) %>
+		</li>
+	<% end %>
+<% end %>
+
+
+</ul>
+
+<h3>Reviewing:</h3>
+
+<ul>
+
+
+</ul>
+
+<%= link_to 'Edit', edit_user_path(@user) %> |
+<%= link_to 'Back', users_path %>
+

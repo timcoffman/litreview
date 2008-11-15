@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <title><%= controller.controller_name.titlecase %>: <%= controller.action_name.titlecase %></title>
+  <%= stylesheet_link_tag 'application' %>
+  <%= stylesheet_link_tag controller.controller_name.pluralize %>
+  <% if current_user ; skin = current_user.preference('skin') %>
+	  <%= stylesheet_link_tag "skins/#{skin}/application"  %>
+	  <%= stylesheet_link_tag "skins/#{skin}/#{controller.controller_name.pluralize}"  %>
+  <% end %>
+  <%= javascript_include_tag 'prototype' %>
+</head>
+<body>
+
+<div id="header">
+
+<div id="banner">
+</div>
+
+<div id="title">
+	<% if current_project.blank? %>
+		<div class="subtitle missing">
+			No Project
+		</div>
+		<div class="title">
+			Systematic  LitReview Tracker
+		</div>
+	<% else %>
+		<div class="subtitle">
+			Systematic  LitReview Tracker
+		</div>
+		<div class="title">
+			<%=h current_project.title %>
+		</div>
+	<% end %>
+</div>
+
+<div id="context1">
+	<% if current_user.blank? %>
+		<span> <%= link_to_unless_current "Log In", :controller => 'session', :action => 'new' %> </span>
+	<% else %>
+		<span class="user"> <%= link_to_unless_current current_user.nickname, user_path(current_user) %> </span>
+		<span> <%= link_to_unless_current "Switch User...", :controller => 'session', :action => 'new' %> </span>
+		<span> <%= link_to_unless_current "Log Out", :controller => 'session', :action => 'destroy' %> </span>
+	<% end %>
+</div>
+
+<div id="context2">
+	<% if current_user %>
+		<% favs = current_user.favorite_projects(2) ; favs.delete current_project %>
+		<% if favs.empty? %>
+			<span class="missing">No Other Projects</span>
+		<% else %>
+			Switch Projects:
+			<% for project in favs %>
+				<span> <%= link_to_unless_current project.title, :controller => 'session', :action => 'switch_project', :id => project %> </span>
+			<% end %>
+		<% end %>
+	<% end %>
+</div>
+
+</div>
+
+<div id="tabs">
+	<% if current_user %>
+		<% if current_project %>
+			<span class="tab"> <%= link_to_unless_current( "Home", user_project_path(current_user,current_project)) { |name| content_tag(:span,name,:class=>'here') } %> </span>
+			<span class="tab"> <%= link_to_unless_current( "Profile", user_path(current_user) ){ |name| content_tag(:span,name,:class=>'here') } %> </span>
+		<% else %>
+			<span class="tab"> <%= link_to_unless_current( "Home", user_path(current_user) ){ |name| content_tag(:span,name,:class=>'here') } %> </span>
+		<% end %>
+		<span class="tab"> <span class="missing">Messages</span> </span> <!-- "Messages" tab will go here -->
+		<% if current_user.is_admin %>
+			<span class="tab"> <%= link_to_unless_current( "Projects", user_projects_path(@user || current_user) ) { |name| content_tag(:span,name,:class=>'here') } %> </span>
+			<span class="tab"> <%= link_to_unless_current( "People", users_path ) { |name| content_tag(:span,name,:class=>'here') } %> </span>
+		<% end %>
+	<% else %>
+		<span class="tab"> <span class="missing">Home</missing> </span> <!-- "Home" tab for non-registered users goes here -->
+	<% end %>
+	<span class="tab"> <%= link_to_unless_current( "Tags", tags_path ) { |name| content_tag(:span,name,:class=>'here') } %> </span>
+
+	<span class="tab aux"> <span class="missing">Help</span> </span>
+	<span class="tab aux"> <span class="missing">Contacts</span> </span>
+
+</div>
+
+<div id="tree">
+	<% box(:inset) do %>
+	<%= link_to_tree @tag, :words, tag_path(@tag) -%>
+	<%= link_to_tree @user, :full_name, user_path(@user) -%>
+	<%= link_to_tree @project, :title, user_project_path(@user,@project) -%>
+	<%= link_to_tree @document_source, :name, user_project_document_source_path(@user,@project,@document_source) -%>
+	<%= link_to_tree @document, Proc.new { |d| '"' + abbreviate(d.title) + '"' }, user_project_document_path(@user,@project,@document) -%>
+	<%= link_to_tree @manager, Proc.new { |m| "Manager (#{m.user.nickname})" }, user_project_manager_path(@user,@project,@manager) -%>
+	<%= link_to_tree @review_stage, :name, user_project_review_stage_path(@user,@project,@review_stage) -%>
+	<%= link_to_tree @stage_reviewer, Proc.new { |sr| sr.user ? "Reviewer (#{sr.user.nickname})" : "New Reviewer" }, user_project_review_stage_stage_reviewer_path(@user,@project,@review_stage,@stage_reviewer) -%>
+	<%= link_to_tree @document_review, Proc.new { |dr| '"' + abbreviate(dr.document.title) + '"' }, user_project_review_stage_stage_reviewer_document_review_path(@user,@project,@review_stage,@stage_reviewer,@document_review) -%>
+	<% end %>
+</div>
+
+<div id="main">
+<% if flash[:notice] %>
+	<p class="flash notice"><%= flash[:notice] %></p>
+<% end %>
+
+<%= yield  %>
+
+</div>
+
+<div id="footer"/>
+
+</body>
+</html>

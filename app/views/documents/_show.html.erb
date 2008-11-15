@@ -1,0 +1,55 @@
+<% following = [] if local_assigns[:following].nil? %>
+
+<% if following.size == 1 %>
+	<h3>Related Documents</h3>
+<% end %>
+
+<div class="document">
+	<% if document.duplicate_of_document %>
+		<div class="duplicate">
+			Duplicate of <span class="title">
+				<%= link_to_unless_current document.duplicate_of_document.title, user_project_document_path(@user,document.duplicate_of_document.document_source.project,document.duplicate_of_document) %>
+			</span>
+			from <span class="source">
+				<%= link_to_unless_current document.duplicate_of_document.document_source.name, user_project_document_source_path(@user,document.duplicate_of_document.document_source.project,document.duplicate_of_document.document_source) %>
+			</span>
+		</div>
+	<% end %>
+
+	<div class="head">
+		<div class="title"><%= link_to_unless_current document.title, user_project_document_path(@user,@project,document) %></div>
+		<div class="authors"><%=h document.authors %></div>
+		<div class="published">
+			<span class="journal"><%=h document.journal %></span>
+			<span class="date"><%=h document.when_published %></span>
+		</div>
+	</div>
+	<div class="body">
+		<div class="abstract">
+			<% unless document.abstract.nil? || document.abstract.empty? %>
+				<%= hilite_keywords document.abstract, document.document_source.project.keywords %>
+			<% else %>
+				<span class="missing">no abstract</span>
+			<% end %>
+		</div>
+	</div>
+	<div class="foot">
+		<% for tag in document.tags %>
+			<%= link_to tag.words, tag, :class => :tag %>
+		<% end %>
+		Document Source: <span class="source">
+			<%= link_to_unless_current document.document_source.name, user_project_document_source_path(@user,document.document_source.project,document.document_source) %>
+		</span>
+	</div>
+</div>
+
+<% following << document %>
+
+<% unless document.duplicate_of_document.nil? || following.include?(document.duplicate_of_document) %>
+	<%= render :partial => 'documents/show', :locals => { :document => document.duplicate_of_document, :following => following } %>
+<% end %>
+
+<% for duplicating_document in document.duplicate_documents.reject { |d| following.include?(d) } %>
+	<%= render :partial => 'documents/show', :locals => { :document => duplicating_document, :following => following } %>
+<% end %>
+

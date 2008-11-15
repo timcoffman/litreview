@@ -1,0 +1,24 @@
+<h1>Editing stage_reviewer</h1>
+
+<% form_for(@stage_reviewer) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :review_stage_id %><br />
+    <%= f.text_field :review_stage_id %>
+  </p>
+  <p>
+    <%= f.label :user_id %><br />
+    <%= f.text_field :user_id %>
+  </p>
+  <p>
+    <%= f.label :is_project_manager %><br />
+    <%= f.check_box :is_project_manager %>
+  </p>
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @stage_reviewer %> |
+<%= link_to 'Back', stage_reviewers_path %>

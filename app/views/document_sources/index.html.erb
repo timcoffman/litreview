@@ -1,0 +1,19 @@
+<h2>Project <span class="title"><%=h @project.title %>: Document Sources</h2>
+
+<table>
+  <tr>
+    <th>Document Source</th>
+    <th>Website</th>
+  </tr>
+
+<% for document_source in @document_sources %>
+  <tr>
+    <td><%= link_to document_source.name, user_project_document_source_path(@user,@project,document_source) %></td>
+    <td><%=h document_source.website %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'Add Document Source', new_user_project_document_source_path(@user,@project) %>

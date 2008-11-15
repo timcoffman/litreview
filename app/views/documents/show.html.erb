@@ -1,0 +1,22 @@
+<h2> Project <%=h @document.document_source.project.title %>: <%=h @document.document_source.name %> Document</h2>
+
+<div class="side-by-side">
+<div class="right-side">
+<h3>Reviews</h3>
+
+<% if @document.document_reviews.empty? %>
+	<p> <span class="missing">no reviews assigned</span> </p>
+<% else %>
+	<% for document_review in @document.document_reviews %>
+		<p>
+			<%= personal_link_to document_review.stage_reviewer.user, DocumentReview.action_verb(document_review.disposition), user_project_review_stage_stage_reviewer_path(@user,@project,document_review.stage_reviewer.review_stage,document_review.stage_reviewer) %>
+			this document in
+			<%= link_to document_review.stage_reviewer.review_stage.name, user_project_review_stage_stage_reviewer_document_review_path(@user,@project,document_review.stage_reviewer.review_stage,document_review.stage_reviewer,document_review) %>
+		</p>
+	<% end %>
+<% end %>
+</div>
+<div class="left-side">
+<%= render :partial => 'show', :locals => { :document => @document } %>
+</div>
+</div>

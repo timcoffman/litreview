@@ -1,0 +1,52 @@
+<% form_for [@user,@project,@review_stage,@stage_reviewer,document_review] do |f| %>
+
+<p>
+Disposition:
+<%= f.radio_button :disposition, 'I' %> Include
+<%= f.radio_button :disposition, 'E' %> Exclude
+</p>
+
+<p id="exclusion-reasons">
+Exclusion Reasons:
+<ul>
+<%
+	possible_reasons =  @review_stage.reasons.concat( document_review.reasons ).uniq
+	possible_reasons.sort! { |a,b| (a.sequence || 0)  <=> (b.sequence || 0) }
+	possible_reasons.sort! { |a,b| a.created_by_stage_reviewer.nil? ? 0 : 1 <=> b.created_by_stage_reviewer.nil? ? 0 : 1 }
+%>
+<% for reason in possible_reasons %>
+	<li class="reason <%= cycle('even','odd') %>">
+	<%= check_box_tag 'document_review[reason_ids][]', reason.id, document_review.includes_reason?(reason) %>
+	<%=h reason.title %>
+	<% if reason.created_by_stage_reviewer %>
+		[<%= personal_link_to reason.created_by_stage_reviewer.user, '', user_project_review_stage_stage_reviewer_path(@user,@project,@review_stage,reason.created_by_stage_reviewer) %>]
+	<% end %>
+	</li>
+<% end %>
+
+<%= render :partial => 'new_reason_link' %>
+</ul>
+</p>
+
+<%= link_to "Discard Changes", user_project_review_stage_stage_reviewer_document_review_path(@user,@project,@review_stage,@stage_reviewer,@document_review) %>
+
+<%= f.submit "Save Changes" %>
+
+<% end %>
+
+<div class="reason new" id="new-reason">
+	<% reason = @review_stage.reasons.build( :created_by_stage_reviewer_id => @stage_reviewer.id ) %>
+	<% form_remote_for [@user,@project,@review_stage,reason] do |f| %>
+		New Reason <%= f.submit "Add" %>
+		<p>Created By:
+		<%= personal_link_to reason.created_by_stage_reviewer.user, '', user_project_review_stage_stage_reviewer_path(@user,@project,@review_stage,reason.created_by_stage_reviewer) %>
+		</p>
+		<p>Reason:
+		<%= text_field_tag 'document_review[reasons][][title]', reason.title %>
+		</p>
+		<p>Description:
+		<%= text_area_tag 'document_review[reasons][][description]', reason.description %> 
+		</p>
+	<% end %>
+</div>
+

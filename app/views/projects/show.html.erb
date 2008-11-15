@@ -1,0 +1,110 @@
+
+<h2>Project: <span class="title"> <%=h @project.title %> </span> </h2>
+
+<% box(:inset) do %>
+	<div class="description"> <%= @project.description %> </div> <!-- note the lack of "h" here -->
+<% end %>
+
+<h3>Participants</h3>
+
+<div class="managers">
+	<% if @project.managers.empty? %>
+		<p><span class="missing">nobody</span> is managing this project.<p>
+	<% else %>
+		<% delimited_list @project.managers do |manager| %>
+			<p><%= personal_link_to manager.user, 'is managing', user_project_manager_path(@user,@project,manager) %>
+			this project.</p>
+		<% end %>
+	<% end %>
+	<span class="actions">
+		<% if current_user && current_user.is_admin %>
+			<% unless @user.manages?( @project ) %>
+				<span class="action add"> <%= link_to "Make #{@user.full_name} a Manager", new_user_project_manager_path( @user, @project ) %> </span>
+			<% end %>
+		<% end %>
+	</span>
+</div>
+
+<div class="reviewers">
+	<% all_stage_reviewers = @project.review_stages.inject([]) { |memo,rs| memo.concat(rs.stage_reviewers)  } %>
+	<% all_reviewing_users = {} ; all_stage_reviewers.each { |sr| all_reviewing_users[sr.user] ||= [] ; all_reviewing_users[sr.user] << sr } %>
+	<% if all_reviewing_users.empty? %>
+		<p><span class="missing">nobody</span> is reviewing this project.</p>
+	<% else %>
+		<% for user_stage_reviewers in all_reviewing_users ; user = user_stage_reviewers[0] ; stage_reviewers = user_stage_reviewers[1] %>
+			<p><%= personal_link_to user, 'is reviewing' %> </span>
+			this project in
+			<% delimited_list stage_reviewers do |stage_reviewer| -%>
+				<span class="reviewer"> <%= link_to stage_reviewer.review_stage.name, user_project_review_stage_stage_reviewer_path(@user,@project,stage_reviewer.review_stage,stage_reviewer) %> </span>
+			<% end %>.</p>
+		<% end %>
+	<% end %>
+</div>
+
+
+<h3>Documents</h3>
+
+<div class="sources">
+	This project contains
+	<span class="documents"> <%= link_to pluralize( @project.document_sources.inject(0) { |c,ds| c += ds.documents.count }, "documents" ), user_project_documents_path(@user,@project) %> </span>
+	from
+	<span class="sources"> <%= link_to pluralize( @project.document_sources.count, "sources" ), user_project_document_sources_path(@user,@project) %> </span>
+	:
+	<% delimited_list @project.document_sources do |document_source| %>
+		<span class="source">
+			<%= link_to document_source.name, user_project_document_source_path(@user,@project,document_source) -%>
+			(<%=h document_source.documents.count %>)
+		</span>
+	<% end %>
+</div>
+
+<h3>Stages</h3>
+
+<table class="stages">
+	<thead>
+		<tr>
+			<th>Number</th>
+			<th>Stage</th>
+			<th>Details</th>
+		</tr>
+	</thead>
+	<tbody>
+	
+<% for review_stage in @project.review_stages do %>
+	<tr class="stage">
+		<th class="sequence">
+			<%=h review_stage.sequence %>
+		</th>
+		<td>
+			<%= link_to review_stage.name, user_project_review_stage_path(@user,@project,review_stage) %>
+		</td>
+		<td>
+			<p>
+			Documents in <%= link_to review_stage.name, user_project_review_stage_path(@user,@project,review_stage) %>
+			are being reviewed by	
+			<% delimited_list review_stage.stage_reviewers, :empty_content => "nobody" do |stage_reviewer| %>
+				<%= personal_link_to stage_reviewer.user, '', user_project_review_stage_stage_reviewer_path(@user,@project,review_stage,stage_reviewer) %>
+			<% end %>.
+			</p>
+			<p>
+			<%= ReviewStage.gate_noun( review_stage.gate_function ).capitalize %> will continue to the next stage.
+			</p>
+		</td>
+	</tr>
+<% end %>
+	</tbody>
+</table>
+
+<h3>Reports</h3>
+
+<p>
+	Generate a <%= link_to 'Agreement Report', report_user_project_path(@user,@project) %>.
+</p>
+
+
+<% if current_user && ( current_user.is_admin || current_user.participates_in?( @project ) ) %> <!-- Project Plan -->
+
+<h2>Plan</h2>
+<%= render :partial => 'plan', :locals => { :user => @user, :project => @project } %>
+
+<% end %> <!-- Project Plan -->

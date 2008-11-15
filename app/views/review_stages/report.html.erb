@@ -1,0 +1,23 @@
+<h2>
+	Project: <span class="title"> <%= link_to @project.title, user_project_path(@user,@project) %> </span>,
+	<%= link_to @review_stage.name, user_project_review_stage_path(@user,@project,@review_stage) %>
+</h2>
+
+<% box(:inset) do %>
+	<div class="description"> <%= @review_stage.description %> </div> <!-- note the lack of "h" here -->
+<% end %>
+
+<h3>Report: <%= @report.description %></h3>
+
+<table class="report">
+	<thead>
+		<tr>
+			<% for group in @report.groups %>
+				<th><%= group %> </th>
+			<% end %>
+			<th>Count</th>
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>
+</table>

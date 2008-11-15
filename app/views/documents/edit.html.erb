@@ -1,0 +1,36 @@
+<h1>Editing document</h1>
+
+<% form_for(@document) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :document_source_id %><br />
+    <%= f.text_field :document_source_id %>
+  </p>
+  <p>
+    <%= f.label :title %><br />
+    <%= f.text_field :title %>
+  </p>
+  <p>
+    <%= f.label :authors %><br />
+    <%= f.text_field :authors %>
+  </p>
+  <p>
+    <%= f.label :when_published %><br />
+    <%= f.date_select :when_published %>
+  </p>
+  <p>
+    <%= f.label :abstract %><br />
+    <%= f.text_area :abstract %>
+  </p>
+  <p>
+    <%= f.label :duplicate_of_document_id %><br />
+    <%= f.text_field :duplicate_of_document_id %>
+  </p>
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @document %> |
+<%= link_to 'Back', documents_path %>

@@ -1,0 +1,32 @@
+<h2>
+        Project <span class="title"><%= link_to @stage_reviewer.review_stage.project.title, user_project_path(@user,@stage_reviewer.review_stage.project) %></span>,
+        <span class="stage"><%= link_to @stage_reviewer.review_stage.name, user_project_review_stage_path(@user,@project,@review_stage) %></span>:
+        New Reviewer Assignment
+</h2>
+
+<% form_for([@user,@project,@review_stage,@stage_reviewer]) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :review_stage_id %>:
+        <% if @stage_reviewer.review_stage %>
+                <%= @stage_reviewer.review_stage.project.title %>,
+		<%= @stage_reviewer.review_stage.name %>
+                <%= f.hidden_field :review_stage_id %>
+        <% else %>
+                <%= f.collection_select :review_stage_id, @project.review_stages.find(:all).reject { |rs| @stage_reviewer.user && rs.reviewed_by?(@stage_reviewer.user) }, :id, :title, {}, { :size => 10 } %>
+        <% end %>
+  <p>
+    <%= f.label :user_id %>:
+        <% if @stage_reviewer.user %>
+                <%=h @stage_reviewer.user.full_name %>
+                <%= f.hidden_field :user_id %>
+        <% else %>
+                <%= f.collection_select :user_id, User.find(:all).reject { |u| @stage_reviewer.review_stage && @stage_reviewer.review_stage.reviewed_by?(u) }, :id, :full_name, {}, { :size => 10 } %>
+        <% end %>
+  </p>
+  <p>
+    <%= f.submit "Assign" %>
+  </p>
+<% end %>
+

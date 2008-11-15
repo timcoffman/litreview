@@ -1,0 +1,71 @@
+<h2>
+	Project <span class="title"><%= link_to @stage_reviewer.review_stage.project.title, user_project_path(@user,@stage_reviewer.review_stage.project) %></span>,
+	<span class="stage"><%= link_to @stage_reviewer.review_stage.name, user_project_review_stage_path(@user,@project,@review_stage) %></span>:
+	<%= personal_link_to @stage_reviewer.user, "'s Reviews" %>
+</h2>
+
+<p>
+<%= personal_link_to @stage_reviewer.user, 'has completed', user_project_review_stage_stage_reviewer_path(@user,@project,@review_stage,@stage_reviewer) %>
+<span class="reviews"><%=h number_with_delimiter @stage_reviewer.completed_reviews.count %></span>
+out of
+<span class="reviews"><%=h number_with_delimiter @stage_reviewer.document_reviews.count %></span>
+assigned reviews
+<% if @stage_reviewer.document_reviews.count != 0 %>
+(<%=h (@stage_reviewer.completed_reviews.count.to_f / @stage_reviewer.document_reviews.count * 1000).to_i.to_f / 10 %>%)
+<% end %>
+.
+</p>
+
+<h3>Next <%=h @incomplete_reviews.size %>  Reviews</h3>
+<table class="reviews">
+	<thead>
+		<th>Document</th>
+		<th>Assigned</th>
+	</thead>
+	<tbody>
+		<% for document_review in @incomplete_reviews %>
+			<tr class="review">
+				<td class="document">
+					<%= render :partial => 'documents/show_mini', :locals => { :document => document_review.document, :url => edit_user_project_review_stage_stage_reviewer_document_review_path(@user,@project,@review_stage,@stage_reviewer,document_review) } %>
+				</td>
+				<td>
+					<%=h time_ago_in_words( document_review.when_assigned ) %> ago
+				</td>
+			</tr>
+		<% end %>
+	</tbody>
+</table>
+
+<h3>Last <%=h @completed_reviews.size %>  Reviews</h3>
+<table class="reviews">
+	<thead>
+		<th>Result</th>
+		<th>Document</th>
+		<th>Reviewed</th>
+	</thead>
+	<tbody>
+		<% for document_review in @completed_reviews %>
+			<tr class="review">
+				<td>
+					<%=h DocumentReview.disposition( document_review.disposition ) %>
+				</td>
+				<td class="document">
+					<div class="head">
+						<div class="title">
+							<%= link_to document_review.document.title, user_project_review_stage_stage_reviewer_document_review_path(@user,@project,@review_stage,@stage_reviewer,document_review) %>
+						</div>
+						<div>
+							<span class="journal"> <%=h document_review.document.journal %> </span>
+							<span class="date"> <%=h document_review.document.when_published %> </span>
+						</div>
+					</div>
+				</td>
+				<td>
+					<%=h time_ago_in_words( document_review.when_reviewed ) %> ago
+				</td>
+			</tr>
+		<% end %>
+	</tbody>
+</table>
+
+<%= link_to 'Unassign', user_project_review_stage_stage_reviewer_path(@user,@project,@review_stage,@stage_reviewer), :method => :delete %>

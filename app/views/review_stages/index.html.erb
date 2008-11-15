@@ -1,0 +1,57 @@
+<h2>
+	Project <span class="title"><%= link_to @project.title, user_project_path(@user,@project) %></span>,
+	<span class="stages">All Stages</span>
+</h2>
+
+<table class="stages">
+	<thead>
+		<tr>
+			<th>Number</th>
+			<% if @project.managed_by?( current_user ) %>
+				<th>Action</th>
+			<% end %>
+			<th>Stage</th>
+			<th>Details</th>
+		</tr>
+	</thead>
+	<tbody>
+	
+<% for review_stage in @project.review_stages do %>
+	<tr class="stage">
+		<th class="sequence">
+			<%=h review_stage.sequence %>
+		</th>
+		<% if @project.managed_by?( current_user ) %>
+			<td class="actions">
+				<%= link_to 'Edit', edit_user_project_review_stage_path(@user,@project,review_stage) %>
+				<%= link_to 'Remove', user_project_review_stage_path(@user,@project,review_stage), :confirm => 'Are you sure?', :method => :delete %>
+			</td>
+		<% end %>
+		<td>
+			<%= link_to review_stage.name, user_project_review_stage_path(@user,@project,review_stage) %>
+		</td>
+		<td>
+			<p>
+			Documents in <%= link_to review_stage.name, user_project_review_stage_path(@user,@project,review_stage) %>
+			are being reviewed by	
+			<% delimited_list review_stage.stage_reviewers do |stage_reviewer| %>
+				<%= personal_link_to stage_reviewer.user, '', user_project_review_stage_stage_reviewer_path(@user,@project,review_stage,stage_reviewer) %>
+			<% end %>.
+			</p>
+			<p>
+			<%= ReviewStage.gate_noun( review_stage.gate_function ).capitalize %> will continue to the next stage.
+			</p>
+		</td>
+	</tr>
+<% end %>
+	<% if @project.managed_by?( current_user ) %>
+		<tr>
+			<th/>
+			<td rowspan="3">
+				<%= link_to 'Add New Stage', new_user_project_review_stage_path(@user,@project) %>
+			</td>
+		</tr>
+	<% end %>
+	</tbody>
+</table>
+

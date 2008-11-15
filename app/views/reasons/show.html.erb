@@ -1,0 +1,18 @@
+<p>
+  <b>Stage reviewer:</b>
+  <%=h @reason.stage_reviewer_id %>
+</p>
+
+<p>
+  <b>Title:</b>
+  <%=h @reason.title %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%=h @reason.description %>
+</p>
+
+
+<%= link_to 'Edit', edit_reason_path(@reason) %> |
+<%= link_to 'Back', reasons_path %>

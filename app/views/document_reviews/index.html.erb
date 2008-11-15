@@ -1,0 +1,44 @@
+<h2>
+        Project <span class="title"><%= link_to @stage_reviewer.review_stage.project.title, user_project_path(@user,@stage_reviewer.review_stage.project) %></span>,
+        <span class="stage"><%= link_to @stage_reviewer.review_stage.name, user_project_review_stage_path(@user,@project,@review_stage) %></span>:
+        <%= personal_link_to @stage_reviewer.user %>:
+	<span class="reviews"><%=h @document_reviews.size %> Reviews</span>
+</h2>
+
+<p>
+	<!-- buttons to affect sorting go here -->
+	Sort By Source |
+	Sort By Author |
+	Sort By Journal
+</p>
+
+<table class="reviews">
+	<thead>
+	<tr>
+		<th>Document</th>
+		<th>Assigned</th>
+		<th>Reviewed</th>
+	</tr>
+	</thead>
+	<tbody>
+<% for document_review in @document_reviews.sort { |a,b| a.reviewer_sequence <=> b.reviewer_sequence || a.when_assigned <=> b.when_assigned } %>
+	<tr>
+		<td>
+			<p>
+				<span class="title">
+					<%= link_to document_review.document.title, user_project_review_stage_stage_reviewer_document_review_path(@user,@project,@review_stage,@stage_reviewer,document_review) %>
+				</span>
+			</p>
+			<p>
+				<span class="authors"><%=h document_review.document.authors %></span>
+			</p>
+		</td>
+		<td><%=h time_ago_in_words( document_review.when_assigned ) %> ago</td>
+		<td>
+			<%= DocumentReview.disposition( document_review.disposition ) %>
+			<%=h time_ago_in_words( document_review.when_reviewed ) %> ago
+		</td>
+	</tr>
+<% end %>
+	</tbody>
+</table>

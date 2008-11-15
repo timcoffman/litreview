@@ -1,0 +1,31 @@
+<h2>
+	Project <%= link_to @manager.project.title, user_project_path(@user,@manager.project) %>:
+	Assign New Manager
+</h2>
+
+<% form_for([@user,@project,@manager]) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :project_id %>:
+	<% if @manager.project %>
+		<%= @manager.project.title %>
+		<%= f.hidden_field :project_id %>
+	<% else %>
+		<%= f.collection_select :project_id, Project.find(:all), :id, :title, {}, { :size => 10 } %>
+	<% end %>
+  </p>
+  <p>
+    <%= f.label :user_id %>:
+	<% if @manager.user %>
+		<%=h @manager.user.full_name %>
+		<%= f.hidden_field :user_id %>
+	<% else %>
+		<%= f.collection_select :user_id, User.find(:all), :id, :full_name, {}, { :size => 10 } %>
+	<% end %>
+  </p>
+  <p>
+    <%= f.submit "Assign" %>
+  </p>
+<% end %>
+

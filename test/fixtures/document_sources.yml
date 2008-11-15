@@ -1,0 +1,15 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  project_id: 1
+  name: MyString
+  identifier: MyString
+  website: MyString
+  query_url_template: MyString
+
+two:
+  project_id: 1
+  name: MyString
+  identifier: MyString
+  website: MyString
+  query_url_template: MyString

@@ -1,0 +1,44 @@
+<h2>
+        Project <%= link_to @project.title, user_project_path(@user,@project) %>:
+        All <%=h number_with_delimiter @documents_count %> Documents
+</h2>
+
+<table>
+  <tr>
+    <th>Source</th>
+    <th>Document</th>
+    <th>Duplication</th>
+  </tr>
+
+<% for document in @documents %>
+  <tr>
+    <td>
+		<%= link_to document.document_source.name, user_project_document_source_path(@user,document.document_source.project,document.document_source) %>
+	</td>
+	<td class="document">
+		<div class="head">
+			<div class="title">
+				<%= link_to document.title, user_project_document_path(@user,@project,document) %>
+			</div>
+			<div class="authors">
+				<%=h document.authors %>
+			</div>
+			<div>
+				<span class="journal"> <%=h document.journal %> </span>
+				<span class="date"> <%=h document.when_published %> </span>
+			</div>
+		</div>
+	</td>
+    <td>
+		<% if document.duplicate_of_document %>
+			<p>Duplicate exists from <%= link_to document.duplicate_of_document.document_source.name, user_project_document_path(@user,@project,document.duplicate_of_document) %></p>
+		<% end %>
+		<% for duplicate_document in document.duplicate_documents %>
+			<p>Duplicated by document from <%= link_to duplicate_document.document_source.name, user_project_document_path(@user,@project,duplicate_document) %></p>
+		<% end %>
+	</td>
+  </tr>
+<% end %>
+</table>
+
+<br />

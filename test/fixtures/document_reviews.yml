@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  document_id: 1
+  stage_reviewer_id: 1
+  when_assigned: 2008-09-21 13:54:12
+  when_reviewed: 2008-09-21 13:54:12
+
+two:
+  document_id: 1
+  stage_reviewer_id: 1
+  when_assigned: 2008-09-21 13:54:12
+  when_reviewed: 2008-09-21 13:54:12

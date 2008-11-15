@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  review_stage_id: 1
+  user_id: 1
+  is_project_manager: false
+
+two:
+  review_stage_id: 1
+  user_id: 1
+  is_project_manager: false

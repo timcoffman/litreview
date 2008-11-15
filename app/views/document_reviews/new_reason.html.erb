@@ -1,0 +1,14 @@
+<li class="reason new" id="new-reason">
+	<% form_remote_for [@user,@project,@review_stage,@reason] do |f| %>
+		New Reason <%= f.submit "Add" %>
+		<p>Created By:
+		<%= personal_link_to @reason.created_by_stage_reviewer.user, '', user_project_review_stage_stage_reviewer_path(@user,@project,@review_stage,@reason.created_by_stage_reviewer) %>
+		</p>
+		<p>Reason:
+		<%= text_field_tag 'document_review[reasons][][title]', @reason.title %>
+		</p>
+		<p>Description:
+		<%= text_area_tag 'document_review[reasons][][description]', @reason.description %> 
+		</p>
+	<% end %>
+</li>

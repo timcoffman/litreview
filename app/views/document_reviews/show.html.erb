@@ -1,0 +1,25 @@
+<h2>
+	Project <span class="title"><%= link_to @document_review.stage_reviewer.review_stage.project.title, user_project_path(@user,@document_review.stage_reviewer.review_stage.project) %></span>,
+	<span class="stage"><%= link_to @document_review.stage_reviewer.review_stage.name, user_project_review_stage_path(@user,@project,@document_review.stage_reviewer.review_stage) %></span>:
+	<%= personal_link_to @document_review.stage_reviewer.user, "'s Reviews", user_path(@document_review.stage_reviewer.user) %></span>
+</h2>
+
+<% if @document_review.preceding_siblings.first %>
+	<%= link_to "&lt;&lt; Previous (#{abbreviate(@document_review.preceding_siblings.first.document.title)})", user_project_review_stage_stage_reviewer_document_review_path(@user,@project,@review_stage,@stage_reviewer,@document_review.preceding_siblings.first) %>
+<% end %>
+<% if @document_review.following_siblings.first %>
+	<%= link_to "(#{abbreviate(@document_review.following_siblings.first.document.title)}) Next &gt;&gt;", user_project_review_stage_stage_reviewer_document_review_path(@user,@project,@review_stage,@stage_reviewer,@document_review.following_siblings.first) %>
+<% end %>
+
+
+<div class="side-by-side">
+	<div class="left-side">
+		<%= render :partial => 'documents/show', :locals => { :document => @document_review.document } %>
+	</div>
+	<div class="right-side">
+		<%= render :partial => 'show', :locals => { :document_review => @document_review } %>
+		<p>
+		<%= link_to @document_review.complete? ? 'Re-review Now' : 'Review Now', edit_user_project_review_stage_stage_reviewer_document_review_path(@user,@project,@review_stage,@stage_reviewer,@document_review) %>
+		</p>
+	</div>
+</div>

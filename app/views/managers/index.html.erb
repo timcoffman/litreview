@@ -1,0 +1,22 @@
+<h1>Listing managers</h1>
+
+<table>
+  <tr>
+    <th>Project</th>
+    <th>User</th>
+  </tr>
+
+<% for manager in @managers %>
+  <tr>
+    <td><%=h manager.project_id %></td>
+    <td><%=h manager.user_id %></td>
+    <td><%= link_to 'Show', manager %></td>
+    <td><%= link_to 'Edit', edit_managers_path(manager) %></td>
+    <td><%= link_to 'Destroy', manager, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New manager', new_project_manager_path %>

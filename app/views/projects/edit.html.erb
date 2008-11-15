@@ -1,0 +1,17 @@
+<h2>Project: <%= @project.title %></h2>
+
+<% form_for([@user,@project]) do |f| %>
+  <%= f.error_messages %>
+
+	<h3>Title</h3>
+    <%= f.text_field :title %>
+
+	<h3>Description</h3>
+	<% box(:inset) do%>
+		<%= f.text_area :description, :size => '90% x 10' %>
+	<% end %>
+	
+	<h3>Done</h3>
+    <%= f.submit "Save Changes" %>
+	<%= link_to 'Cancel Changes', user_project_path(@user,@project) %>
+<% end %>

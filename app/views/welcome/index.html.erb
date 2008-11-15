@@ -1,0 +1,16 @@
+<% if current_user %>
+<p>
+	Welcome to the Systematic Literature Review Tracker, <%= current_user.nickname %>!
+</p>
+<p>
+	If you're not <%= current_user.full_name %>,
+	please <%= link_to 'log in', login_path %>.
+</p>
+<% else %>
+<p>
+	Welcome to the Systematic Literature Review Tracker!
+</p>
+<p>
+	Please <%= link_to 'log in to continue', login_path %>.
+</p>
+<% end %>

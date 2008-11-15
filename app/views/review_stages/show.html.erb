@@ -1,0 +1,44 @@
+<h2>Review Stage: <%=h "#{@review_stage.project.title}, #{@review_stage.name}" %> </h2>
+
+<% box(:inset) do %>
+	<div class="description"> <%= @review_stage.description %> </div> <!-- note the lack of "h" here -->
+<% end %>
+
+<h3>Participants</h3>
+
+<div class="reviewers">
+	Reviewers:
+	<% if @review_stage.stage_reviewers.empty? %>
+		<span class="missing">nobody</span>
+	<% else %>
+		<% delimited_list @review_stage.stage_reviewers do |stage_reviewer| %>
+			<span class="reviewer"> <%= personal_link_to stage_reviewer.user, '', user_project_review_stage_stage_reviewer_path(@user,@project,@review_stage,stage_reviewer) %> </span>
+		<% end %>
+	<% end %>
+</div>
+
+<h3>Exclusion Reasons</h3>
+
+<div class="reasons">
+	<p>This review stage supplies <%= link_to "#{@review_stage.reasons.count} exclusion reasons", user_project_review_stage_reasons_path(@user,@project,@review_stage) %>.</p>
+	A project manager created <%= @review_stage.reasons.count - @review_stage.custom_reasons.count %> of those reasons.
+	<% for stage_reviewer in @review_stage.stage_reviewers %>
+		<p>
+			<%= personal_link_to stage_reviewer.user, 'created', user_project_review_stage_stage_reviewer_path(@user,@project,@review_stage,stage_reviewer) %>
+			<%=h stage_reviewer.custom_reasons.count %> of those reasons.
+		</p>
+	<% end %>
+
+<h2>Details</h2>
+
+<div class="gates">
+	Gate function:
+	<% for gate_function in [ 'ANY', 'ALL', @review_stage.gate_function ].uniq do %>
+		<%=
+		tag_classes = [ 'gate' ]
+		tag_classes << 'selected' if gate_function == @review_stage.gate_function
+		content_tag :span, gate_function, :class => tag_classes.join(' ')
+		%>
+	<% end %>
+</p>
+

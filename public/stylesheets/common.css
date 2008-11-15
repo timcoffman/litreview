@@ -1,0 +1,84 @@
+@import url(layout.css);
+@import url(box.css);
+
+:link img,
+:visited img,
+:active img,
+:hover img {
+	border: none ;
+}
+
+p {
+	margin-top: 3pt ;
+	margin-bottom: 3pt ;
+}
+
+h2 {
+	border-bottom: 2px solid #337 ;
+	font-style: italic ;
+	font-size: 18pt ;
+	margin: 0 ;
+	margin-top: 0.5em ;
+	margin-bottom: 0.25em ;
+}
+
+h3 {
+	font-size: 14pt ;
+	line-height: 24px ;
+	margin: 0 ;
+	margin-top: 0.25em ;
+	margin-bottom: 0.125em ;
+	/*
+	padding-left: 12px ;
+	padding-right: 12px ;
+	background-color: #559 ;
+	color: #ffc ;
+	*/
+	border-bottom: 1px solid #559 ;
+	width: 60% ;
+}
+
+h3:before {
+	content: '' ;
+	background: url(/images/h3.png) no-repeat left center ;
+}
+h3:after {
+	content: '' ;
+	background: url(/images/h3.png) no-repeat right center ;
+}
+
+h2 :active, h2 :visited, h2 :link, h2 :hover,
+h1 :active, h1 :visited, h1 :link, h1 :hover {
+	text-decoration: none ;
+}
+
+.missing {
+	font-style: italic ;
+	color: #bbb ;
+}
+
+.card {
+	border: 2px solid #fff ;
+	background-color: #fcfcf7 ;
+	padding-top: 0.5em ;
+	padding-bottom: 0.5em ;
+	padding-left: 1em ;
+	padding-right: 3em ;
+	float: right ;
+}
+
+.gate {
+	padding-top: 3px ;
+	padding-bottom: 3px ;
+	padding-left: 1em ;
+	padding-right: 1em ;
+	color: #99c ;
+	background-color: #ffc ;
+	border: 1px dashed #559 ;
+}
+
+.gate.selected {
+	color: #559 ;
+	background-color: #dda ;
+	border: 1px solid #000 ;
+}

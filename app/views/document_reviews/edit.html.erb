@@ -1,0 +1,14 @@
+<h2>
+	Project <span class="title"><%= link_to @document_review.stage_reviewer.review_stage.project.title, user_project_path(@user,@document_review.stage_reviewer.review_stage.project) %></span>,
+	<span class="stage"><%= link_to @document_review.stage_reviewer.review_stage.name, user_project_review_stage_path(@user,@project,@document_review.stage_reviewer.review_stage) %></span>:
+	<%= personal_link_to @document_review.stage_reviewer.user, '', user_path(@document_review.stage_reviewer.user) %></span>
+</h2>
+
+<div class="side-by-side">
+	<div class="left-side">
+		<%= render :partial => 'documents/show', :locals => { :document => @document_review.document } %>
+	</div>
+	<div class="right-side">
+		<%= render :partial => 'edit', :locals => { :document_review => @document_review } %>
+	</div>
+</div>

@@ -1,0 +1,26 @@
+<h2>Project: <span class="title"> <%=h @project.title %> </span> </h2>
+
+<% box(:inset) do %>
+	<div class="description"> <%= @project.description %> </div> <!-- note the lack of "h" here -->
+<% end %>
+
+<h3>Report: <%= @report.description %></h3>
+
+<table class="report">
+	<thead>
+		<tr>
+			<% for column in @report.domain %>
+				<th><%=h column %> </th>
+			<% end %>
+		</tr>
+	</thead>
+	<tbody>
+		<% for series in @report.series %>
+			<tr>
+				<% for dataPoint in series %>
+					<td><%=h dataPoint %></td>
+				<% end %>
+			</tr>
+		<% end %>
+	</tbody>
+</table>

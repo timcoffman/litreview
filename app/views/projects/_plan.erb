@@ -1,0 +1,140 @@
+
+<%
+	project_users = project.review_stages.inject([]) { |pu,rs| pu.concat rs.reviewers }.uniq
+	project_users.sort! { |a,b| ((a==user)?0:1) <=> ((b==user)?0:1) }
+%>
+
+<% flow = flow_sequence %>
+
+<table class="flow">
+	<thead>
+	<tr class="role">
+		<th/>
+		<th class="odd"><%=h pluralize(project.managers.count,"Project Manager") %></th>
+		<% unless project_users.empty? %>
+			<th class="even" colspan="<%= project_users.size %>"> <%=h pluralize(project_users.size,"Reviewer") %> </th>
+		<% end %>
+	</tr>	
+	<tr class="username">
+		<th/>
+		<th class="odd">
+			<% if project.managers.empty? %>
+				<span class="missing">nobody</span>
+			<% else %>
+				<% for manager in project.managers %>
+					<span> <%= personal_link_to manager.user, '', user_project_manager_path(user,project,manager)  %> </span>
+				<% end %>
+			<% end %>
+		</th>
+		<% reset_cycle %>
+		<% for user in project_users %>
+			<th class="<%=h cycle('even','odd') %>">
+				<span> <%= personal_link_to user, '', user_path(user) %> </span>
+			</th>
+		<% end %>
+	</tr>
+	</thead>
+	<tbody>
+	<tr class="initial">
+		<th><%= image_tag "rotated_text_flowsections_setup.png" %></th>
+		<td class="odd">
+			<%= flow.step("Assign Manager", :status => ! project.managers.empty?, :url => new_user_project_manager_path(user,project) ) %>
+			<%= flow.step("Write Mission") do |fs|
+				fs.url edit_user_project_path(user,@project)
+				fs.given("Assign Manager", true ) do
+					wc = (project.description || "").split(/\s+/).length
+					fs.achievement "Words", :count => wc
+					fs.partial( (wc - 100).to_f / 100.0 ) if wc <100 
+				end
+			end %>
+			<%= flow_step("Define stages") do |fs|
+				fs.achievement "Defined", :count => project.review_stages.count
+				fs.url user_project_review_stages_path(user,project) if project.managed_by?( user )
+			end %>
+			<%= flow_step( "Import Documents", :achievement => { :title => "Documents", :count => project.documents.count } ) %>
+			<%= flow_step("Search for Duplicates") do |fs|
+				fs.complete_if project.documents.empty? ? nil : ! project.documents.find( :first, :conditions => 'duplicate_of_document_id IS NOT NULL' ).nil?
+				unless project.documents.empty?
+	fs.achievement "Duplicates", :count => project.documents.count( :conditions => 'duplicate_of_document_id IS NOT NULL' ), :total => project.documents.count ;
+				end
+			end %>
+		</td>
+		<% reset_cycle %>
+		<% for user in project_users %>
+			<td class="<%=h cycle('even','odd') %>">
+				<%= flow_step("Sign Up") { |fs| fs.complete } %>
+			</td>
+		<% end %>
+	</tr>
+	<% for review_stage in project.review_stages %>
+		<tr class="iteration <%=h "iteration-#{review_stage.sequence}" %>">
+			<th rowspan="2">
+				<%= link_to image_tag("rotated_text_flowsections_iter_#{review_stage.sequence}.png"), user_project_review_stage_path(@user,@project,review_stage) %>
+			</th>
+			<td class="odd">
+				<%= flow_step("Invite Reviewers") do |fs|
+					fs.achievement "Invited", :count => review_stage.stage_reviewers.count
+					fs.url new_user_project_review_stage_stage_reviewer_path(@user,@project,review_stage)
+				end %>
+				<%= flow_step("Assign Reviews") do |fs|
+					document_review_counts = review_stage.stage_reviewers.collect { |sr| sr.document_reviews.count }
+					document_review_count = document_review_counts.inject(0) { |memo,drc| memo + drc }
+					if review_stage.sequence == 1
+						# fs.achievement "Assigned", :total => project.reviewable_documents.count, :count => review_stage.document_reviews.count
+						fs.achievement "Assigned", :count => document_review_count, :total => project.reviewable_documents.count * review_stage.stage_reviewers.count
+					elsif ! review_stage.previous_stage.nil?
+						fs.achievement "Assigned", :count => document_review_count
+					else
+						fs.incomplete
+					end
+				end %>
+			</td>
+			<% reset_cycle %>
+			<% for user in project_users %>
+				<td class="<%=h cycle('even','odd') %>">
+				</td>
+			<% end %>
+		</tr>
+		<tr>
+			<td class="odd">
+			</td>
+			<% reset_cycle %>
+			<% for user in project_users %>
+				<% stage_reviewer = review_stage.stage_reviewers.find( :first, :conditions => { :user_id => user.id } ) %>
+				<td class="<%=h cycle('even','odd') %>">
+					<% if stage_reviewer %>
+						<%= flow_step("Review") do |fs|
+							fs.achievement 'Reviewed', :total => stage_reviewer.document_reviews.count, :count => stage_reviewer.completed_reviews.count
+							fs.url user_project_review_stage_stage_reviewer_path(@user,@project,review_stage,stage_reviewer)
+						end %>
+					<% end %>
+				</td>
+			<% end %>
+		</tr>
+	<% end %>
+	<tr class="final">
+		<th><%= image_tag "rotated_text_flowsections_final.png" %></th>
+		<td class="odd">
+			<%= flow_step "Wrap-up", :final => true %> <!-- complete if all reviewers' stages area complete -->
+		</td>
+		<% reset_cycle %>
+		<% for user in project_users %>
+			<td class="<%=h cycle('even','odd') %>">
+				<%= flow_step "Wrap-up", :final => true %> <!-- complete if all previous stages are complete -->
+			</td>
+		<% end %>
+	</tr>
+	</tbody>
+</table>
+
+<div class="legend">
+	<h3>Legend</h3>
+	<table> <tr>
+	<td> <%= flow_step("To Do") { |fs| fs.incomplete ; fs.final } %> </td>
+	<td> <%= flow_step("In Progress") { |fs| fs.partial(0.25) ; fs.final } %> </td>
+	</tr> <tr>
+	<td> <%= flow_step("Done") { |fs| fs.complete ; fs.final }  %> </td>
+	<td> <%= flow_step("Not Yet Available", :final =>true )%> </td>
+	</tr> </table>
+</div>
+

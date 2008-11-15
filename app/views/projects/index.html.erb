@@ -1,0 +1,32 @@
+<h1>All Projects</h1>
+
+<%= link_to 'New project', new_user_project_path(@user) %>
+
+<% for project in @projects %>
+	<div class="project overview">
+		<div class="icon">
+		</div>
+		<div class="title">
+			<%= link_to project.title, user_project_path(@user,project) %>
+			<% if current_user && current_user.is_admin %>
+				<span class="actions">
+					<span class="action"> <%= link_to 'Edit', edit_project_path(project) %> </span>
+					<span class="action"> <%= link_to 'Destroy', project, :confirm => 'Are you sure?', :method => :delete %> <span>
+				</span>
+			<% end %>
+			</div>
+		<div class="managers">
+			Managed By:
+			<% if project.managers.empty? %>
+				<span class="missing">nobody</span>
+			<% else %>
+				<% delimited_list project.managers do |manager| %>
+					<%= personal_link_to manager.user, '', user_project_manager_path(@user,project,manager) %> </span>
+				<% end %>
+			<% end %>
+		</div>
+		<div class="actions">
+			
+		</div>
+	</div>
+<% end %>

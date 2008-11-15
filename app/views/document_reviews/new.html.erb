@@ -1,0 +1,27 @@
+<h1>New document_review</h1>
+
+<% form_for(@document_review) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :document_id %><br />
+    <%= f.text_field :document_id %>
+  </p>
+  <p>
+    <%= f.label :stage_reviewer_id %><br />
+    <%= f.text_field :stage_reviewer_id %>
+  </p>
+  <p>
+    <%= f.label :when_assigned %><br />
+    <%= f.datetime_select :when_assigned %>
+  </p>
+  <p>
+    <%= f.label :when_reviewed %><br />
+    <%= f.datetime_select :when_reviewed %>
+  </p>
+  <p>
+    <%= f.submit "Create" %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', document_reviews_path %>

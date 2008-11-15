@@ -1,0 +1,24 @@
+<h1>Listing reasons</h1>
+
+<table>
+  <tr>
+    <th>Stage reviewer</th>
+    <th>Title</th>
+    <th>Description</th>
+  </tr>
+
+<% for reason in @reasons %>
+  <tr>
+    <td><%=h reason.stage_reviewer_id %></td>
+    <td><%=h reason.title %></td>
+    <td><%=h reason.description %></td>
+    <td><%= link_to 'Show', reason %></td>
+    <td><%= link_to 'Edit', edit_reason_path(reason) %></td>
+    <td><%= link_to 'Destroy', reason, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New reason', new_reason_path %>

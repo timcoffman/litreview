@@ -1,0 +1,24 @@
+<h2>
+	Project <span class="title"><%= link_to @project.title, user_project_path(@user,@project) %></span>,
+	<span class="stage">New Stage</span>
+</h2>
+
+<% form_for([@user,@project,@review_stage]) do |f| %>
+  <%= f.error_messages %>
+
+	<h3>Name</h3>
+	<%= f.text_field :name %>
+
+	<h3>Gate Function</h3>
+	<%= f.select :gate_function, [ 'ANY', 'ALL' ] %>
+
+	<h3>Description</h3>
+	<% box(:inset) do%>
+		<%= f.text_area :description, :size => '90% x 10' %>
+	<% end %>
+
+	<h3>Done</h3>
+	<%= f.submit "Save Changes" %>
+	<%= link_to 'Cancel Changes', user_project_review_stages_path(@user,@project) %>
+
+<% end %>
