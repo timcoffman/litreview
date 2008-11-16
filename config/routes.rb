@@ -61,12 +61,12 @@ ActionController::Routing::Routes.draw do |map|
   # Install the default routes as the lowest priority.
   # Note: These default routes make all actions in every controller accessible via GET requests. You should
   # consider removing the them or commenting them out if you're using named routes and resources.
-  # map.connect ':controller/:action/:id'
-  # map.connect ':controller/:action/:id.:format'
+  map.connect ':controller/:action/:id'
+  map.connect ':controller/:action/:id.:format'
 
   # shortcuts via human-friendly nickcnames
 
 
-  map.connect ':fn_user', :controller => 'users', :action => 'show', :user => /[a-zA-Z][a-zA-Z-_]*/, :conditions => { :method => :get }
-  map.connect ':fn_user/:fn_project', :controller => 'projects', :action => 'show', :user => /[a-zA-Z][-_0-9a-zA-Z]*/, :project => /[a-zA-Z][-_0-9a-zA-Z]*/, :conditions => { :method => :get }
+  # map.connect ':fn_user', :controller => 'users', :action => 'show', :user => /[a-zA-Z][a-zA-Z-_]*/, :conditions => { :method => :get }
+  # map.connect ':fn_user/:fn_project', :controller => 'projects', :action => 'show', :user => /[a-zA-Z][-_0-9a-zA-Z]*/, :project => /[a-zA-Z][-_0-9a-zA-Z]*/, :conditions => { :method => :get }
 end
