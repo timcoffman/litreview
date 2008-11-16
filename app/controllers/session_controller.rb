@@ -60,7 +60,7 @@ class SessionController < ApplicationController
 		{
 			:email => 'email',
 			:full_name => 'fullname',
-			:nick_name => 'nickname'
+			:nickname => 'nickname'
 		}.each do |model_attr, registration_attr|
 			unless registration[registration_attr].blank?
 				user.send "#{model_attr}=", registration[registration_attr]
