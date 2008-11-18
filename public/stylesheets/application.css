@@ -240,6 +240,10 @@ body {
 #tree a.tree.leaf:active  { color: #337 ; text-decoration: none ; }
 #tree a.tree.leaf:hover   { color: #337 ; text-decoration: none ; color: #397; /* background-color: #bb9 ; */ }
 
+a.switch:before {
+	content: url(/images/link_switch.png) ;
+}
+
 #main {
 	color: #000 ;
 	background-color: #ffc ;

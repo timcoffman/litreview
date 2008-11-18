@@ -1,10 +1,39 @@
 <% if current_user %>
 <p>
-	Welcome to the Systematic Literature Review Tracker, <%= current_user.nickname %>!
+	Welcome to the Systematic Literature Review Tracker, <%= link_to current_user.nickname, user_path(current_user) %>!
 </p>
 <p>
 	If you're not <%= current_user.full_name %>,
-	please <%= link_to 'log in', login_path %>.
+	please <%= link_to 'log in with your won id', login_path %>.
+</p>
+<p>
+	<% favs = current_user.favorite_projects(2) ; favs.delete current_project %>
+	<% if current_project %>
+		Your current project is "<%= link_to current_project.title, user_project_path(@user,current_project) %>".
+		<% unless favs.empty? %>
+			You may switch to one of these other projects:
+			<ul>
+			<% for project in favs %>
+				<li> <%= link_to_unless_current project.title, { :controller => 'session', :action => 'switch_project', :id => project }, { :class => 'switch' } %> </li>
+			<% end %>
+			</ul>
+		<% end %>
+	<% else %>
+		<% if favs.empty? %>
+			You're not participating in any projects.
+			If you were invited to a particular project, please wait for the
+				project manager to assign you to a stage of the project.
+			If you would like to start a new project, please
+				<%= link_to 'place a request for a new project', new_user_project_path(@user) %>.
+		<% else %>
+			Please select your current project:
+			<ul>
+			<% for project in favs %>
+				<li> <%= link_to_unless_current project.title, { :controller => 'session', :action => 'switch_project', :id => project }, { :class => 'switch' } %> </li>
+			<% end %>
+			</ul>
+		<% end %>
+	<% end %>
 </p>
 <% else %>
 <p>

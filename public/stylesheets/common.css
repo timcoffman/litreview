@@ -82,3 +82,11 @@ h1 :active, h1 :visited, h1 :link, h1 :hover {
 	background-color: #dda ;
 	border: 1px solid #000 ;
 }
+
+.email {
+	font-family: monospace ;
+}
+
+.openid {
+	font-family: monospace
+}

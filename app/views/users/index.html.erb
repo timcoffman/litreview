@@ -1,26 +1,39 @@
-<h1>Listing users</h1>
+<h2>People</h2>
 
 <table>
-  <tr>
-    <th>Full name</th>
-    <th>Nickname</th>
-    <th>Identity url</th>
-    <th>Email</th>
-  </tr>
+	<tr>
+		<th rowspan="2">User</th>
+		<th rowspan="2">Roles</th>
+		<th colspan="2">Projects</th>
+	</tr>
+	<tr>
+		<th>Managing</th>
+		<th>Reviewing</th>
+	</tr>
 
 <% for user in @users %>
-  <tr>
-    <td><%=h user.full_name %></td>
-    <td><%=h user.nickname %></td>
-    <td><%=h user.identity_url %></td>
-    <td><%=h user.email %></td>
-    <td><%= link_to 'Show', user %></td>
-    <td><%= link_to 'Edit', edit_user_path(user) %></td>
-    <td><%= link_to 'Destroy', user, :confirm => 'Are you sure?', :method => :delete %></td>
-  </tr>
+	<% reviewed_projects = user.review_stages.map { |rs| rs.project }.uniq %>
+	<tr>
+		<td>
+			<%=h user.nickname %>
+			(<%= link_to user.full_name, user_path(user) %>)
+		</td>
+		<td><ul>
+			<% if user.is_admin? %><li>Administrator</li><% end %>
+			<% if not user.managed_projects.empty? %><li>Manager</li><% end %>
+			<% if not reviewed_projects.empty? %><li>Reviewer</li><% end %>
+		</ul></td>
+		<td>
+			<% unless user.managed_projects.empty? %>
+				<%= pluralize user.managed_projects.count, 'project' %>
+			<% end %>
+		</td>
+		<td>
+			<% unless reviewed_projects.empty? %>
+				<%= pluralize reviewed_projects.size, 'project' %>
+			<% end %>
+		</td>
+	</tr>
 <% end %>
+
 </table>
-
-<br />
-
-<%= link_to 'New user', new_user_path %>

@@ -1,18 +1,18 @@
-<h2> User Profile: <%= link_to_unless_current user.nickname, user_path(user) %> </h2>
+<h2> User Profile: <%= personal_link_to user.nickname, '', user_path(user) %> </h2>
 
 <p>
-  <b>Full name:</b>
+  <b>Name:</b>
   <%= personal_link_to user.full_name, '', user_path(user) %>
 </p>
 
-<% if current_user == user || current_user.is_admin %>
+<% if current_user && (current_user == user || current_user.is_admin?) %>
 <p>
-  <b>Identity url:</b>
-  <%=h user.identity_url %>
+  <b>OpenId:</b>
+  <span class="openid"><%=h user.identity_url %></span>
 </p>
 <% end %>
 
 <p>
-  <b>Email:</b>
-  <%=h user.email %>
+  <b>E-Mail Address:</b>
+  <span class="email"><%=h user.email %></email>
 </p>

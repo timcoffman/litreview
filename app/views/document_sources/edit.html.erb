@@ -1,6 +1,6 @@
 <h1>Editing document_source</h1>
 
-<% form_for(@document_source) do |f| %>
+<% form_for([@user,@project,@document_source]) do |f| %>
   <%= f.error_messages %>
 
   <p>
@@ -28,5 +28,5 @@
   </p>
 <% end %>
 
-<%= link_to 'Show', @document_source %> |
-<%= link_to 'Back', document_sources_path %>
+<%= link_to 'Show', user_project_document_source_path(@user,@project,@document_source) %> |
+<%= link_to 'Back', user_project_document_sources_path(@user,@project) %>

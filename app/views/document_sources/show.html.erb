@@ -1,24 +1,53 @@
-<p>
-  <b>Project:</b>
-  <%=h @document_source.project.title %>
-</p>
+<h2>
+	Document Source: <%=h @document_source.name %>
+	in <%= link_to @document_source.project.title, user_project_path(@user,@document_source.project) %>
+	</h2>
+
+<h3>Details</h3>
 
 <p>
-  <b>Name:</b>
-  <%=h @document_source.name %>
-</p>
-
-<p>
-  <b>Identifier:</b>
+  Identifier:
   <%=h @document_source.identifier %>
 </p>
 
 <p>
-  <b>Website:</b>
+  Website:
   <%=h @document_source.website %>
 </p>
 
 <p>
-  <b>Query url template:</b>
+  Query url template:
   <%=h @document_source.query_url_template %>
+</p>
+
+<h3>Documents</h3>
+This document source contains <%= pluralize( @document_source.documents.count, "documents" ) %>.
+
+<h3>Importing</h3>
+<p>
+	<% if @document_source.has_import_file? %>
+		Import file: uploaded <%= @document_source.when_import_file_uploaded %>
+	<% else %>
+		Import file: <span class="missing">none</span>
+	<% end %>
+</p>
+
+<p>
+<% form_tag upload_user_project_document_source_path(@user,@project,@document_source), :method => :post, :multipart => :true do |f| %>
+	<% if @document_source.has_import_file? %>
+		Replace uploaded file containing document details for import:
+	<% else %>
+		Upload a file containing document details for import:
+	<% end %>
+	<%= file_field_tag "import_file", :accept => "text/plain" %>
+	<input type="submit" value="<%= @document_source.has_import_file? ? 'Upload' : 'Replace' %>"/>
+<% end %>
+</p>
+
+<p>
+<% if @document_source.has_import_file? %>
+<% form_tag import_user_project_document_source_path(@user,@project,@document_source), :method => :post do |f| %>
+	<input type="submit" value="Import"/>
+<% end %>
+<% end %>
 </p>

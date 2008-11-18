@@ -10,8 +10,7 @@
 			<%= link_to project.title, user_project_path(@user,project) %>
 			<% if current_user && current_user.is_admin %>
 				<span class="actions">
-					<span class="action"> <%= link_to 'Edit', edit_project_path(project) %> </span>
-					<span class="action"> <%= link_to 'Destroy', project, :confirm => 'Are you sure?', :method => :delete %> <span>
+					<span class="action"> <%= link_to 'Edit', edit_user_project_path(@user,project) %> </span>
 				</span>
 			<% end %>
 			</div>

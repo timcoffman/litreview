@@ -39,6 +39,11 @@
 			<% end %>.</p>
 		<% end %>
 	<% end %>
+	<% form_tag invite_reviewer_user_project_path(@user,@project), :method => :post do %>
+	Invite someone to sign up for reviewing this project:
+	<input type="text" name="invitee_address" value="enter e-mail address"/>
+	<input type="submit" value="Send Invitation"/>
+	<% end %>
 </div>
 
 

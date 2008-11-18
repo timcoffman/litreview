@@ -3,8 +3,8 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :users do |users|
     users.resources :managers
-    users.resources :projects, :member => { :report => :get } do |projects|
-      projects.resources :document_sources, :as => 'sources'
+    users.resources :projects, :member => { :report => :get, :invite_reviewer => :post } do |projects|
+      projects.resources :document_sources, :member => { :upload => :post, :import => :post }, :as => 'sources'
       projects.resources :documents
       projects.resources :managers
       projects.resources :review_stages, :as => 'stages', :member => { :report => :get } do |stages|

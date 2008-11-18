@@ -56,7 +56,7 @@
 		<% else %>
 			Switch Projects:
 			<% for project in favs %>
-				<span> <%= link_to_unless_current project.title, :controller => 'session', :action => 'switch_project', :id => project %> </span>
+				<span> <%= link_to_unless_current project.title, { :controller => 'session', :action => 'switch_project', :id => project }, { :class => 'switch' } %> </span>
 			<% end %>
 		<% end %>
 	<% end %>

@@ -1,28 +1,21 @@
-<h1>Editing user</h1>
+<h2> User: <%=h @user.full_name %> </h2>
 
-<% form_for(@user) do |f| %>
+<% form_for([@user]) do |f| %>
   <%= f.error_messages %>
 
-  <p>
-    <%= f.label :full_name %><br />
-    <%= f.text_field :full_name %>
-  </p>
-  <p>
-    <%= f.label :nickname %><br />
-    <%= f.text_field :nickname %>
-  </p>
-  <p>
-    <%= f.label :identity_url %><br />
-    <%= f.text_field :identity_url %>
-  </p>
-  <p>
-    <%= f.label :email %><br />
-    <%= f.text_field :email %>
-  </p>
-  <p>
-    <%= f.submit "Update" %>
-  </p>
-<% end %>
+	<% if current_user && (current_user == @user || current_user.is_admin?) %>
+	<h3>Login</h3>
+    <p>OpenID: <span class="openid"><%= @user.identity_url %><span></p>
+	<% end %>
 
-<%= link_to 'Show', @user %> |
-<%= link_to 'Back', users_path %>
+	<h3>Name</h3>
+    <p>Full Name: <%= f.text_field :full_name %></p>
+    <p>Nickname: <%= f.text_field :nickname %></p>
+
+	<h3>Contact Information</h3>
+    <p>E-Mail Address: <%= f.text_field :email, :class=>'email' %></p>
+		
+	<h3>Done</h3>
+    <%= f.submit "Save Changes" %>
+	<%= link_to 'Cancel Changes', user_path(@user) %>
+<% end %>

@@ -8,6 +8,7 @@ class ProjectsController < ApplicationController
   def index
     @user = User.find( params[:user_id] )
 	@user = current_user unless @user || current_user.is_admin?
+	@project = current_project
     @projects = Project.find(:all)
 
     respond_to do |format|
@@ -103,5 +104,19 @@ class ProjectsController < ApplicationController
       format.html
       format.xml { render :xml => @report }
     end
+  end
+    
+  def invite_reviewer
+    @user = User.find( params[:user_id] )
+    @project = Project.find(params[:id])
+	invitee_address = params[:invitee_address]
+	
+	Inviter.deliver_invitation( @user, @project, invitee_address )
+	flash[:notice] = "#{invitee_address} invited to join #{@project.title}."
+
+    respond_to do |format|
+		format.html { redirect_to([@user,@project]) }
+		format.xml { head :ok }
+	end
   end
 end
