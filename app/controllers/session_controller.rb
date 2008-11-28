@@ -18,7 +18,7 @@ class SessionController < ApplicationController
 	def destroy
 		reset_session
 		self.current_user = nil
-		flash.now[:notice] = 'You have logged out'
+		flash[:notice] = 'You have logged out'
 		render :action => 'new'
 	end
 	
@@ -51,8 +51,8 @@ class SessionController < ApplicationController
 		end
 	end
 	
-	def failed_login
-		flas.now[:error] = message
+	def failed_login( message )
+		flash[:error] = message
 		render :action => 'new'
 	end
 	
