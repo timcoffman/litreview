@@ -38,7 +38,7 @@ class ProjectsController < ApplicationController
   # GET /projects/new.xml
   def new
     @user = User.find( params[:user_id] )
-    @project = Project.new
+    @project = Project.new( :title => "New Project" )
 
     respond_to do |format|
       format.html # new.html.erb
