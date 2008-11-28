@@ -1,15 +1,25 @@
-<h2>Project <span class="title"><%=h @project.title %>: Document Sources</h2>
+<h2>Project <%= link_to @project.title, user_project_path(@user,@project) %>: Document Sources</h2>
 
 <table>
   <tr>
     <th>Document Source</th>
     <th>Website</th>
+    <th>Documents</th>
   </tr>
 
 <% for document_source in @document_sources %>
   <tr>
     <td><%= link_to document_source.name, user_project_document_source_path(@user,@project,document_source) %></td>
     <td><%=h document_source.website %></td>
+    <td>
+		<% if not document_source.documents.empty? %>
+			<%= pluralize document_source.documents.count, "document" %>
+		<% elsif not document_source.has_import_file? %>
+			<span class="missing">no import file loaded</span>
+		<% else %>
+			<span class="missing">import file not loaded</span>
+		<% end %>
+	</td>
   </tr>
 <% end %>
 </table>

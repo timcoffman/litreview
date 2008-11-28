@@ -49,9 +49,12 @@
 			end %>
 			<%= flow_step("Define stages") do |fs|
 				fs.achievement "Defined", :count => project.review_stages.count
-				fs.url user_project_review_stages_path(user,project) if project.managed_by?( user )
+				fs.url user_project_review_stages_path(user,project) if project.managed_by?( current_user )
 			end %>
-			<%= flow_step( "Import Documents", :achievement => { :title => "Documents", :count => project.documents.count } ) %>
+			<%= flow_step( "Import Documents" ) do |fs|
+				fs.achievement "Documents", :count => project.documents.count
+				fs.url user_project_document_sources_path(user,project) if project.managed_by?( current_user )
+			end %>
 			<%= flow_step("Search for Duplicates") do |fs|
 				fs.complete_if project.documents.empty? ? nil : ! project.documents.find( :first, :conditions => 'duplicate_of_document_id IS NOT NULL' ).nil?
 				unless project.documents.empty?

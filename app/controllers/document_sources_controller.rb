@@ -102,9 +102,21 @@ class DocumentSourcesController < ApplicationController
     @project = Project.find(params[:project_id])
     @document_source = DocumentSource.find(params[:id])
     uploaded_file = params[:import_file]
-    @document_source.import_file = uploaded_file
+    @document_source.store_import_file(uploaded_file)
     respond_to do |format|
       flash[:notice] = 'Import file successfully uploaded.'
+      format.html { redirect_to([@user,@project,@document_source]) }
+      format.xml  { head :ok }
+    end
+  end
+  
+  def import
+    @user = User.find(params[:user_id])
+    @project = Project.find(params[:project_id])
+    @document_source = DocumentSource.find(params[:id])
+    result = @document_source.import(params[:column_mapping])
+    respond_to do |format|
+      flash[:notice] = "Successfully imported #{result[:documents].length} documents."
       format.html { redirect_to([@user,@project,@document_source]) }
       format.xml  { head :ok }
     end

@@ -21,32 +21,46 @@
 </p>
 
 <h3>Documents</h3>
-This document source contains <%= pluralize( @document_source.documents.count, "documents" ) %>.
+This document source contains <%= link_to pluralize( @document_source.documents.count, "documents" ), user_project_documents_path(@user,@project) %>.
 
 <h3>Importing</h3>
 <p>
 	<% if @document_source.has_import_file? %>
 		Import file: uploaded <%= @document_source.when_import_file_uploaded %>
+		<% box(:inset) do %><%= @document_source.import_file_preview.split("\n").map { |x| "<p>#{x}</p>" }.join("\n")  %><% end %>
 	<% else %>
 		Import file: <span class="missing">none</span>
 	<% end %>
 </p>
 
 <p>
-<% form_tag upload_user_project_document_source_path(@user,@project,@document_source), :method => :post, :multipart => :true do |f| %>
+<% form_for @document_source, :url => upload_user_project_document_source_path(@user,@project,@document_source), :html => { :method => :post, :multipart => :true } do |f| %>
 	<% if @document_source.has_import_file? %>
 		Replace uploaded file containing document details for import:
 	<% else %>
 		Upload a file containing document details for import:
 	<% end %>
 	<%= file_field_tag "import_file", :accept => "text/plain" %>
-	<input type="submit" value="<%= @document_source.has_import_file? ? 'Upload' : 'Replace' %>"/>
+	<input type="submit" value="<%= @document_source.has_import_file? ? 'Replace' : 'Upload' %>"/>
 <% end %>
 </p>
 
 <p>
 <% if @document_source.has_import_file? %>
-<% form_tag import_user_project_document_source_path(@user,@project,@document_source), :method => :post do |f| %>
+<% form_for @document_source, :url => import_user_project_document_source_path(@user,@project,@document_source), :html => { :method => :post } do |f| %>
+	<% column_names = @document_source.import_file_column_names %>
+	<% column_best_matches = DocumentSource.import_column_name_best_matches( column_names ) %>
+	<table>
+		<tr> <th>Import From</th> <th>Import To</th> </tr>
+	<% for column_name in column_names %>
+		<tr>
+				<td><%= column_name %></td>
+				<td>
+					<%= select_tag "column_mapping[#{column_name}]", options_for_select(DocumentSource.importable_attributes.merge({"(Don't Import)"=>nil}), DocumentSource.importable_attributes[column_best_matches[column_name]] ) %>
+				</td>
+		</tr>
+	<% end %>
+	</table>
 	<input type="submit" value="Import"/>
 <% end %>
 <% end %>
