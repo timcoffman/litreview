@@ -30,7 +30,8 @@ class ReviewStagesController < ApplicationController
   def new
     @user = User.find(params[:user_id])
     @project = Project.find( params[:project_id] )
-    @review_stage = @project.review_stages.build( :sequence => @project.review_stages.collect { |rs| rs.sequence }.max )
+    seq = @project.review_stages.collect { |rs| rs.sequence }.max || 1
+    @review_stage = @project.review_stages.build( :name => "Round #{seq}", :sequence => seq )
 
     respond_to do |format|
       format.html # new.html.erb
