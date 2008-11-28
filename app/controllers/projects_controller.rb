@@ -3,6 +3,11 @@ class ProjectsController < ApplicationController
   before_filter :require_login
   #before_filter :require_admin_login
 
+  def update_dashboard
+	super
+	@dashboard.headsup('Project').items << "HeadsUp item 1"
+  end
+
   # GET /projects
   # GET /projects.xml
   def index

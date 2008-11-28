@@ -1,6 +1,8 @@
 # Filters added to this controller apply to all controllers in the application.
 # Likewise, all the methods added will be available for all controllers.
 
+require 'dashboard.rb'
+
 class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
 
@@ -20,6 +22,17 @@ class ApplicationController < ActionController::Base
 		params[:id] ||= params[:user_id]
 	end
   end 
+  
+  before_filter :update_dashboard
+  
+  def update_dashboard
+    @dashboard = Dashboard.new
+    if current_user && current_user.is_admin?
+      for u in User.find( :all, :limit => 5, :order => 'created_at DESC' )
+        @dashboard.headsup('Recent Users').items << "#{u.nickname}- #{u.created_at}"
+      end
+    end
+  end
   
   # See ActionController::RequestForgeryProtection for details
   # Uncomment the :secret if you're not using the cookie session store

@@ -302,3 +302,37 @@ a.switch:before {
 	color: black ;
 	border: 2px solid red ;
 }
+
+#main .main h2:before {
+	content: url(/images/h2.png) ;
+	vertical-align: middle ;
+}
+
+#dashboard {
+	float: right ;
+	margin-left: 0.5em ;
+	padding-left: 0.5em ; 
+	border-left: solid 1px #559 ;
+}
+
+#dashboard h2 {
+	font-size: 12pt ;
+	font-weight: bold ;
+	font-style: normal ;
+	margin: 2px ;
+}
+
+#dashboard p,
+#dashboard ul,
+#dashboard ol {
+	font-size: 10pt ;
+}
+
+#dashboard ul,
+#dashboard ol {
+	margin-top: 1px ;
+	margin-bottom: 1px ;
+	padding-left: 10px ;
+}
+
+

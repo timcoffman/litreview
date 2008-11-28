@@ -1,0 +1,16 @@
+<% if @dashboard %><div id="dashboard">
+	<% for headsup in @dashboard.all %>
+	 	<% box(:inset) do %>
+			<h2><%= headsup.title %></h2>
+			<% if headsup.items.empty? %>
+				<p><span class="missing">none</span></p>
+			<% else %>
+				<ul>
+				<% for item in headsup.items %>
+					<li><%=h item %></li>
+				<% end %>
+				</ul>
+			<% end %>
+		<% end %>
+	<% end %>
+</div><% end %>

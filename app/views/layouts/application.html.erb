@@ -106,7 +106,11 @@
 	<p class="flash notice"><%= flash[:notice] %></p>
 <% end %>
 
-<%= yield  %>
+<!--
+<%= render :partial=>"common/dashboard" %>
+-->
+
+<div class="main"><%= yield  %></div>
 
 </div>
 
