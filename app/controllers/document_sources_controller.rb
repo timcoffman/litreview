@@ -4,7 +4,7 @@ class DocumentSourcesController < ApplicationController
   def index
 	@user = User.find(params[:user_id])
 	@project = Project.find(params[:project_id])
-    @document_sources = DocumentSource.find(:all)
+    @document_sources = @project.document_sources.find(:all)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -17,7 +17,7 @@ class DocumentSourcesController < ApplicationController
   def show
 	@user = User.find(params[:user_id])
 	@project = Project.find(params[:project_id])
-    @document_source = DocumentSource.find(params[:id])
+    @document_source = @project.document_sources.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
