@@ -7,7 +7,7 @@ ActionController::Routing::Routes.draw do |map|
       projects.resources :document_sources, :member => { :upload => :post, :import => :post }, :as => 'sources'
       projects.resources :documents
       projects.resources :managers
-      projects.resources :review_stages, :as => 'stages', :member => { :report => :get } do |stages|
+      projects.resources :review_stages, :as => 'stages', :member => { :report => :get, :auto_assign => :post } do |stages|
         stages.resources :reasons
         stages.resources :stage_reviewers, :as => 'reviewers' do |reviewers|
 		  reviewers.resources :document_reviews, :as => 'reviews', :member => { :new_reason => :get, :add_reason => :put }

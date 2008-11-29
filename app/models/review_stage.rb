@@ -48,6 +48,25 @@ class ReviewStage < ActiveRecord::Base
 		end
 	end
 	
+	def auto_assign
+		result = { :status => :ok, :reviewers => { } }
+		self.stage_reviewers.each { |sr| result[:reviewers][sr.id] = [] }
+		docs = []
+		if self.previous_stage
+			docs.concat self.previous_stage.reviewable_documents
+		else
+			self.project.document_sources.each { |ds| docs.concat ds.documents }
+		end
+		for doc in docs
+			for sr in self.stage_reviewers
+				#unless doc.document_reviews.find( :first, :stage_reviewer_id => sr.id )
+					result[:reviewers][sr.id] << doc.document_reviews.create( :stage_reviewer => sr )
+				#end
+			end
+		end
+		return result
+	end
+	
 	#define_report 'agreement', :count => :documents
 	
 	def agreement_report

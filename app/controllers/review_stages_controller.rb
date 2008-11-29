@@ -97,6 +97,18 @@ class ReviewStagesController < ApplicationController
       format.xml  { head :ok }
     end
   end
+  
+  def auto_assign
+    @user = User.find( params[:user_id] )
+    @project = Project.find(params[:project_id])
+    @review_stage = ReviewStage.find(params[:id])
+    result = @review_stage.auto_assign
+    respond_to do |format|
+      flash[:notice] = "Successfully auto-assigned document reviews."
+      format.html { redirect_to([@user,@project,@review_stage]) }
+      format.xml  { head :ok }
+    end
+  end
 
   def report
     @user = User.find( params[:user_id] )
