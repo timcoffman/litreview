@@ -6,7 +6,6 @@ class CreateDocumentReviews < ActiveRecord::Migration
       t.integer :reviewer_sequence, :default => 0
       t.integer :reviewer_snooze, :default => 0
       t.string :disposition
-      t.datetime :when_assigned
       t.datetime :when_reviewed
 
       t.timestamps
