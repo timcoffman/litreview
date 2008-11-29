@@ -16,10 +16,15 @@
 <% end %>
 
 <% for project in current_user.managed_projects %>
+	<% assignable_review_stages = project.review_stages.reject { |rs| rs.reviewed_by?( @user ) } %>
+	<% unless assignable_review_stages.empty? %>
 	<p>
 	Assign as
-	<% delimited_list project.review_stages.reject { |rs| rs.reviewed_by?( @user ) }, :connector => "or" do |review_stage| %>	
-		<%= link_to "Reviewer for #{review_stage.project.title}, #{review_stage.name}", new_user_project_review_stage_stage_reviewer_path( @user, review_stage.project, review_stage, 'stage_reviewer[user_id]' => @user.id ) %>
+	<% delimited_list assignable_review_stages, :connector => "or" do |review_stage| %>	
+		<%= link_to "Reviewer for #{review_stage.name}", new_user_project_review_stage_stage_reviewer_path( @user, review_stage.project, review_stage, 'stage_reviewer[user_id]' => @user.id ) %>
+	<% end %>
+	in <%= project.title %>
+	</p>
 	<% end %>
 <% end %>
 
@@ -44,9 +49,11 @@
 
 <% if current_user.is_admin %>
 	<% for project in Project.find( :all ) %>
+		<% unless project.managed_by?( @user ) %>
 		<li>
-			<%= link_to "Assign to #{project.title}", new_user_project_manager_path( @user, project ) %>
+			<%= link_to "Assign as Manager for #{project.title}", new_user_project_manager_path( @user, project ) %>
 		</li>
+		<% end %>
 	<% end %>
 <% end %>
 
