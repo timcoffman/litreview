@@ -57,6 +57,45 @@ h1 :active, h1 :visited, h1 :link, h1 :hover {
 	color: #bbb ;
 }
 
+table.basic {
+	border-collapse: collapse ;
+}
+
+table.basic th,
+table.basic td {
+	background: #ddddb1 ;
+	color: #000 ;
+	text-align: center ;
+	padding-left: 2pt ;
+	padding-right: 2pt ;
+}
+
+table.basic a:link    { color: #000 ; text-decoration: none ; }
+table.basic a:visited { color: #000 ; text-decoration: none ; }
+table.basic a:active  { color: #000 ; text-decoration: none ; }
+table.basic a:hover   { color: #000 ; text-decoration: underline ; }
+
+table.basic th {
+	font-weight: bold ;
+}
+table.basic td {
+}
+table.basic thead {
+	border-bottom: solid 2px #559 ;
+}
+table.basic thead th {
+	background: #b1b1dd ;
+}
+table.basic thead td {
+	background: #c0c0f0 ;
+}
+table.basic tbody th {
+	background: #d1d1a8 ;
+}
+table.basic tbody td {
+	background: #ddddb1 ;
+}
+
 .card {
 	border: 2px solid #fff ;
 	background-color: #fcfcf7 ;
