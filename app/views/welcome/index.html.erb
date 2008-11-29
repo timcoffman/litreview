@@ -7,7 +7,7 @@
 	please <%= link_to 'log in with your own id', login_path %>.
 </p>
 <p>
-	<% favs = current_user.favorite_projects(2) ; favs.delete current_project %>
+	<% favs = current_user.favorite_projects() ; favs.delete current_project %>
 	<% if current_project %>
 		Your current project is "<%= link_to current_project.title, user_project_path(@user,current_project) %>".
 		<% unless favs.empty? %>
