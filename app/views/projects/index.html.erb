@@ -8,12 +8,12 @@
 		</div>
 		<div class="title">
 			<%= link_to project.title, user_project_path(@user,project) %>
-			<% if current_user && current_user.is_admin %>
-				<span class="actions">
-					<span class="action"> <%= link_to 'Edit', edit_user_project_path(@user,project) %> </span>
-				</span>
+		</div>
+		<div class="actions">
+			<% unless project == current_project %>
+				Switch Projects: <span> <%= link_to project.title, { :controller => 'session', :action => 'switch_project', :id => project }, { :class => 'switch' } %> </span>
 			<% end %>
-			</div>
+		</div>
 		<div class="managers">
 			Managed By:
 			<% if project.managers.empty? %>
