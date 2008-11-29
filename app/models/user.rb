@@ -1,11 +1,11 @@
 class User < ActiveRecord::Base
-	has_many :stage_reviewers
+	has_many :stage_reviewers, :dependent => :delete_all
 	has_many :review_stages, :through => :stage_reviewers
-	has_many :managers
+	has_many :managers, :dependent => :delete_all
 	has_many :managed_projects, :class_name => 'Project', :source => :project, :through => :managers
 	has_one :current_project, :class_name => 'Project', :foreign_key => 'current_project_id'
-	has_many :custom_tags, :class_name => 'Tag', :foreign_key => :created_by_user_id
-	has_many :document_tags, :class_name => 'DocumentTag', :foreign_key => :applied_by_user_id
+	has_many :custom_tags, :class_name => 'Tag', :foreign_key => :created_by_user_id, :dependent => :nullify
+	has_many :document_tags, :class_name => 'DocumentTag', :foreign_key => :applied_by_user_id, :dependent => :nullify
 
 	validates_presence_of :identity_url
 	

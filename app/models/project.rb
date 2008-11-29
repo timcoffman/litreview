@@ -1,11 +1,11 @@
 class Project < ActiveRecord::Base
-	has_many :document_sources
+	has_many :document_sources, :dependent => :delete_all
 	has_many :documents, :through => :document_sources
 	has_many :reviewable_documents, :class_name => 'Document', :through => :document_sources, :source => :documents, :conditions => [ 'duplicate_of_document_id IS NULL' ]
-	has_many :review_stages
-	has_many :managers
+	has_many :review_stages, :dependent => :delete_all
+	has_many :managers, :dependent => :delete_all
 	has_many :managing_users, :class_name => 'User', :source => :user, :through => :managers
-	has_many :custom_tags, :class_name => 'Tag', :foreign_key => :created_for_project_id
+	has_many :custom_tags, :class_name => 'Tag', :foreign_key => :created_for_project_id, :dependent => :delete_all
 
 	validates_presence_of :title
 	

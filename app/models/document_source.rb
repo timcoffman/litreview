@@ -3,7 +3,7 @@ require 'amatch'
 
 class DocumentSource < ActiveRecord::Base
 	belongs_to :project
-	has_many :documents
+	has_many :documents, :dependent => :delete_all
 	
 	def import_file_location
 		"#{APPLICATION_DATA_LOCATION}/document_source/#{self.id}"

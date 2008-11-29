@@ -1,12 +1,12 @@
 class ReviewStage < ActiveRecord::Base
 	belongs_to :project
-	has_many :stage_reviewers
+	has_many :stage_reviewers, :dependent => :delete_all
 	has_many :users, :through => :stage_reviewers
 	has_many :reviewers, :class_name => 'User', :source => :user, :through => :stage_reviewers
-	has_many :reasons
+	has_many :reasons, :dependent => :delete_all
 	has_many :custom_reasons, :class_name => 'Reason', :conditions => [ 'created_by_stage_reviewer_id IS NOT NULL' ]
 	has_many :document_reviews, :through => :stage_reviewers
-	has_many :document_tags, :class_name => 'DocumentTag', :foreign_key => :applied_in_review_stage_id
+	has_many :document_tags, :class_name => 'DocumentTag', :foreign_key => :applied_in_review_stage_id, :dependent => :nullify
 	
 	has_many :included_documents, :class_name => 'Document', :finder_sql => <<-EOT
 		SELECT * FROM documents d
