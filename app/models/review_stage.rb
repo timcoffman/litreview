@@ -48,8 +48,9 @@ class ReviewStage < ActiveRecord::Base
 		end
 	end
 	
-	def auto_assign
-		result = { :status => :ok, :reviewers => { } }
+	def auto_assign( options ={} )
+		{ :confirm => false }.merge( options || {} )
+		result = { :status => :ok, :reviewers => { }, :added => [], :existing => [] }
 		self.stage_reviewers.each { |sr| result[:reviewers][sr.id] = [] }
 		docs = []
 		if self.previous_stage
@@ -59,9 +60,19 @@ class ReviewStage < ActiveRecord::Base
 		end
 		for doc in docs
 			for sr in self.stage_reviewers
-				#unless doc.document_reviews.find( :first, :stage_reviewer_id => sr.id )
-					result[:reviewers][sr.id] << doc.document_reviews.create( :stage_reviewer => sr )
-				#end
+				dr = doc.document_reviews.find( :first, :conditions => { :stage_reviewer_id => sr.id } )
+				if dr
+					result[:existing] << dr
+				else
+					if options[:confirm]
+						dr = doc.document_reviews.create( :stage_reviewer => sr )
+					else
+						dr = doc.document_reviews.build( :stage_reviewer => sr )
+						result[:status] = :followup
+					end
+					result[:added] << dr
+				end
+				result[:reviewers][sr.id] << dr
 			end
 		end
 		return result

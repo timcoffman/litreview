@@ -102,9 +102,22 @@ class ReviewStagesController < ApplicationController
     @user = User.find( params[:user_id] )
     @project = Project.find(params[:project_id])
     @review_stage = ReviewStage.find(params[:id])
-    result = @review_stage.auto_assign
+    result = @review_stage.auto_assign( :confirm => params[:confirm] )
     respond_to do |format|
-      flash[:notice] = "Successfully auto-assigned document reviews."
+      if result[:status] == :followup
+        flash[:followup] = {
+		:message => "#{result[:existing].size} document reviews have already been assigned, #{result[:added].size} document reviews can be auto-assigned.",
+		:post => {
+			:url => auto_assign_user_project_review_stage_path(@user,@project,@review_stage),
+			:params => { :confirm => true },
+			:commit => "Confirm Assigniments",
+			},
+		}
+      elsif result[:status] == :ok
+        flash[:notice] = "Successfully auto-assigned #{result[:added].size} document reviews."
+      else
+        flash[:notice] = result[:notice] || "Could not auto-assign document reviews."
+      end
       format.html { redirect_to([@user,@project,@review_stage]) }
       format.xml  { head :ok }
     end
