@@ -302,6 +302,11 @@ a.switch:before {
 	color: black ;
 	border: 2px solid red ;
 }
+.flash.followup {
+	background-color: white ;
+	color: black ;
+	border: 2px solid yellow ;
+}
 
 #main .main h2:before {
 	content: url(/images/h2.png) ;

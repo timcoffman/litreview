@@ -116,7 +116,21 @@
 <% if flash[:notice] %>
 	<p class="flash notice"><%= flash[:notice] %></p>
 <% end %>
-
+<% if flash[:followup] %>
+	<% if flash[:followup][:url] %>
+		<p class="flash followup">
+			<%= flash[:followup][:message] %>
+		</p>
+	<% elsif flash[:followup][:post] %>
+		<% form_tag flash[:followup][:post][:url], :method => :post, :class => "flash followup" do |f| %>
+			<% flash[:followup][:post][:params].each_pair do |k,v| %>
+				<%= hidden_field_tag k.to_s, :value => v %>
+			<% end %>
+			<%= flash[:followup][:message] %>
+			<%= submit_tag flash[:followup][:post][:commit] %>
+		<% end %>
+	<% end %>
+<% end %>
 <!--
 <%= render :partial=>"common/dashboard" %>
 -->
