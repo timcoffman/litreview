@@ -82,14 +82,13 @@
 				<%= flow_step("Assign Reviews") do |fs|
 					document_review_counts = review_stage.stage_reviewers.collect { |sr| sr.document_reviews.count }
 					document_review_count = document_review_counts.inject(0) { |memo,drc| memo + drc }
-					if review_stage.sequence == 1
+					if review_stage.previous_stage.nil?
 						# fs.achievement "Assigned", :total => project.reviewable_documents.count, :count => review_stage.document_reviews.count
 						fs.achievement "Assigned", :count => document_review_count, :total => project.reviewable_documents.count * review_stage.stage_reviewers.count
-					elsif ! review_stage.previous_stage.nil?
-						fs.achievement "Assigned", :count => document_review_count
 					else
-						fs.incomplete
+						fs.achievement "Assigned", :count => document_review_count
 					end
+					fs.url user_project_review_stage_path(@user,@project,review_stage)
 				end %>
 			</td>
 			<% reset_cycle %>
