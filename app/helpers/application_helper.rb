@@ -32,6 +32,30 @@ module ApplicationHelper
 			content_tag :span, title, :class => 'tree leaf here'
 		end
 	end
+	
+	def tree( options ={}, &block )
+		treeBuilder = TreeBuilder.new
+		yield( treeBuilder )
+		concat( treeBuilder.render, block.binding )
+	end
+
+	class TreeBuilder
+		#object_name = ActionController::RecordIdentifier.singular_class_name(object)
+		def initialize()
+			@leaves = { }
+		end
+		def method_missing( methodId, *args )
+			method_name = methodId.to_s
+			self.add_mapping( method_name, *args )
+			nil
+		end
+		def add_mapping( method_name, options ={} )
+			@leaves[method_name.to_sym] = options
+		end
+		def render
+			"<!-- TreeBuilder.render output goes here -->"
+		end
+	end
 
 	class FlowSequence
 		def initialize()
@@ -189,8 +213,12 @@ module ApplicationHelper
 	
 	def delimited_list(collection, options ={}, &block)
 		return unless block_given?
-		options = { :delimiter => ',', :empty_content => 'none', :connector => 'and' }.merge( options )
+		options = { :delimiter => ',', :empty_content => 'none', :connector => 'and', :trim => true }.merge( options )
 		parts = collection.collect { |x| capture(x,&block) }
+		if options[:trim]
+			parts.each { |x| x.strip! }
+			options[:delimiter] += ' '
+		end
 		result = case parts.length
 			when 0
 				content_tag :span, options[:empty_content], :class => :missing
