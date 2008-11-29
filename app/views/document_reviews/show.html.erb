@@ -17,6 +17,9 @@
 		<%= render :partial => 'documents/show', :locals => { :document => @document_review.document } %>
 	</div>
 	<div class="right-side">
+		<% if @project.managed_by?( current_user ) %>
+			<%= link_to "Unassign review from #{@document_review.stage_reviewer.user.nickname}", user_project_review_stage_stage_reviewer_document_review_path(@user,@project,@review_stage,@stage_reviewer,@document_review), :method => :delete, :confirm => "Are yous sure you want to cancel the assignment of #{@stage_reviewer.user.full_name} to review \"#{@document_review.document.title}\"?" %>
+		<% end %>
 		<%= render :partial => 'show', :locals => { :document_review => @document_review } %>
 		<p>
 		<%= link_to @document_review.complete? ? 'Re-review Now' : 'Review Now', edit_user_project_review_stage_stage_reviewer_document_review_path(@user,@project,@review_stage,@stage_reviewer,@document_review) %>
