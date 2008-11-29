@@ -208,7 +208,7 @@ body {
 
 #tree {
 	color: #337 ;
-	background-color: #ffc ;
+	background: #ffc url(/images/main-top-border-blend.png) top center repeat-x ;
 	margin: 0 ;
 	font-style: italic ;
 }
@@ -246,7 +246,7 @@ a.switch:before {
 
 #main {
 	color: #000 ;
-	background-color: #ffc ;
+	background: #ffc ;
 }
 
 
