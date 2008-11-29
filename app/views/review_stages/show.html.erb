@@ -26,16 +26,20 @@
 
 <div class="reasons">
 	<p>This review stage supplies <%= link_to "#{@review_stage.reasons.count} exclusion reasons", user_project_review_stage_reasons_path(@user,@project,@review_stage) %>.</p>
-	A project manager created <%= @review_stage.reasons.count - @review_stage.custom_reasons.count %> of those reasons.
-	<% for stage_reviewer in @review_stage.stage_reviewers %>
-		<p>
-			<%= personal_link_to stage_reviewer.user, 'created', user_project_review_stage_stage_reviewer_path(@user,@project,@review_stage,stage_reviewer) %>
-			<%=h stage_reviewer.custom_reasons.count %> of those reasons.
-		</p>
+	<% unless @review_stage.reasons.empty? %>
+		A project manager created <%= @review_stage.reasons.count - @review_stage.custom_reasons.count %> of those reasons.
+		<% for stage_reviewer in @review_stage.stage_reviewers %>
+			<p>
+				<%= personal_link_to stage_reviewer.user, 'created', user_project_review_stage_stage_reviewer_path(@user,@project,@review_stage,stage_reviewer) %>
+				<%=h stage_reviewer.custom_reasons.count %> of those reasons.
+			</p>
+		<% end %>
 	<% end %>
+</div>
 
 <h2>Reports</h2>
 Generate an <%=link_to 'Agreement Report', report_user_project_review_stage_path(@user,@project,@review_stage) %>
+
 <h2>Details</h2>
 
 <div class="gates">
@@ -47,7 +51,7 @@ Generate an <%=link_to 'Agreement Report', report_user_project_review_stage_path
 		content_tag :span, gate_function, :class => tag_classes.join(' ')
 		%>
 	<% end %>
-</p>
+</div>
 
 <h2>Review Assignements</h2>
 <% form_for [@user,@project,@review_stage], :url => auto_assign_user_project_review_stage_path(@user,@project,@review_stage), :html => { :method => :post } do |f| %>
