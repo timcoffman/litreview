@@ -44,7 +44,7 @@
 				fs.given("Assign Manager", true ) do
 					wc = (project.description || "").split(/\s+/).length
 					fs.achievement "Words", :count => wc
-					fs.partial( (wc - 100).to_f / 100.0 ) if wc <100 
+					fs.partial( wc.to_f / 100.0 ) if wc <100 
 				end
 			end %>
 			<%= flow_step("Define stages") do |fs|
