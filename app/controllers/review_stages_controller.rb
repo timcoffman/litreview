@@ -102,10 +102,14 @@ class ReviewStagesController < ApplicationController
     @user = User.find( params[:user_id] )
     @project = Project.find(params[:project_id])
     @review_stage = ReviewStage.find(params[:id])
-    @report = @review_stage.new_report( { :groups => [ 'Agreement' ] }.merge( params[:report] || {} ) )
-    respond_to do |format|
-      format.html
-      format.xml { render :xml => @report }
+    if request.xhr?
+    	@report = @review_stage.agreement_report
+	render :partial => 'report/show'
+    else
+      respond_to do |format|
+        format.html
+        format.xml { render :xml => @report }
+      end
     end
   end
 end

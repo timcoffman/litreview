@@ -36,11 +36,5 @@ class Project < ActiveRecord::Base
 	def keywords
 		return [ 'workflow', 'workflow analysis', 'workflow analyses', 'workflow system' ]
 	end
-	
-	def new_report( spec ={} )
-		domain = [ 'Reviewer 1 Round 1 Disposition', 'Reviewer 1 Round 2 Disposition', 'Reviewer 2 Round 1 Disposition', 'Reviewer 2 Round 2 Disposition' ]
-		series = []
-		return Report.new( spec ) 
-	end
-	
+		
 end

@@ -1,0 +1,11 @@
+
+.report {
+	border:	outset 2px ;
+	background: white ;
+}
+
+.report td,
+.report th {
+	border: inset 1px ;
+	
+}

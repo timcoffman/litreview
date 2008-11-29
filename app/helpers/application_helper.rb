@@ -1,5 +1,23 @@
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
+	def render_report( report, &block )
+		thead_tr_tds = report.columns.collect { |col| content_tag :th, col.title, :class => col.is_group? ? 'group' : 'value' }
+		thead_tr_html = content_tag :tr, thead_tr_tds.join("")
+		thead_html = content_tag :thead, thead_tr_html
+		
+		tbody_trs = report.rows.collect do |row|
+			tbody_tr_tds = report.columns.collect { |col| content_tag( col.is_group? ? :th : :td, row.value(col)) }
+			content_tag :tr, tbody_tr_tds.join("")
+		end
+		tbody_html = content_tag :tbody, tbody_trs.join("\n")
+		
+		tfoot_tr_tds = report.columns.collect { |col| content_tag :th, col.summary_value }
+		tfoot_tr_html = content_tag :tr, tfoot_tr_tds.join("")
+		tfoot_html = content_tag :tfoot, tfoot_tr_html
+		
+		content_tag :table, [thead_html, tbody_html, tfoot_html].join("\n"), :class => 'report'
+	end
+	
 	def link_to_tree(record,display,url)
 		return '' if record.nil?
 		if display.is_a?(Proc)
