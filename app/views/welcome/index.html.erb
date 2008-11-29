@@ -4,7 +4,7 @@
 </p>
 <p>
 	If you're not <%= current_user.full_name %>,
-	please <%= link_to 'log in with your won id', login_path %>.
+	please <%= link_to 'log in with your own id', login_path %>.
 </p>
 <p>
 	<% favs = current_user.favorite_projects(2) ; favs.delete current_project %>
