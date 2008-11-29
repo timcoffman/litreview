@@ -12,7 +12,7 @@ class CreateDocuments < ActiveRecord::Migration
 
       t.timestamps
     end
-    add_index :pub_ident, :unique => true
+    add_index :document_source_id, :pub_ident, { :unique => true }
   end
 
   def self.down
