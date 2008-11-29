@@ -15,7 +15,12 @@
 		</tr>
 	</thead>
 	<tbody>
-	
+<% if @project.review_stages.empty? %>
+	<tr>
+		<th/>
+		<% if @project.managed_by?( current_user ) %><td/><% end %>
+		<td colspan="2"><span class="missing">no review stages</span></td>
+<% end %>
 <% for review_stage in @project.review_stages do %>
 	<tr class="stage">
 		<th class="sequence">
