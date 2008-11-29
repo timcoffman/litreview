@@ -50,17 +50,22 @@
 <h3>Documents</h3>
 
 <div class="sources">
+	<p>
 	This project contains
 	<span class="documents"> <%= link_to pluralize( @project.document_sources.inject(0) { |c,ds| c += ds.documents.count }, "documents" ), user_project_documents_path(@user,@project) %> </span>
 	from
-	<span class="sources"> <%= link_to pluralize( @project.document_sources.count, "sources" ), user_project_document_sources_path(@user,@project) %> </span>
-	:
-	<% delimited_list @project.document_sources do |document_source| %>
-		<span class="source">
-			<%= link_to document_source.name, user_project_document_source_path(@user,@project,document_source) -%>
-			(<%=h document_source.documents.count %>)
-		</span>
-	<% end %>
+	<span class="sources"> <%= link_to pluralize( @project.document_sources.count, "sources" ), user_project_document_sources_path(@user,@project) %></span>:
+	</p>
+	<table class="basic">
+		<thead><tr>
+			<th>Source</th>
+			<%= @project.document_sources.collect { |ds| content_tag :td, link_to(ds.name,user_project_document_source_path(@user,@project,ds)) }.join %>
+		</tr></thead>
+		<tbody><tr>
+			<th>Documents</th>
+			<%= @project.document_sources.collect { |ds| content_tag :td, number_with_delimiter(ds.documents.count) }.join %>
+		</tr></tbody>
+	</table>
 </div>
 
 <h3>Stages</h3>
