@@ -29,7 +29,7 @@ assigned reviews
 					<%= render :partial => 'documents/show_mini', :locals => { :document => document_review.document, :url => edit_user_project_review_stage_stage_reviewer_document_review_path(@user,@project,@review_stage,@stage_reviewer,document_review) } %>
 				</td>
 				<td>
-					<%=h time_ago_in_words( document_review.when_assigned ) %> ago
+					<%=h document_review.when_assigned.nil? ? 'never' : time_ago_in_words( document_review.when_assigned ) + " ago" %>
 				</td>
 			</tr>
 		<% end %>
@@ -61,7 +61,7 @@ assigned reviews
 					</div>
 				</td>
 				<td>
-					<%=h time_ago_in_words( document_review.when_reviewed ) %> ago
+					<%=h document_review.when_reviewed.nil? ? 'never' : time_ago_in_words( document_review.when_reviewed) + " ago" %>
 				</td>
 			</tr>
 		<% end %>
