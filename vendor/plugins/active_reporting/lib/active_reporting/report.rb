@@ -1,18 +1,45 @@
 module ActiveReporting
 	class Report
-		def initialize( spec =nil )
-			spec ||= {} 
-			@domain = [ 'name', 'x', 'y', 'z' ]
-			@series = [ [ 'abc', 1, 2, 3 ], [ 'def', 4, 5, 6 ] ]
+		def initialize( options ={} )
+			@columns = [ ]
+			@rows = [ ]
+			@description = options[:dsecription] || "A Report"
 		end
 		def description()
-			"a report"
+			@description
 		end
-		def domain()
-			return @domain
+		def columns
+			@columns
 		end
-		def series()
-			return @series
+		def rows
+			@rows
+		end
+
+		class Column
+			def initialize( options ={})
+				@title = options[:title] || "Column"
+				@formatter = options[:formatter] || Proc.new { |v| v.to_s }
+			end
+			def title
+				@title
+			end
+			def summary_value
+				""
+			end
+			def format( v )
+				@formatter.call(v)
+			end
+			def is_group?
+				false
+			end
+		end
+		class Row
+			def initialize( values )
+				@values = values
+			end
+			def value( col )
+				@values[col]
+			end
 		end
 	end
 end
