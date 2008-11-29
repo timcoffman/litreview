@@ -1,20 +1,19 @@
-<h1>New Review Stage</h1>
+<h2><%= link_to @project.title, user_project_path(@user,@project) %>: New Review Stage</h2>
 
-<% form_for([ current_user, @project, @review_stage ]) do |f| %>
+<% form_for([ @user, @project, @review_stage ]) do |f| %>
   <%= f.error_messages %>
-
-  <p>
-    <%= f.label :project_id %><br />
     <%= f.hidden_field :project_id %>
-    <%=h @project.title %>
-  </p>
+    <%= f.hidden_field :sequence %>
+
   <p>
     <%= f.label :name %><br />
     <%= f.text_field :name %>
   </p>
   <p>
     <%= f.label :description %><br />
+    <% box(:inset) do %>
     <%= f.text_area :description %>
+    <% end %>
   </p>
   <p>
     <%= f.label :gate_function %><br />
@@ -25,4 +24,4 @@
   </p>
 <% end %>
 
-<%= link_to 'Back', user_project_review_stages_path(current_user,@project) %>
+<%= link_to 'Back', user_project_review_stages_path(@user,@project) %>
