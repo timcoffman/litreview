@@ -5,12 +5,9 @@
 <head>
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   <title><%= controller.controller_name.titlecase %>: <%= controller.action_name.titlecase %></title>
-  <%= stylesheet_link_tag 'application' %>
-  <%= stylesheet_link_tag controller.controller_name.pluralize %>
-  <% if current_user ; skin = current_user.preference('skin') %>
-	  <%= stylesheet_link_tag "skins/#{skin}/application"  %>
-	  <%= stylesheet_link_tag "skins/#{skin}/#{controller.controller_name.pluralize}"  %>
-  <% end %>
+  <% skin = User.preference(current_user,'skin', :default => 'blue' ) %>
+  <%= stylesheet_link_tag "skins/#{skin}/application"  %>
+  <%= stylesheet_link_tag "skins/#{skin}/#{controller.controller_name.pluralize}"  %>
   <%= javascript_include_tag 'prototype' %>
 </head>
 <body>

@@ -1,0 +1,138 @@
+
+table.flow {
+	border-collapse: collapse ;
+}
+
+.flow tbody {
+	border: 1px solid #444 ;
+}
+
+.flow tbody th {
+	vertical-align: middle ;
+	width: 16px ;
+	background-color: #337 ;
+	color: #fff ;
+}
+
+.flow th {
+	vertical-align: middle ;
+}
+
+.flow td {
+	vertical-align: top ;
+}	
+
+.flow td {
+	padding: 0.5em ;
+}
+
+.flow .odd {
+	background-color: #f7f7c7 ;
+	/* background-color: #eeb ; */
+}
+
+.flow .even {
+	/* background-color: #ffc ; */
+}
+
+.flow .role th {
+	text-decoration: underline ;
+}
+
+.flow tbody tr.iteration,
+.flow tbody tr.final {
+	border-top: 1px dashed #559 ;
+}
+
+.flow tbody tr.iteration td.name {
+	padding: 0 ;
+	text-align: center ;
+}
+
+.flowstep {
+	display: block ;
+	width:  160px ;
+	height: auto ;
+	overflow: hidden ;
+	margin: 0 ;
+	margin-left: 0.25em ;
+	margin-right: 0.25em ;
+	border: 2px solid #777 ;
+	font-size: 14px ;
+	padding: 1px ;
+	border-color: #777 ;
+	background-color: #eee ;
+	position: relative ;
+	color: #000 ;
+}
+
+a.flowstep:visited { color: #000 ; text-decoration: none ; }
+a.flowstep:link    { color: #000 ; text-decoration: none ; }
+a.flowstep:active  { color: #000 ; text-decoration: none ; }
+a.flowstep:hover   { color: #000 ; text-decoration: none ; background-color: #f00; }
+
+.flowcontinue {
+	width: 160px ;
+	height: 8px ;
+	margin: 0 ;
+	margin-left: 0.25em ;
+	margin-right: 0.25em ;
+	background: transparent url(/images/step.png) no-repeat center center ;
+}
+
+.flowstep.complete   { border-color: #373 ; background-color: #ded ; }
+.flowstep.partial    { border-color: #357 ; background-color: #dde1ee ; }
+.flowstep.incomplete { border-color: #733 ; background-color: #edd ; }
+
+a.flowstep.complete:hover   { border-color: #373 ; background-color: #bcb ; }
+a.flowstep.partial:hover    { border-color: #357 ; background-color: #bbc0cc ; }
+a.flowstep.incomplete:hover { border-color: #733 ; background-color: #cbb ; }
+
+.flowstep.none       .icon:before { content: url(/images/flowstep_status_none.png) ; }
+.flowstep.complete   .icon:before { content: url(/images/flowstep_status_complete.png) ; }
+.flowstep.incomplete .icon:before { content: url(/images/flowstep_status_incomplete.png) ; }
+.flowstep.partial    .icon:before { content: url(/images/flowstep_status_partial.png) ; }
+
+.flowstep .icon {
+	padding: 0 ;
+	padding-right: 2px ;
+	text-align: center ;
+	float: left ;
+}
+
+.flowstep .detail {
+}
+
+.flowstep .title {
+	position: absolute ;
+	left: 0 ; top : 0 ;
+	width: 40px ; height: auto ; 
+}
+
+.flowstep .achievement {
+	float: right ;
+	border-left: 1px solid #777 ;
+	padding-left: 2px ;
+	margin-left: 2px ;
+}
+
+.flowstep .achievement .value {
+	font-size: 150% ;
+	font-weight: bold ;
+	text-align: center ;
+}
+
+.flowstep .achievement .value .units {
+	font-size: 75% ;
+	font-weight: normal ;
+}
+
+.flowstep .achievement .subtitle {
+	height: 14px ;
+	font-size: 12px ;
+	text-align: center ;
+}
+
+.legend table {
+	border: 1px solid #444 ;
+}

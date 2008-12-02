@@ -19,3 +19,13 @@
     <%= f.submit "Save Changes" %>
 	<%= link_to 'Cancel Changes', user_path(@user) %>
 <% end %>
+
+<h2> Preferences </h2>
+<% skin_pref = @user.user_preferences.find( :first, :conditions => { :key => 'skin' } ) || @user.user_preferences.build( :key => 'skin', :value => 'blue' ) %>
+<% form_for([@user]) do |f| %>
+	<p>
+		Color Scheme:
+		<%= f.select( :preferred_skin, { 'Black' => 'black', 'Blue' => 'blue' } ) %>
+    		<%= f.submit "Set" %>
+	</p>
+<% end %>

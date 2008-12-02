@@ -1,0 +1,11 @@
+
+.dialog.login {
+	margin-left: 15% ;
+	margin-right: 15% ;
+	margin-top: 0.5em ;
+	margin-bottom: 0.5em ;
+	border: solid 2px black ;
+	background-color: white ;
+	padding: 1em ;
+}
+

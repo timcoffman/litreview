@@ -1,0 +1,64 @@
+table.box {
+	border-collapse: collapse ;
+}
+
+table.box td {
+	margin: 0 ;
+	padding: 0 ;
+}
+
+table.box.inset tr.top td,
+table.box.inset tr.bottom td {
+	height: 9px ;
+}
+
+table.box.inset td.left,
+table.box.inset td.right {
+	width: 9px ;
+}
+
+table.box.inset tr.top    td.left   { background: url(/images/box/inset/box-inset-0-0.png) top left no-repeat ; }
+table.box.inset tr.top    td.middle { background: url(/images/box/inset/box-inset-1-0.png) top center repeat-x ; }
+table.box.inset tr.top    td.right  { background: url(/images/box/inset/box-inset-2-0.png) top right no-repeat ; }
+table.box.inset tr.middle td.left   { background: url(/images/box/inset/box-inset-0-1.png) center left repeat-y ; }
+table.box.inset tr.middle td.middle { background: #fff ; }
+table.box.inset tr.middle td.right  { background: url(/images/box/inset/box-inset-2-1.png) center right repeat-y ; }
+table.box.inset tr.bottom td.left   { background: url(/images/box/inset/box-inset-0-2.png) bottom left no-repeat ; }
+table.box.inset tr.bottom td.middle { background: url(/images/box/inset/box-inset-1-2.png) bottom center repeat-x ; }
+table.box.inset tr.bottom td.right  { background: url(/images/box/inset/box-inset-2-2.png) bottom right no-repeat ; }
+
+table.box.inset tr.middle td.middle textarea,
+table.box.inset tr.middle td.middle input {
+	border: none ;
+	background-color: #fff ;
+}
+
+.box .actions {
+	float: right ;
+	width: 50% ;
+	border-top: 1px solid #ccc ;
+	text-align: right ;
+	font-size: 10pt ;
+	margin-top: 0.5em ;
+}
+.box .action {
+	background-color: #ccc ;
+	padding: 0 ;
+	margin-left: 0.5em ;
+	margin-right: 0.5em ;
+	padding-left: 1em ;
+	padding-right: 1em ;
+	line-height: 18pt ;
+	padding-top: 4pt ;
+}
+
+.box .actions a:link,
+.box .actions a:visited,
+.box .actions a:active,
+.box .actions a:hover {
+	color: #000 ; text-decoration: none ;
+}
+
+.box .actions a:hover {
+	background-color: #000 ; color: #fff ; 
+}

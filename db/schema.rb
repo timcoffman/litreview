@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081018032307) do
+ActiveRecord::Schema.define(:version => 20081201165809) do
 
   create_table "document_review_reasons", :force => true do |t|
     t.integer  "document_review_id"
@@ -22,7 +22,6 @@ ActiveRecord::Schema.define(:version => 20081018032307) do
     t.integer  "document_id"
     t.integer  "stage_reviewer_id"
     t.string   "disposition"
-    t.datetime "when_assigned"
     t.datetime "when_reviewed"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -41,10 +40,12 @@ ActiveRecord::Schema.define(:version => 20081018032307) do
   end
 
   create_table "document_tags", :force => true do |t|
-    t.integer  "tag_id"
-    t.integer  "document_id"
+    t.integer  "tag_id",                     :null => false
+    t.integer  "document_id",                :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "applied_by_user_id",         :null => false
+    t.integer  "applied_in_review_stage_id", :null => false
   end
 
   create_table "documents", :force => true do |t|
@@ -60,7 +61,7 @@ ActiveRecord::Schema.define(:version => 20081018032307) do
     t.string   "journal",                  :limit => 256
   end
 
-  add_index "documents", ["pub_ident"], :name => "pub_ident", :unique => true
+  add_index "documents", ["document_source_id", "pub_ident"], :name => "pub_ident", :unique => true
 
   create_table "import", :primary_key => "PubId", :force => true do |t|
     t.string "DuplicateOf",       :limit => 64
@@ -104,6 +105,9 @@ ActiveRecord::Schema.define(:version => 20081018032307) do
     t.string  "Tags",              :limit => 32
     t.string  "Reason",            :limit => 64
     t.string  "ReasonOther",       :limit => 256
+  end
+
+  create_table "import_tags", :primary_key => "PubId", :force => true do |t|
   end
 
   create_table "managers", :force => true do |t|
@@ -167,6 +171,14 @@ ActiveRecord::Schema.define(:version => 20081018032307) do
     t.string   "words"
     t.integer  "created_by_user_id"
     t.integer  "created_for_project_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_preferences", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "key"
+    t.string   "value"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

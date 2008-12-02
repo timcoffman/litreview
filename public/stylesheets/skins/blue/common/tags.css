@@ -1,0 +1,19 @@
+.tag {
+	font-size: 12pt ;
+	font-family: sans-serif ;
+	margin: 1px ;
+	margin-left: 2px;
+	margin-right: 2px;
+	padding: 4px ;
+	padding-top: 3px ;
+	padding-bottom: 1px ;
+	background-color: #0c7 ;
+	color: #fff ;
+}
+
+a.tag:active,
+a.tag:link,
+a.tag:visited,
+a.tag:hover {
+	text-decoration: none ;
+}

@@ -6,8 +6,22 @@ class User < ActiveRecord::Base
 	has_one :current_project, :class_name => 'Project', :foreign_key => 'current_project_id'
 	has_many :custom_tags, :class_name => 'Tag', :foreign_key => :created_by_user_id, :dependent => :nullify
 	has_many :document_tags, :class_name => 'DocumentTag', :foreign_key => :applied_by_user_id, :dependent => :nullify
+	has_many :user_preferences
 
 	validates_presence_of :identity_url
+	
+	def method_missing( method_sym, *args )
+		m = method_sym.to_s.match( /^preferred_([^=?!]+)(=?)$/ )
+		if m
+			if m[2]
+				self.put_preference( m[1], args[0] )
+			else
+				self.get_preference( m[1] )
+			end
+		else
+			super
+		end
+	end
 	
 	def after_initialize
 		autoPromoteToAdmin = 0 == User.count
@@ -48,8 +62,43 @@ class User < ActiveRecord::Base
 		return self.managers.find( :first, :conditions => { :project_id => project.id } ) || self.review_stages.find( :first, :conditions => { :project_id => project.id } )
 	end
 	
-	def preference( name )
+	def self.default_preference_from_options( user, options )
+		if options.nil?
+			nil
+		elsif options.is_a?(Hash)
+			default = options[:default]
+			if default.nil?
+				nil
+			elsif default.is_a?(Proc)
+				default.call(user)
+			else
+				default.to_s
+			end
+		else
+			options.to_s
+		end
+	end
+	
+	def get_preference( name )
+		pref = self.user_preferences.find( :first, :conditions => { :key => name } )
+		return pref ? pref.value : nil
+	end
+	
+	def put_preference( name, value )
+		pref = self.user_preferences.find( :first, :conditions => { :key => name } )
+		pref ||= self.user_preferences.build( :key => name )
+		pref.value = value
+		pref.save
+	end
+	
+	def self.preference( user, name, options =nil )
+		return user ? user.preference( name, options ) : User.default_preference_from_options( self, options )
+	end
+	
+	def preference( name, options =nil )
+		options ||= {}
 		# this should read a user preferences table for the preference with the given name
-		return 'default' ;
+		pref = self.user_preferences.find( :first, :conditions => { :key => name } )
+		return pref ? pref.value : User.default_preference_from_options( self, options )
 	end
 end
