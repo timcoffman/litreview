@@ -210,7 +210,6 @@ body {
 	color: #337 ;
 	background: #ffc url(/images/main-top-border-blend.png) top center repeat-x ;
 	margin: 0 ;
-	font-style: italic ;
 }
 
 #tree .box tr.middle td.middle {
@@ -219,21 +218,22 @@ body {
 }
 
 #tree .tree.leaf {
-	display: inline ;
-	line-height: 24px ;
-	padding: 0 ;
-	padding-bottom: 2px ;
-	margin-left: -10px ; 
+	display: block ;
+	float: left ;
+	background: #bb9 ;
 }
 
 #tree .tree.leaf.here {
 	color: #397 ;
-	/* background-color: #559 ; */
+	background: #ddb ;
 }
 
-#tree .tree.leaf .text { background: transparent url(/images/tree-m.png) center bottom repeat-x ; padding-bottom: 3px; padding-top: 7px ;}
-#tree .tree.leaf:before { content: url(/images/tree-l.png) ; vertical-align: bottom ; margin: 0 ; padding: 0 ; }
-#tree .tree.leaf:after  { content: url(/images/tree-r.png) ; vertical-align: bottom ; margin: 0 ; padding: 0 ; }
+#tree .tree.leaf .category { display: none ; }
+#tree .tree.leaf .text {
+	font-size: 12pt ;
+	margin: 2px ;
+	margin-right: 6px ;
+	}
 
 #tree a.tree.leaf:visited { color: #337 ; text-decoration: none ; }
 #tree a.tree.leaf:link    { color: #337 ; text-decoration: none ; }

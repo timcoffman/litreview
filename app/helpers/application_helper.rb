@@ -27,22 +27,27 @@ module ApplicationHelper
 		else
 			title = display
 		end
+		if url.is_a?(Proc)
+			url = url.call(record)
+		end
+		category = content_tag :span, record.class.name.titleize, :class => 'category'
 		title = content_tag :span, title, :class => 'text'
-		link_to_unless_current( title, url, :class => 'tree leaf') do
-			content_tag :span, title, :class => 'tree leaf here'
+		link_to_unless_current( category + title, url, :class => 'tree leaf') do
+			content_tag :span, category + title, :class => 'tree leaf here'
 		end
 	end
 	
 	def tree( options ={}, &block )
-		treeBuilder = TreeBuilder.new
+		treeBuilder = TreeBuilder.new(self)
 		yield( treeBuilder )
 		concat( treeBuilder.render, block.binding )
 	end
 
 	class TreeBuilder
 		#object_name = ActionController::RecordIdentifier.singular_class_name(object)
-		def initialize()
-			@leaves = { }
+		def initialize(view)
+			@leaves = {}
+			@root = TreeNode.new( view, @leaves )
 		end
 		def method_missing( methodId, *args )
 			method_name = methodId.to_s
@@ -52,9 +57,76 @@ module ApplicationHelper
 		def add_mapping( method_name, options ={} )
 			@leaves[method_name.to_sym] = options
 		end
-		def render
-			"<!-- TreeBuilder.render output goes here -->"
+		def node( *args, &block )
+			@root.node( *args, &block )
 		end
+		def render
+			@root.render
+		end
+		class TreeNode
+			def initialize(view, leaves, path =[])
+				@view = view
+				@html = ""
+				@leaves = leaves
+				@path = path
+			end
+			def path_for_node
+				method_name = @path.collect { |p| p.is_a?(String) ? p : p.class.name.underscore  }.join("_") + "_path"
+				@view.send( method_name, *@path )
+			end
+			def node( object, options ={}, &block )
+				if object.is_a?(Symbol) || object.is_a?(String)
+					member_singular_method = "@#{object.to_s}"
+					member_plural_method = "@#{object.to_s.pluralize}"
+					singular_object = @view.send(:eval, member_singular_method)
+					plural_object = @view.send(:eval, member_plural_method)
+					if plural_object
+						self.node( plural_object, {}, &block )
+					elsif singular_object
+						self.node( singular_object, {}, &block )
+					elsif ! @path.empty?
+						if @path.last.respond_to?(object.to_s.pluralize)
+						plural_object = @path.last.send(object.to_s.pluralize)
+						method_name = @path.collect { |p| p.is_a?(String) ? p : p.class.name.underscore  }.join("_") + "_#{object.to_s.pluralize}_path"
+						url = @view.send( method_name, *@path )
+						title = "#{plural_object.size.to_s} #{object.to_s.pluralize.titleize}"
+						title = @view.content_tag( :span, title, :class => 'category' )
+						@html << @view.link_to_unless_current( title, url, :class => 'tree leaf' ) do
+							@view.content_tag( :span, title, :class => 'tree leaf' )
+						end
+						if true
+							# suppress this for now
+						elsif plural_object.size < 5
+							self.node( plural_object, {}, &block )
+						else
+							self.node( plural_object[0..2], {}, &block )
+							# add note about more...
+						end
+						end
+					end
+				elsif object.is_a?(Enumerable)
+					object.each do |obj|
+						self.node( obj, options, &block )
+					end
+				else
+					nodeBuilder = TreeNode.new(@view, @leaves, @path + [ object ])
+					defn = @leaves[object.class.name.underscore.to_sym]
+					if defn
+						url = defn[:url] || nodeBuilder.path_for_node
+						@html << @view.link_to_tree( object, defn[:show], url )
+					end
+					if block_given?
+						yield(nodeBuilder)
+						@html << nodeBuilder.render
+					end
+				end
+			end
+			def render
+				@html
+			end
+		end
+	
+	
 	end
 
 	class FlowSequence

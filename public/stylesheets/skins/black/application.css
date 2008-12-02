@@ -29,15 +29,15 @@ body {
 #tree {
 	top: 108px ;
 	left: 0 ;
-	height: 44px ;
-	right: 0 ;
+	width: 180px ;
+	bottom: 18pt ;
 	overflow: hidden ;
-	padding: 4px ;
+	padding: 0 ;
 }
 
 #main {
-	top: 160px ;
-	left: 0 ;
+	top: 108px ;
+	left: 180px ;
 	bottom: 18pt ;
 	right: 0 ;
 	overflow: scroll ;
@@ -70,7 +70,8 @@ body {
 #footer {
 	display: none  ;
 }
-#main {
+#main,
+#tree {
 	bottom: 0 ;
 }
 
@@ -207,38 +208,49 @@ body {
 #tabs a:hover   { color: #000 ; background-color: #dd9 ; text-decoration: none ; }
 
 #tree {
-	color: #337 ;
-	background: #ffc url(/images/main-top-border-blend.png) top center repeat-x ;
+	color: #eee ;
+	background: #002 ;
 	margin: 0 ;
-	font-style: italic ;
-}
-
-#tree .box tr.middle td.middle {
-	padding-right: 3em ;
-	padding-left: 10px;
 }
 
 #tree .tree.leaf {
-	display: inline ;
-	line-height: 24px ;
+	display: block ;
+	width: 100% ;
 	padding: 0 ;
-	padding-bottom: 2px ;
-	margin-left: -10px ; 
+	color: #fff ;
+	background: #335;
+	border-top:    1px solid #557 ;
+	border-bottom: 1px solid #002 ;
 }
 
 #tree .tree.leaf.here {
-	color: #397 ;
-	/* background-color: #559 ; */
+	color: #eee ;
+	background: #557;
+	border-top:    1px solid #779 ;
+	border-bottom: 1px solid #335 ;
 }
 
-#tree .tree.leaf .text { background: transparent url(/images/tree-m.png) center bottom repeat-x ; padding-bottom: 3px; padding-top: 7px ;}
-#tree .tree.leaf:before { content: url(/images/tree-l.png) ; vertical-align: bottom ; margin: 0 ; padding: 0 ; }
-#tree .tree.leaf:after  { content: url(/images/tree-r.png) ; vertical-align: bottom ; margin: 0 ; padding: 0 ; }
+#tree .tree.leaf .category {
+	padding: 4px 0 ;
+	color: #99c ;
+	display: block ;
+	font-size: 10pt ;
+}
 
-#tree a.tree.leaf:visited { color: #337 ; text-decoration: none ; }
-#tree a.tree.leaf:link    { color: #337 ; text-decoration: none ; }
-#tree a.tree.leaf:active  { color: #337 ; text-decoration: none ; }
-#tree a.tree.leaf:hover   { color: #337 ; text-decoration: none ; color: #397; /* background-color: #bb9 ; */ }
+#tree .tree.leaf.here .category {
+	padding: 2px 0 ;
+	color: #aad ;
+}
+
+#tree .tree.leaf .text {
+	display: block ;
+	font-size: 18pt ;
+}
+
+#tree a.tree.leaf:visited { color: #eee ; text-decoration: none ; }
+#tree a.tree.leaf:link    { color: #eee ; text-decoration: none ; }
+#tree a.tree.leaf:active  { color: #eee ; text-decoration: none ; }
+#tree a.tree.leaf:hover   { color: #eee ; text-decoration: none ; background-color: #779 ; }
 
 a.switch:before {
 	content: url(/images/link_switch.png) ;
@@ -246,7 +258,7 @@ a.switch:before {
 
 #main {
 	color: #000 ;
-	background: #ffc ;
+	background: #ffc url(/images/main-top-border-blend.png) top center repeat-x ;
 }
 
 
