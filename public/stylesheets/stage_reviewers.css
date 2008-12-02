@@ -1,6 +1,0 @@
-@import url(common/documents.css) ;
-
-tr.review:hover {
-	/* add a hover indicator to the whole row in the table */
-	/* background-color: #nnn */
-}
