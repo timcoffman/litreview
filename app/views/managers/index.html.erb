@@ -1,22 +1,24 @@
-<h1>Listing managers</h1>
+<h2>Managers for Project <%= link_to @project.title, user_project_path(@user,@project) %></h2>
 
 <table>
-  <tr>
-    <th>Project</th>
-    <th>User</th>
-  </tr>
-
-<% for manager in @managers %>
-  <tr>
-    <td><%=h manager.project_id %></td>
-    <td><%=h manager.user_id %></td>
-    <td><%= link_to 'Show', manager %></td>
-    <td><%= link_to 'Edit', edit_managers_path(manager) %></td>
-    <td><%= link_to 'Destroy', manager, :confirm => 'Are you sure?', :method => :delete %></td>
-  </tr>
+	<thead><tr>
+		<% if current_user && current_user.is_admin? %>
+		<th>Action</th>
+		<% end %>
+		<th>Manager</th>
+	</tr></thead>
+	<tbody>
+	<% for manager in @managers %>
+		<tr>
+		<% if current_user && current_user.is_admin? %>
+		<td>
+    			<%= link_to 'Edit', edit_user_project_manager_path(@user,@project,manager) %>
+    			<%= link_to 'Unassign', user_project_manager_path(@user,@project,manager), :method => :delete, :confirm => "Are you sure you want to unassign #{manager.user.full_name} as a manager of \"#{manager.project.title}\"?" %>
+		</td>
+		<% end %>
+		<td>
+			<%= link_to manager.user.full_name, user_project_manager_path(@user,@project,manager) %>
+		</td>
+  </p>
 <% end %>
 </table>
-
-<br />
-
-<%= link_to 'New manager', new_project_manager_path %>
