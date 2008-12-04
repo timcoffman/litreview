@@ -103,4 +103,15 @@ class DocumentsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+  
+  def match_duplicates
+	@user = User.find(params[:user_id])
+	@project = Project.find(params[:project_id])
+    @document = Document.find(params[:id])
+
+    respond_to do |format|
+      format.html # match_duplicates.html.erb
+      format.xml  { render :xml => @document }
+    end
+  end
 end

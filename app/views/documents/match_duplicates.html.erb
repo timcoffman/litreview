@@ -1,0 +1,25 @@
+<h2> Project <%=h @document.document_source.project.title %>: <%=h @document.document_source.name %> Document</h2>
+
+<div class="side-by-side">
+<div class="right-side">
+<h3>Potential Duplicates</h3>
+
+<% form_remote_tag :url => search_documents_user_project_path(@user,@project), :method => :get, :update => "search_documents_results", :html => { :method => :get, :class => 'query' } do %>
+	<table>
+	<tr><th>Title</th>    <td><%= text_field_tag :title    %></td></tr>
+	<tr><th>Authors</th>  <td><%= text_field_tag :authors  %></td></tr>
+	<tr><th>Journal</th>  <td><%= text_field_tag :journal  %></td></tr>
+	<tr><th>Abstract</th> <td><%= text_field_tag :abstract %></td></tr>
+	</table>
+	<%= submit_tag "Search" %>
+<% end %>
+
+<div class="documents" id="search_documents_results">
+</div>
+
+</div>
+<div class="left-side">
+<%= render :partial => 'show', :locals => { :document => @document } %>
+</div>
+
+</div>
