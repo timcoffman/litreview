@@ -77,11 +77,15 @@
 		</div>
 	</td>
     <td>
-		<% if document.duplicate_of_document %>
-			<p>Duplicate exists from <%= link_to document.duplicate_of_document.document_source.name, user_project_document_path(@user,@project,document.duplicate_of_document) %></p>
-		<% end %>
-		<% for duplicate_document in document.duplicate_documents %>
-			<p>Duplicated by document from <%= link_to duplicate_document.document_source.name, user_project_document_path(@user,@project,duplicate_document) %></p>
+		<% if document.duplicate_of_document || !document.duplicate_documents.empty? %>
+			<% if document.duplicate_of_document %>
+				<p>Duplicate exists from <%= link_to document.duplicate_of_document.document_source.name, user_project_document_path(@user,@project,document.duplicate_of_document) %></p>
+			<% end %>
+			<% for duplicate_document in document.duplicate_documents %>
+				<p>Duplicated by document from <%= link_to duplicate_document.document_source.name, user_project_document_path(@user,@project,duplicate_document) %></p>
+			<% end %>
+		<% else %>
+			<span class="missing">none</span>
 		<% end %>
 	</td>
   </tr>
