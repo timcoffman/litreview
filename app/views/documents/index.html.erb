@@ -2,6 +2,53 @@
         Project <%= link_to @project.title, user_project_path(@user,@project) %>:
         All <%=h number_with_delimiter @documents_count %> Documents
 </h2>
+<% if @pages > 1 %>
+<p>
+	Documents per Page:
+	<% [ 10, 25, 50, 100, 200 ].each do |limit| %>
+		<% if limit == @limit %>
+			<span class="page-limit here">
+				<%=h limit %>
+			</span>
+		<% else %>
+			<span class="page-limit">
+				<%= link_to limit, url_for(:overwrite_params => { :offset => @offset, :limit => limit } ) %>
+			</span>
+		<% end %>
+	<% end %>
+</p>
+<p>
+	Documents <%= (@page * @limit)+1 %> ... <%= ((@page+1) * @limit) %>
+</p>
+<p>
+	Pages:
+	<% first = [0,@page-5].max %>
+	<% last = [@page+5,@pages-1].min %>
+	<% if @page > 5 %>
+		<%= link_to "First #{@limit}", url_for(:overwrite_params => { :offset => 0, :limit => @limit } ) %>
+		...
+		<%= link_to "Previous #{@limit}", url_for(:overwrite_params => { :offset => @offset-5*@limit, :limit => @limit } ) %>
+		...
+	<% end %>
+	<% (first..last).each do |page| %>
+		<% if page == @page %>
+			<span class="page-number here">
+				<%=h (page+1) %>
+			</span>
+		<% else %>
+			<span class="page-number">
+				<%= link_to (page+1), url_for(:overwrite_params => { :offset => page*@limit, :limit => @limit } ) %>
+			</span>
+		<% end %>
+	<% end %>
+	<% if @page < @pages-4 %>
+		...
+		<%= link_to "Next #{@limit}", url_for(:overwrite_params => { :offset => @page+5*@limit, :limit => @limit } ) %>
+		...
+		<%= link_to "Last #{@limit}", url_for(:overwrite_params => { :offset => @document_count-1-@limit, :limit => @limit } ) %>
+	<% end %>
+</p>
+<% end %>
 
 <table>
   <tr>

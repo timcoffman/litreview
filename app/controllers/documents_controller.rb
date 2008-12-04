@@ -4,8 +4,14 @@ class DocumentsController < ApplicationController
   def index
 	@user = User.find(params[:user_id])
 	@project = Project.find(params[:project_id])
-    @documents = @project.documents.find(:all,:limit => 30 )
-    @documents_count = @project.documents.count(:all)
+	@limit = params[:limit] || 10
+	@limit = @limit.to_i
+	@offset = params[:offset] || 0
+	@offset = @offset.to_i
+    @documents = @project.documents.find(:all,:limit => @limit, :offset => @offset, :include => :document_source )
+    @document_count = @project.documents.count(:all)
+	@page = ( @offset / @limit ).floor
+	@pages = ( @document_count / @limit ).ceil
 
     respond_to do |format|
       format.html # index.html.erb
