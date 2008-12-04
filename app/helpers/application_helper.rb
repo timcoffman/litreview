@@ -76,37 +76,42 @@ module ApplicationHelper
 			end
 			def node( object, options ={}, &block )
 				if object.is_a?(Symbol) || object.is_a?(String)
-					member_singular_method = "@#{object.to_s}"
-					member_plural_method = "@#{object.to_s.pluralize}"
-					singular_object = @view.send(:eval, member_singular_method)
-					plural_object = @view.send(:eval, member_plural_method)
-					if plural_object
-						self.node( plural_object, {}, &block )
-					elsif singular_object
+					singular_object = @view.send(:eval, "@#{object.to_s}")
+					plural_object = @view.send(:eval, "@#{object.to_s.pluralize}")
+					plural_count = @view.send(:eval, "@#{object.to_s}_count")
+					if singular_object
 						self.node( singular_object, {}, &block )
+					end
+					if plural_object
+						method_path_parts = @path.collect { |p| p.is_a?(String) ? p : p.class.name.underscore  }
+						method_path_parts << object.to_s.pluralize
+						method_name = method_path_parts.join("_") + "_path"
+						url = @view.send( method_name, *@path )
+						
+						self.node( plural_object, { :category => object, :url => url, :count => plural_count }, &block )
 					elsif ! @path.empty?
 						if @path.last.respond_to?(object.to_s.pluralize)
-						plural_object = @path.last.send(object.to_s.pluralize)
-						method_name = @path.collect { |p| p.is_a?(String) ? p : p.class.name.underscore  }.join("_") + "_#{object.to_s.pluralize}_path"
-						url = @view.send( method_name, *@path )
-						title = "#{plural_object.size.to_s} #{object.to_s.pluralize.titleize}"
-						title = @view.content_tag( :span, title, :class => 'category' )
-						@html << @view.link_to_unless_current( title, url, :class => 'tree leaf' ) do
-							@view.content_tag( :span, title, :class => 'tree leaf' )
-						end
-						if true
-							# suppress this for now
-						elsif plural_object.size < 5
-							self.node( plural_object, {}, &block )
-						else
-							self.node( plural_object[0..2], {}, &block )
-							# add note about more...
-						end
+							plural_object = @path.last.send(object.to_s.pluralize)
+							method_name = @path.collect { |p| p.is_a?(String) ? p : p.class.name.underscore  }.join("_") + "_#{object.to_s.pluralize}_path"
+							url = @view.send( method_name, *@path )
+							self.node( plural_object, { :category => object, :url => url, :count => plural_object.size }, &block )
 						end
 					end
 				elsif object.is_a?(Enumerable)
-					object.each do |obj|
-						self.node( obj, options, &block )
+					if options[:category]
+						category = options[:category]
+						url = options[:url]
+						count = options[:count] || object.size
+						title = @view.pluralize( count, category.to_s.titleize )
+						title = @view.content_tag( :span, title, :class => 'category' )
+						@html << @view.link_to_unless_current( title, url, :class => 'tree leaf' ) do
+							@view.content_tag( :span, title, :class => 'tree leaf here' )
+						end
+					elsif object.size < 5
+						object.each { |obj| self.node( obj, {}, &block ) }
+					else
+						self.node( object[0..2], {}, &block )
+						# add note about more...
 					end
 				else
 					nodeBuilder = TreeNode.new(@view, @leaves, @path + [ object ])

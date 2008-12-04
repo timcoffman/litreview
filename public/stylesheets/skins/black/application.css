@@ -208,7 +208,7 @@ body {
 #tabs a:hover   { color: #000 ; background-color: #dd9 ; text-decoration: none ; }
 
 #tree {
-	color: #eee ;
+	color: #ddf ;
 	background: #002 ;
 	margin: 0 ;
 }
@@ -217,14 +217,14 @@ body {
 	display: block ;
 	width: 100% ;
 	padding: 0 ;
-	color: #fff ;
+	color: #ddf ;
 	background: #335;
 	border-top:    1px solid #557 ;
 	border-bottom: 1px solid #002 ;
 }
 
 #tree .tree.leaf.here {
-	color: #eee ;
+	color: #fff ;
 	background: #557;
 	border-top:    1px solid #779 ;
 	border-bottom: 1px solid #335 ;
@@ -239,7 +239,7 @@ body {
 
 #tree .tree.leaf.here .category {
 	padding: 2px 0 ;
-	color: #aad ;
+	color: #cce ;
 }
 
 #tree .tree.leaf .text {
@@ -247,10 +247,10 @@ body {
 	font-size: 18pt ;
 }
 
-#tree a.tree.leaf:visited { color: #eee ; text-decoration: none ; }
-#tree a.tree.leaf:link    { color: #eee ; text-decoration: none ; }
-#tree a.tree.leaf:active  { color: #eee ; text-decoration: none ; }
-#tree a.tree.leaf:hover   { color: #eee ; text-decoration: none ; background-color: #779 ; }
+#tree a.tree.leaf:visited { color: #ddf ; text-decoration: none ; }
+#tree a.tree.leaf:link    { color: #ddf ; text-decoration: none ; }
+#tree a.tree.leaf:active  { color: #ddf ; text-decoration: none ; }
+#tree a.tree.leaf:hover   { color: #fff ;  text-decoration: none ; background-color: #779 ; }
 
 a.switch:before {
 	content: url(/images/link_switch.png) ;
