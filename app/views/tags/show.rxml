@@ -1,0 +1,73 @@
+xml.instruct!
+xml.tag!( "document-set", :xmlns => "urn:literature-review" ) {
+	ref_tags = {}
+	ref_users = {} 
+	ref_projects = {}
+	xml.filters {
+		xml.filter ( :type => "tag" ) {
+			ref_tags[@tag.id] = @tag
+			xml.tag( :idref => "tag-#{@tag.id}" )
+		}
+	}
+	@tag.documents.each do |document|
+		xml.document( :id => "document-#{document.id}" ) {
+			xml.title( document.title )
+			xml.authors( document.authors )
+			xml.journal( document.journal )
+			xml.tag!( "when_published", document.when_published )
+			xml.abstract { xml.cdata! document.abstract }
+			xml.project {
+				ref_projects[document.document_source.project.id] = document.document_source.project
+				xml.project( :idref => "project-#{document.document_source.project.id}" )
+			}
+			document.document_tags.each do |document_tag|
+				xml.tag!( "tagged-with" ) {
+					ref_tags[document_tag.tag.id] = document_tag.tag
+					xml.tag!( "tag", :idref => "tag-#{document_tag.tag.id}" )
+					if document_tag.user
+						xml.tag!( "applied-by" ) {
+							ref_users[document_tag.user.id] = document_tag.user
+							xml.tag!( "user", :idref => "user-#{document_tag.user.id}" )
+						}
+					end
+					if document_tag.stage
+						xml.tag!( "applied-in" ) {
+							ref_projects[document_tag.stage.project.id] = document_tag.stage.project
+							xml.tag!( "stage", :idref => "stage-#{document_tag.stage.id}" )
+						}
+					end
+				}
+			end
+		}
+	end
+	ref_tags.each_value do |tag|
+		xml.tag!( "tag", :id => "tag-#{tag.id}" ) {
+			xml.words( tag.words )
+			xml.tag!( "created-by" ) {
+				ref_users[tag.user.id] = tag.user
+				xml.user( :idref => "user-#{tag.user.id}" )
+			}
+			xml.tag!( "created-for" ) {
+				ref_projects[tag.project.id] = tag.project
+				xml.project( :idref => "project-#{tag.project.id}" )
+			}
+		}
+	end
+	ref_users.each_value do |user|
+		xml.user( :id => "user-#{user.id}", :nickname => user.nickname ) {
+			xml.tag!( "full-name", user.full_name )
+		}
+	end
+	ref_projects.each_value do |project|
+		xml.project( :id => "project-#{project.id}" ) {
+			xml.title ( project.title )
+			xml.description { xml.cdata! project.description }
+			project.review_stages.each do |stage|
+				xml.stage ( :id => "stage-#{stage.id}", :number => stage.sequence ) {
+					xml.name( stage.name )
+					xml.tag!( "gate-function", ReviewStage.gate_noun( stage.gate_function ), :code => stage.gate_function )
+				}
+			end
+		}
+	end
+}

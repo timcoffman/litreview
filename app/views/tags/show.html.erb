@@ -1,35 +1,44 @@
 <h2> Tag: <span class="words"><%=h @tag.words %></span> </h2>
 
-<h3>All Documents</h3>
+<h3>All Tagged Documents</h3>
 <table class="documents">
-	<thead><th>User</th><th>Project</th><th>Document</th></tr></thead>
+	<thead>
+		<tr><td colspan="3">
+			<%= link_to "Export Documents as XML", url_for( :overwrite_params => { :id => "#{params[:id]}.xml" } ) %>
+		</td></tr>
+		<tr><th>User</th><th>Project</th><th>Document</th></tr>
+	</thead>
 	<tbody>
-	<% for document_tag in @tag.document_tags %>
-		<tr>
-			<td class="user">
-				<%= personal_link_to document_tag.user %>
-				<% if document_tag.user != @tag.user %>
-					(<%= personal_link_to @user, "'s tag" %>)
-				<% end %>
-			</td>
-			<td class="stage">
-				<% if document_tag.stage %>
-					<%= link_to "#{document_tag.stage.project.title}, #{document_tag.stage.name}", user_project_review_stage_path(current_user,document_tag.stage.project,document_tag.stage)  %>
-					<% if @tag.project != document_tag.stage.project %>
-						<%= link_to "#{@tag.project.title}", user_project_path(current_user,@tag.project) %> 
+	<% if @tag.document_tags.empty? %>
+		<tr><td class="missing">this tag has not been applied to any documents</td></tr>
+	<% else %>
+		<% for document_tag in @tag.document_tags %>
+			<tr>
+				<td class="user">
+					<%= personal_link_to document_tag.user %>
+					<% if document_tag.user != @tag.user %>
+						(<%= personal_link_to @user, "'s tag" %>)
 					<% end %>
-				<% else %>
-					<%= link_to "#{@tag.project.title}", user_project_path(current_user,@tag.project)  %>
-				<% end %>
-			</td>
-			<td class="document">
-				<% if document_tag.stage %>
-					<%= render :partial => 'documents/show_mini', :locals => { :document => document_tag.document, :url => user_project_document_path(current_user,document_tag.stage.project,document_tag.document)  } %>
-				<% elsif document_tag.tag.project %>
-					<%= render :partial => 'documents/show_mini', :locals => { :document => document_tag.document, :url => user_project_document_path(current_user,@tag.project,document_tag.document)  } %>
-				<% end %>
-			</td>
-		</tr>
+				</td>
+				<td class="stage">
+					<% if document_tag.stage %>
+						<%= link_to "#{document_tag.stage.project.title}, #{document_tag.stage.name}", user_project_review_stage_path(current_user,document_tag.stage.project,document_tag.stage)  %>
+						<% if @tag.project != document_tag.stage.project %>
+							<%= link_to "#{@tag.project.title}", user_project_path(current_user,@tag.project) %> 
+						<% end %>
+					<% else %>
+						<%= link_to "#{@tag.project.title}", user_project_path(current_user,@tag.project)  %>
+					<% end %>
+				</td>
+				<td class="document">
+					<% if document_tag.stage %>
+						<%= render :partial => 'documents/show_mini', :locals => { :document => document_tag.document, :url => user_project_document_path(current_user,document_tag.stage.project,document_tag.document)  } %>
+					<% elsif document_tag.tag.project %>
+						<%= render :partial => 'documents/show_mini', :locals => { :document => document_tag.document, :url => user_project_document_path(current_user,@tag.project,document_tag.document)  } %>
+					<% end %>
+				</td>
+			</tr>
+		<% end %>
 	<% end %>
 	<tbody>
 </table>
