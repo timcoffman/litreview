@@ -11,7 +11,7 @@
 	color: #000 ;
 }
 
-.document a:active,
+.document :active,
 .document a:link,
 .document a:visited,
 .document a:hover {
@@ -113,10 +113,25 @@
 	text-align: justify ;
 }
 
+.document .foot form.tag input, 
 .document .foot .tag {
 	font-size: 10pt ;
 	font-family: sans-serif ;
-	color: #fff ;
+	color: black
+}
+
+.document .tag:active,
+.document .tag:link,
+.document .tag:visited,
+.document .tag:hover {
+}
+.document .tag:hover {
+	background: #fff ;
+	text-decoration: underline ;
+	color: #77f ;
+}
+.document form.tag:hover {
+	text-decoration: none ;
 }
 
 .document .duplicate,
