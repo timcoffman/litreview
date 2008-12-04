@@ -65,7 +65,7 @@
 	<% if current_user %>
 		<% if current_project %>
 			<span class="tab"> <%= link_to_unless_current( "Home", user_project_path(current_user,current_project)) { |name| content_tag(:span,name,:class=>'here') } %> </span>
-			<span class="tab"> <%= link_to_unless_current( "Profile", user_path(current_user) ){ |name| content_tag(:span,name,:class=>'here') } %> </span>
+			<span class="tab"> <%= link_to_unless_current( current_user.nickname, user_path(current_user) ){ |name| content_tag(:span,name,:class=>'here') } %> </span>
 		<% else %>
 			<span class="tab"> <%= link_to_unless_current( "Home", user_path(current_user) ){ |name| content_tag(:span,name,:class=>'here') } %> </span>
 		<% end %>
