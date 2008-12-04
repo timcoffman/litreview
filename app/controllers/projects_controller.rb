@@ -99,6 +99,16 @@ class ProjectsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+	
+  def search_documents
+    @user = User.find( params[:user_id] )
+    @project = Project.find( params[:id] )
+    @documents = @project.search( params )
+    #respond_to do |format|
+    #  format.html 
+    #  format.xml { render :xml => @report }
+    #end
+  end
 
   def report
     @user = User.find( params[:user_id] )

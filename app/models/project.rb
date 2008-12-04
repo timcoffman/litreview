@@ -36,5 +36,16 @@ class Project < ActiveRecord::Base
 	def keywords
 		return [ 'workflow', 'workflow analysis', 'workflow analyses', 'workflow system' ]
 	end
-		
+	
+	def search( params, *args )
+		phrases = []
+		bindings = {}
+		[:title, :authors, :journal, :abstract].each do |field|
+			if params.include?(field)
+				phrases << "#{field} like :#{field}_value"
+				bindings["#{field}_value".to_sym] = "%#{params[field]}%"
+			end
+		end
+		return self.documents.find( :all, :conditions => [ phrases.join(" AND "), bindings ], *args )
+	end
 end
