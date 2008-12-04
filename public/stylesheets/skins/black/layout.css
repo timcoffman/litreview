@@ -48,3 +48,32 @@
 	left: 60% ;
 	right: 0 ;
 }
+
+
+.tie {
+	position: relative ;
+	width: 100% ;
+	height: auto ;
+}
+
+.tie .tie-left,
+.tie .tie-center,
+.tie .tie-right {
+	position: absolute ;
+	height: auto ;
+}
+
+.tie .tie-left {
+	left: 0 ;
+	width: 45% ;
+}
+
+.tie .tie-center {
+	left: 45% ;
+	right: 45% ;
+}
+
+.tie .tie-right {
+	width: 45% ;
+	right: 0 ;
+}
