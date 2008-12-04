@@ -90,6 +90,29 @@ class DocumentsController < ApplicationController
     end
   end
 
+  def new_tags
+    @user = User.find(params[:user_id])
+    @project = Project.find(params[:project_id])
+    @document = @project.documents.find(params[:id])
+    result = { :status => :ok, :document_tags => [ ], :tags => [ ] }
+    for words in (params[:tag_words] || "").split( /\s/ )
+      tag = Tag.find_best( words, @user, @project )
+      unless tag
+        tag = Tag.create( :words => words, :created_by_user_id => @user.id, :created_for_project_id => @project.id )
+        result[:tags] << tag
+      end
+      document_tag = @document.document_tags.find( :first, :conditions => { :tag_id => tag.id, :applied_by_user_id => @user } )
+      unless document_tag
+      	document_tag = @document.document_tags.create( :tag_id => tag.id, :applied_by_user_id => @user )
+        result[:document_tags] << document_tag
+      end
+    end
+    respond_to do |format|
+      format.html { redirect_to([@user,@project,@document]) }
+      format.js { render :xml => result }
+    end
+  end
+  
   # DELETE /documents/1
   # DELETE /documents/1.xml
   def destroy

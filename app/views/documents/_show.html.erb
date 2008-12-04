@@ -4,7 +4,7 @@
 	<h3>Related Documents</h3>
 <% end %>
 
-<div class="document">
+<div class="document" id="<%= "doc-#{document.id}" %>">
 	<% if document.duplicate_of_document %>
 		<div class="duplicate">
 			Duplicate of <span class="title">
@@ -37,6 +37,15 @@
 		<% for tag in document.tags %>
 			<%= link_to tag.words, tag, :class => :tag %>
 		<% end %>
+		<% form_remote_tag :url => new_tags_user_project_document_path(@user,document.document_source.project,document), :html => { :class => 'tag', :id => "document-#{document.id}-tags-form", :style => "display: none ;" } do %>
+			<%= text_field_tag "tag_words", "", :id => "document-#{document.id}-tags" %>
+			<span class="tags-options">
+				<% for tag in @user.custom_tags + @project.custom_tags %>
+					<%= link_to_function(tag.words,"$('document-#{document.id}-tags').value += ' #{tag.words}'", :class => 'tag' ) %>
+				<% end %>
+			</span>
+		<% end %>
+		<%= link_to_function "(+)", "$('document-#{document.id}-tags-form').show(); $('document-#{document.id}-tags-reveal').hide()", :class => 'tag', :id => "document-#{document.id}-tags-reveal" %>
 		Document Source: <span class="source">
 			<%= link_to_unless_current document.document_source.name, user_project_document_source_path(@user,document.document_source.project,document.document_source) %>
 		</span>

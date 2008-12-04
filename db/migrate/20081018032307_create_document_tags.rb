@@ -4,7 +4,7 @@ class CreateDocumentTags < ActiveRecord::Migration
       t.integer :tag_id
       t.integer :document_id
 	  t.integer :applied_by_user_id
-	  t.integer :applied_in_review_stage_id
+	  t.integer :applied_in_review_stage_id, :null => true
 
       t.timestamps
     end
