@@ -13,7 +13,6 @@ class ProjectsController < ApplicationController
   def index
     @user = User.find( params[:user_id] )
 	@user = current_user unless @user || current_user.is_admin?
-	@project = current_project
     @projects = Project.find(:all)
 
     respond_to do |format|
