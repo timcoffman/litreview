@@ -1,0 +1,25 @@
+
+.dialog {
+	margin-left: 15% ;
+	margin-right: 15% ;
+	margin-top: 0.5em ;
+	margin-bottom: 0.5em ;
+	border: solid 2px black ;
+	background-color: white ;
+	padding: 1em ;
+}
+
+.dialog tr.input th {
+	text-align: right ;
+}
+.dialog tr.input td {
+	text-align: left ;
+}
+.dialog tr.submit td,
+.dialog tr.submit th {
+	text-align: right ;
+}
+
+.dialog tr.input td.missing {
+	font-size: 75% ;
+}
