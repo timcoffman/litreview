@@ -1,0 +1,5 @@
+<% for document in @documents %>
+	<div class="document">
+		<%= render :partial => 'documents/show_mini', :locals => { :document => document } %>
+	</div>
+<% end %>
