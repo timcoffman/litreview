@@ -28,7 +28,7 @@ class UsersController < ApplicationController
   # GET /users/new
   # GET /users/new.xml
   def new
-    @user = User.new
+    @user = User.new(params[:user])
 
     respond_to do |format|
       format.html # new.html.erb

@@ -11,6 +11,7 @@ class CreateUsers < ActiveRecord::Migration
       t.timestamps
     end
 	add_index :users, :identity_url, :unique => true
+	add_index :users, :nickname, :unique => true
   end
 
   def self.down

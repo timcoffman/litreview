@@ -8,7 +8,9 @@ class User < ActiveRecord::Base
 	has_many :document_tags, :class_name => 'DocumentTag', :foreign_key => :applied_by_user_id, :dependent => :nullify
 	has_many :user_preferences
 
-	validates_presence_of :identity_url
+	validates_presence_of :identity_url, :nickname, :full_name, :email
+	validates_format_of :email, :with => /[^@]+@[^@]+/, :message => "must be like \"name@domain.net\""
+	validates_format_of :nickname, :with => /^\S+$/, :message => "can't contain spaces"
 	
 	def method_missing( method_sym, *args )
 		m = method_sym.to_s.match( /^preferred_([^=?!]+)(=?)$/ )

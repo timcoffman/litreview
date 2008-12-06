@@ -1,37 +1,53 @@
 
-<h3>Please log in</h3>
+<h2>Please log in</h2>
+
+<p>
+	This site uses <a href="http://openid.net/"><img src="http://openid.net/wp-content/uploads/2007/10/openid_med_logo_text.png" alt="OpenId"/></a> to login.
+</p>
 
 <div class="layout">
 
 <div class="layout left">
 
-<div class="login dialog">
-
-<form method="post" action="session/create">
-	OpenID <input name="openid_url"/>
-	<input type="submit" value="Login with my OpenID"/>
-</form>
-</div>
-
-</div>
-<div class="layout right">
+<h3>Already have an OpenId?</h3>
 
 <div class="login dialog">
 
-<form method="post" action="session/create">
+	<form method="post" action="session/create">
+		<table><tbody>
+		<tr class="input"><th>OpenID:</th><td><input name="openid_url"/></td></tr>
+		<tr class="input"><th>Password:</th><td class="missing">Your OpenID provider will prompt you for your password.</td></tr>
+		<tr class="submit"><td colspan="2"><input type="submit" value="Login"/></td></tr>
+		</tbody></table>
+	</form>
+</div>
+
+<div class="login dialog">
+	<form method="post" action="session/create">
 	<input type="hidden" name="openid_url" value="me.yahoo.com"/>
 	<!-- buttons images catalog at http://developer.yahoo.com/openid/loginbuttons.html -->
 	<input type="image" src="http://us.i1.yimg.com/us.yimg.com/i/reg/openid/buttons/11.png" alt="Login with my Yahoo OpenID"/>
-</form>
+	</form>
 </div>
 
 <div class="login dialog">
-<form method="post" action="session/create">
+	<form method="post" action="session/create">
 	<input type="hidden" name="openid_url" value="me.yahoo.com"/>
 	<!-- buttons images catalog at http://developer.yahoo.com/openid/loginbuttons.html -->
 	<input type="image" src="http://us.i1.yimg.com/us.yimg.com/i/reg/openid/buttons/4_new.png" alt="Login with my Yahoo OpenID"/>
 </form>
 
+</div>
+
+</div>
+<div class="layout right">
+
+<h3>Need an OpenId?</h3>
+
+<div class="login dialog">
+	<p>
+		<a href="http://openid.net/get/">You can get an OpenID from a number of sources.</a>
+	</p>
 </div>
 
 </div>

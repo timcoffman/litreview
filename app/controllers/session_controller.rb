@@ -22,6 +22,21 @@ class SessionController < ApplicationController
 		render :action => 'new'
 	end
 	
+	def create_user
+		@user = User.new(params[:user])
+		respond_to do |format|
+			if @user.save
+				flash[:notice] = 'User was successfully created.'
+				self.current_user = @user
+				format.html { redirect_to(@user) }
+				format.xml  { render :xml => @user, :status => :created, :location => @user }
+			else
+				format.html { render :action => 'new_user' }
+				format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
+			end
+		end
+	end
+	
 	def open_id_authentication
 		if params[:openid_url].blank? && params[:open_id_complete].blank?
 			return failed_login("Please enter your OpenId") ;
@@ -39,12 +54,18 @@ class SessionController < ApplicationController
 				user = User.find_by_identity_url( identity_url )
 				if user.nil?
 					user = User.new( :identity_url => identity_url )
-					unless assign_registration_attributes( user, registration )
-						return failed_login( "Your OpenID registration failed: " + user.errors.full_messages.to_sentence )
+					self.assign_registration_attributes( user, registration )
+					if user.save
+						self.current_user = user
+					else
+						@user = user
+						render :action => 'new_user'
+						#return failed_login( "Your OpenID registration failed: " + user.errors.full_messages.to_sentence )
 					end
+				else
+					self.current_user = user ;
+					successful_login
 				end
-				self.current_user = user ;
-				successful_login
 			else
 				failed_login( result.message || "Sorry, couldn't authenticate #{identity_url}" )
 			end
@@ -66,7 +87,6 @@ class SessionController < ApplicationController
 				user.send "#{model_attr}=", registration[registration_attr]
 			end
 		end
-		user.save
 	end
 	
 	def switch_project

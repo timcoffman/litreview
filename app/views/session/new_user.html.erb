@@ -1,0 +1,57 @@
+
+<h2>New User</h2>
+
+<h3>Welcome!</h3>
+
+<p>
+	<span class="url"><%= @user.identity_url %></span> is your OpenId.
+</p>
+
+<p>
+	Your OpenId provider did not supply your complete profile,
+	so please add the information below to get started!
+</p>
+
+<h3>New User Information</h3>
+<% form_for(@user, :url => { :action => "create_user" } ) do |f| %>
+	<div class="dialog"><table><tbody>
+		<tr>
+			<th>OpenId</th>
+			<td><%= f.hidden_field :identity_url %><span class="url"><%= @user.identity_url %></span></td>
+		</tr>
+		<tr>
+			<th>Full Name</th>
+			<td><%= f.text_field :full_name %></td>
+			<td class="validation">
+				<% if @user.errors[:full_name].is_a?(Array) %>
+					<ul><%= @user.errors[:full_name].collect { |e| content_tag :li, e, :class => "error" }.join %></ul>
+				<% elsif ! @user.errors[:full_name].nil? %>
+					<ul><li class="error"><%= @user.errors[:full_name] %></li></ul>
+				<% end %>
+			</td>
+		</tr>
+		<tr>
+			<th>Nickname</th>
+			<td><%= f.text_field :nickname %></td>
+			<td class="validation">
+				<% if @user.errors[:nickname].is_a?(Array) %>
+					<ul><%= @user.errors[:nickname].collect { |e| content_tag :li, e, :class => "error" }.join %></ul>
+				<% elsif ! @user.errors[:nickname].nil? %>
+					<ul><li class="error"><%= @user.errors[:nickname] %></li></ul>
+				<% end %>
+			</td>
+		</tr>
+		<tr>
+			<th>E-Mail Address</th>
+			<td><%= f.text_field :email %></td>
+			<td class="validation">
+				<% if @user.errors[:email].is_a?(Array) %>
+					<ul><%= @user.errors[:email].collect { |e| content_tag :li, e, :class => "error" }.join %></ul>
+				<% elsif ! @user.errors[:email].nil? %>
+					<ul><li class="error"><%= @user.errors[:email] %></li></ul>
+				<% end %>
+			</td>
+		</tr>
+		<tr class="submit"><th colspan="2"><%= f.submit "Continue" %></th></tr>
+	</tbody></table></div>
+<% end %>

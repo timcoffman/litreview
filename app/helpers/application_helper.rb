@@ -315,7 +315,20 @@ module ApplicationHelper
 		return w.length > 2 ? w[0..2].join(' ') + '...' : text
 	end
 
-	def personal_link_to( user, suffix =nil, url =nil)
+	def personal_link_to( user, options_or_suffix =nil, options_or_url =nil, options =nil )
+		if options_or_suffix.is_a?(Hash)
+			suffix = nil
+			url = nil
+			options = options_or_suffix
+		elsif options_or_url.is_a?(Hash)
+			suffix = options_or_suffix
+			url = nil
+			options = options_or_url
+		else
+			suffix = options_or_suffix
+			url = options_or_url
+			options = {}
+		end
 		url ||= user_path(user)
 		subject = if not user.is_a?(User)
 			"#{user}"
@@ -326,7 +339,7 @@ module ApplicationHelper
 		else
 			user.full_name
 		end
-		link = content_tag :span, link_to_unless_current( subject, url ), :class => 'user'
+		link = content_tag :span, link_to_unless_current( subject, url, options ), :class => 'user'
 		return link unless suffix && !suffix.empty?
 		first_person = "#{suffix}"
 		second_person = "#{suffix}"
