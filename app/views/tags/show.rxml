@@ -1,4 +1,11 @@
 xml.instruct!
+
+xml.declare! :DOCTYPE,
+	'document-set'.to_sym,
+	:PUBLIC,
+	"-//litreview//DTD DOCUMENT-SET 1.0 Strict//EN",
+	request.protocol + request.host_with_port + dtd_path("document-set")
+
 xml.tag!( "document-set", :xmlns => "urn:literature-review" ) {
 	ref_tags = {}
 	ref_users = {} 
@@ -14,12 +21,12 @@ xml.tag!( "document-set", :xmlns => "urn:literature-review" ) {
 			xml.title( document.title )
 			xml.authors( document.authors )
 			xml.journal( document.journal )
-			xml.tag!( "when_published", document.when_published )
+			xml.tag!( "when-published", document.when_published )
 			xml.abstract { xml.cdata! document.abstract }
-			xml.project {
-				ref_projects[document.document_source.project.id] = document.document_source.project
-				xml.project( :idref => "project-#{document.document_source.project.id}" )
-			}
+			
+			ref_projects[document.document_source.project.id] = document.document_source.project
+			xml.project( :idref => "project-#{document.document_source.project.id}" )
+			
 			document.document_tags.each do |document_tag|
 				xml.tag!( "tagged-with" ) {
 					ref_tags[document_tag.tag.id] = document_tag.tag

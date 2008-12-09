@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT document-set (filters?,document*,tag*,user*,project*)>
+<!ATTLIST document-set
+	xmlns (urn:literature-review) #REQUIRED
+>
+
+<!ELEMENT filters (filter+)>
+
+<!ELEMENT filter (tag?)>
+<!ATTLIST filter
+	type (tag) #REQUIRED
+>
+
+<!ELEMENT tag (words,created-by,created-for?)?>
+<!ATTLIST tag
+	id ID #IMPLIED
+	idref IDREF #IMPLIED
+>
+
+<!ELEMENT words (#PCDATA)>
+<!ELEMENT created-by (user)>
+<!ELEMENT created-for (project)>
+
+<!ELEMENT document (title?,authors?,journal?,when-published?,abstract?,project,tagged-with*)>
+<!ATTLIST document
+	id ID #IMPLIED
+	idref IDREF #IMPLIED
+>
+
+<!ELEMENT title (#PCDATA)>
+<!ELEMENT authors (#PCDATA)>
+<!ELEMENT journal (#PCDATA)>
+<!ELEMENT when-published (#PCDATA)>
+<!ELEMENT abstract (#PCDATA)>
+
+<!ELEMENT tagged-with (tag,applied-by?,applied-in?)>
+
+<!ELEMENT applied-by (user)>
+
+<!ELEMENT applied-in (stage)>
+
+<!ELEMENT project (title,description,stage*)?>
+<!ATTLIST project
+	id ID #IMPLIED
+	idref IDREF #IMPLIED
+>
+
+<!ELEMENT description (#PCDATA)>
+
+<!ELEMENT stage (name,gate-function)?>
+<!ATTLIST stage
+	id ID #IMPLIED
+	idref IDREF #IMPLIED
+	number CDATA #IMPLIED
+>
+
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT gate-function (#PCDATA)>
+<!ATTLIST gate-function
+	code CDATA #IMPLIED
+>
+
+<!ELEMENT user (full-name)?>
+<!ATTLIST user
+	id ID #IMPLIED
+	idref IDREF #IMPLIED
+	nickname CDATA #IMPLIED
+>
+
+<!ELEMENT full-name (#PCDATA)>
+
+
