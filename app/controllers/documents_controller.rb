@@ -4,7 +4,7 @@ class DocumentsController < ApplicationController
   def index
 	@user = User.find(params[:user_id])
 	@project = Project.find(params[:project_id])
-	@limit = params[:limit] || 10
+	@limit = params[:limit] || current_user.preferred_documents_page_limit || 10
 	@limit = @limit.to_i
 	@offset = params[:offset] || 0
 	@offset = @offset.to_i
@@ -12,6 +12,7 @@ class DocumentsController < ApplicationController
     @document_count = @project.documents.count(:all)
 	@page = ( @offset / @limit ).floor
 	@pages = ( @document_count / @limit ).ceil
+	current_user.preferred_documents_page_limit = @limit 
 
     respond_to do |format|
       format.html # index.html.erb
