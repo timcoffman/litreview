@@ -1,8 +1,10 @@
 @import url(tags.css) ;
 
 .document {
-	border: 2px solid #bbb ;
-	background: #fff ;
+	background: transparent url(/images/document_bg.png) top right no-repeat ;
+	border: 0 ;
+	border-left: 2px solid #bbb ;
+	border-bottom: 2px solid #bbb ;
 	margin-top: 0.5em ;
 	margin-bottom: 0.5em ;
 	margin-left: 2em ;
