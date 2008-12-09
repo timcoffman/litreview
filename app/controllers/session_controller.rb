@@ -92,6 +92,6 @@ class SessionController < ApplicationController
 	def switch_project
 		project = Project.find(params[:id])
 		self.current_project = project
-		redirect_to user_project_url( current_user, project )
+		redirect_to user_project_url( current_user, current_project )
 	end
 end

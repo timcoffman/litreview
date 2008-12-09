@@ -54,21 +54,22 @@ class ApplicationController < ActionController::Base
 	session[:user_id] = new_user && new_user.id
 	@current_user = new_user
 	
-	if @current_user
+	if @current_user && ! current_project
 		favs = @current_user.favorite_projects(1)
 		unless favs.empty?
-			self.current_project = @current_user.favorite_projects.unshift
+			self.current_project = @current_user.favs.shift
 		end
 	end
   end
   
   def current_project
-	@current_project ||= ( session[:project_id] && Project.find_by_id( session[:project_id]))
+	@current_project ||= Project.find_by_title( current_user.preferred_project_current_title ) if current_user
   end
   
   def current_project= ( new_project )
-	session[:project_id] = new_project && new_project.id
 	@current_project = new_project
+	current_user.preferred_project_current_title = @current_project.title if current_user && @current_project
+	@current_project
   end
   
   def successful_login
