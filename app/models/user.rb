@@ -15,13 +15,14 @@ class User < ActiveRecord::Base
 	def method_missing( method_sym, *args )
 		m = method_sym.to_s.match( /^preferred_([^=?!]+)(=?)$/ )
 		if m
-			if m[2]
-				self.put_preference( m[1], args[0] )
+			name = m[1].gsub( /_/, "." )
+			unless m[2].empty?
+				return self.put_preference( name, args[0] )
 			else
-				self.get_preference( m[1] )
+				return self.get_preference( name )
 			end
 		else
-			super
+			return super
 		end
 	end
 	
@@ -91,6 +92,7 @@ class User < ActiveRecord::Base
 		pref ||= self.user_preferences.build( :key => name )
 		pref.value = value
 		pref.save
+		return pref.value
 	end
 	
 	def self.preference( user, name, options =nil )
