@@ -74,7 +74,7 @@ class SessionController < ApplicationController
 	
 	def failed_login( message )
 		flash[:error] = message
-		render :action => 'new'
+		redirect_to :controller => 'session', :action => 'new'
 	end
 	
 	def assign_registration_attributes( user, registration )
