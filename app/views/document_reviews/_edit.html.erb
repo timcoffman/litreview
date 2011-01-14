@@ -1,14 +1,18 @@
 <% form_for [@user,@project,@review_stage,@stage_reviewer,document_review] do |f| %>
 
-<p>
-Disposition:
-<%= f.radio_button :disposition, 'I' %> Include
-<%= f.radio_button :disposition, 'E' %> Exclude
-</p>
+<fieldset id="disposition include">
+<label class="disposition">
+	<%= f.radio_button :disposition, 'I' %> Include
+</label>
+</fieldset>
 
-<p id="exclusion-reasons">
-Exclusion Reasons:
-<ul>
+
+<fieldset id="disposition exclude">
+<label class="disposition">
+	<%= f.radio_button :disposition, 'E' %> Exclude
+</label>
+
+<ul class="reasons">
 <%
 	possible_reasons =  @review_stage.reasons.concat( document_review.reasons ).uniq
 	possible_reasons.sort! { |a,b| (a.sequence || 0)  <=> (b.sequence || 0) }
@@ -16,17 +20,33 @@ Exclusion Reasons:
 %>
 <% for reason in possible_reasons %>
 	<li class="reason <%= cycle('even','odd') %>">
+	<label>
 	<%= check_box_tag 'document_review[reason_ids][]', reason.id, document_review.includes_reason?(reason) %>
 	<%=h reason.title %>
+	</label>
 	<% if reason.created_by_stage_reviewer %>
-		[<%= personal_link_to reason.created_by_stage_reviewer.user, '', user_project_review_stage_stage_reviewer_path(@user,@project,@review_stage,reason.created_by_stage_reviewer) %>]
+		<span class="owner"><%= personal_link_to reason.created_by_stage_reviewer.user, '', user_project_review_stage_stage_reviewer_path(@user,@project,@review_stage,reason.created_by_stage_reviewer), :display => :nickname %></span>
 	<% end %>
 	</li>
 <% end %>
 
-<%= render :partial => 'new_reason_link' %>
+<li class="reason <%= cycle('even','odd')%>" id='new-reason'>
+	<%= check_box_tag '_null', -1, true, :disabled => true %>
+	<%= text_field_tag 'document_review[reason_ids][][title]', "", :size => 20, :id => 'new-reason-title' %>
+	<%= observe_field 'new-reason-title', :on => 'focus', :function => "element.getValue() ? $('new-reason-details').show() : $('new-reason-details').hide() ;" %>
+	<span class="owner"><%= personal_link_to @user, '', user_project_review_stage_stage_reviewer_path(@user,@project,@review_stage,@user), :display => :nickname %></span>
+	<div style="display: none" id='new-reason-details'>
+		<label>
+			Description:
+			<%= text_area_tag 'document_review[reasons][][description]', "", :rows => 3, :cols => 20 %>
+		</label>
+		<%= link_to_remote 'Add', :update => "new-reason", :method => :get, :url => new_reason_user_project_review_stage_stage_reviewer_document_review_path(@user,@project,@review_stage,@stage_reviewer) %>
+	</div>
+</li>
+
 </ul>
-</p>
+
+</fieldset>
 
 <%= link_to "Discard Changes", user_project_review_stage_stage_reviewer_document_review_path(@user,@project,@review_stage,@stage_reviewer,@document_review) %>
 
@@ -34,7 +54,7 @@ Exclusion Reasons:
 
 <% end %>
 
-<div class="reason new" id="new-reason">
+<div class="reason new" id="new-reason" style="display: none;">
 	<% reason = @review_stage.reasons.build( :created_by_stage_reviewer_id => @stage_reviewer.id ) %>
 	<% form_remote_for [@user,@project,@review_stage,reason] do |f| %>
 		New Reason <%= f.submit "Add" %>
@@ -49,4 +69,10 @@ Exclusion Reasons:
 		</p>
 	<% end %>
 </div>
+
+<%= javascript_tag "function decorate_fieldsets() { decorate_fieldset_for_radio($('document_review_disposition_i')); decorate_fieldset_for_radio($('document_review_disposition_e')); }" %>
+<%= javascript_tag "function decorate_fieldset_for_radio(r) { r.getValue() ? r.up('fieldset').addClassName('active') : r.up('fieldset').removeClassName('active') } " %>
+<%= observe_form "edit_document_review_#{@document_review.id}", :function => 'decorate_fieldsets()' %>
+<%= javascript_tag "decorate_fieldsets();" %>
+
 

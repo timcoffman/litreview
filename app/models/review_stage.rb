@@ -26,7 +26,7 @@ class ReviewStage < ActiveRecord::Base
 	def reviewed_by?( user )
 		return user && self.users.find(:first, :conditions => { :id => user.id } )
 	end
-	
+		
 	def reviewable_documents
 		if self.gate_function == 'ANY'
 			return []

@@ -18,8 +18,8 @@ development:
   adapter: mysql
   encoding: utf8
   database: litreview_dev
-  username: coffman
-  password: password
+  username: litreview
+  password: litreview2010
   socket: /tmp/mysql.sock
 
 # Warning: The database defined as "test" will be erased and
@@ -29,14 +29,14 @@ test:
   adapter: mysql
   encoding: utf8
   database: litreview_test
-  username: coffman
-  password: password
+  username: litreview
+  password: litreview2010
   socket: /tmp/mysql.sock
 
 production:
   adapter: mysql
   encoding: utf8
   database: litreview
-  username: coffman
-  password: password
+  username: litreview
+  password: litreview2010
   socket: /tmp/mysql.sock

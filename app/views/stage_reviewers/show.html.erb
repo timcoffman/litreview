@@ -16,6 +16,12 @@ assigned reviews
 .
 </p>
 
+<% incomplete_review_count = @stage_reviewer.incomplete_reviews.count %>
+<% if incomplete_review_count > 0 %>
+	<% review_total = @stage_reviewer.document_reviews.count %>
+	<%= link_to_task content_tag(:strong,incomplete_review_count) + " reviews to do for #{@stage_reviewer.review_stage.name}", edit_user_project_review_stage_stage_reviewer_document_review_path(@user,@project,@stage_reviewer.review_stage,@stage_reviewer,@stage_reviewer.incomplete_reviews.first) %>
+<% end %>
+
 <h3>Next <%=h @incomplete_reviews.size %>  Reviews</h3>
 <table class="reviews">
 	<thead>

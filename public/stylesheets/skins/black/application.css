@@ -91,7 +91,7 @@ body {
 #header #title {
 	position: absolute ;
 	left: 72px ;
-	right: 40% ;
+	right: 33% ;
 	top: 0 ;
 	bottom: 0 ;
 	font-size: 24pt ;
@@ -112,10 +112,11 @@ body {
 #header #context2 {
 	position: absolute ;
 	text-align: right ;
-	width: 40% ;
+	width: 33% ;
 	right: 0 ;
-	font-size: 12pt ;
+	font-size: 10pt ;
 	padding: 2px ;
+	padding-left: 48px ;
 }
 
 #header #context1 {
@@ -309,15 +310,20 @@ a.switch:before {
 	padding-bottom: 0.25em ;
 }
 
+.flash.error {
+	background-color: #fff7f7 ;
+	color: #070000 ;
+	border: 2px solid #C00000 ;
+}
 .flash.notice {
-	background-color: white ;
-	color: black ;
-	border: 2px solid red ;
+	background-color: #f7f7ff ;
+	color: #000007 ;
+	border: 2px solid #0000C0 ;
 }
 .flash.followup {
-	background-color: white ;
-	color: black ;
-	border: 2px solid yellow ;
+	background-color: #fffff7 ;
+	color: #070700 ;
+	border: 2px solid #c0c000 ;
 }
 
 #main .main h2:before {

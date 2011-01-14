@@ -1,5 +1,30 @@
 @import url(common/documents.css) ;
 
-li.reason:hover {
-	background-color: #cc9 ;
+form.edit_document_review fieldset {
+	border: 2px dashed #e7e7b7 ;
+	background: transparent ;
+	padding: 2px ;
+	margin: 2px 0 ;
+}
+
+form.edit_document_review fieldset {
+}
+
+form.edit_document_review fieldset.active {
+	background-color: #e7e7b7 ;
+	border: 2px solid #e0e0b0 ;
+}
+
+form.edit_document_review ul {
+	list-style: none none inside ;
+	padding-left: 0 ;
+	margin: 0 0 0 1em ;
+}
+
+form.edit_document_review li label {
+	background: transparent ;
+}
+
+form.edit_document_review li label:hover {
+	background-color: #d7d7e0 ;
 }

@@ -1,4 +1,4 @@
-<h2>Review Stage: <%=h "#{@review_stage.project.title}, #{@review_stage.name}" %> </h2>
+<h2>Review Stage: <%= link_to @review_stage.project.title, user_project_path(@user,@review_stage.project) %>, <%=h @review_stage.name %> </h2>
 
 <% box(:inset) do %>
 	<div class="description"> <%= @review_stage.description %> </div> <!-- note the lack of "h" here -->

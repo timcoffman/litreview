@@ -3,23 +3,27 @@
 	<%= personal_link_to @manager.user %>
 </h2>
 
-<div class="card">
-
-<%= render :partial => "users/show", :locals => { :user => @manager.user } %>
-
-</div>
-
 <p>
-  <b>Project:</b>
-  <%= link_to @manager.project.title, user_project_path(@user,@manager.project) %>
-</p>
-
-<p>
-  <b>Manager:</b>
-  <%= personal_link_to @manager.user %>
-</p>
-
 <%= link_to 'Revoke', user_project_manager_path(@user,@project,@manager), :method => :delete %> |
 <%= link_to 'Edit', edit_user_project_manager_path(@user,@project,@manager) %> |
 <%= link_to 'Back', user_project_managers_path(@user,@project) %>
+</p>
+
+
+<div class="tie">
+
+<div class="tie-left">
+  <span class="category">Project</span>
+  <%= link_to @manager.project.title, user_project_path(@user,@manager.project), :class => "entity" %>
+</div>
+
+<div class="tie-center">
+</div>
+
+<div class="tie-right">
+  <span class="category">Manager</span>
+  <%= personal_link_to @manager.user, "", nil, :class => "entity" %>
+</div>
+
+<div>
 

@@ -1,0 +1,9 @@
+<% unless stage_reviewer.incomplete_reviews.empty? %>
+	<div class="todo">
+		<%= personal_link_to stage_reviewer.user %>
+		has
+		<%= link_to_unless_current pluralize( stage_reviewer.incomplete_reviews.count, 'reviews' ) %>
+		open in
+		<%= link_to_unless_current stage_reviewer.review_stage, user_project_review_stage_path(@user,@project,stage_reviewer.review_stage) %>
+	</div>
+<% end %>

@@ -32,9 +32,8 @@
 
 .document .duplicate {
 	margin: 1px ;
-	background-color: #900 ;
-	color: #ffb ;
-	text-align: center ;
+	color: #900 ;
+	text-align: left ;
 	padding: 2px ;
 }
 
@@ -42,14 +41,18 @@
 .document .duplicate a:link,
 .document .duplicate a:visited,
 .document .duplicate a:hover {
-	color: #ff9 ;
+	color: #600 ;
 	text-decoration: none ;
 }
 
 .document .duplicate a:hover {
-	background-color: #c33 ;
+	background-color: #ff9 ;
 }
 
+.document .duplicate:before {
+        content: url(/images/duplicate-tag.png) ;
+        vertical-align: middle ;
+}
 
 .document .head {
 	margin-left: 1em ;

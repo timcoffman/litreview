@@ -40,7 +40,7 @@ This document source contains <%= link_to pluralize( @document_source.documents.
 	<% else %>
 		Upload a file containing document details for import:
 	<% end %>
-	<%= file_field_tag "import_file", :accept => "text/plain" %>
+	<%= file_field_tag "import_file", :accept => "text/plain, text/csv" %>
 	<input type="submit" value="<%= @document_source.has_import_file? ? 'Replace' : 'Upload' %>"/>
 <% end %>
 </p>

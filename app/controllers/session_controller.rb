@@ -44,6 +44,8 @@ class SessionController < ApplicationController
 		
 		@openid_url = params[:openid_url] ;
 		
+		### return failed_login( "\"#{@openid_url}\" is not an OpenId; it should be similar to an e-mail address (i.e. name@host.com)" ) unless @openid_url.match( "^[^@]+@[^@]+$" ) ;
+		
 		authenticate_with_open_id(
 				@openid_url,
 				:required => [ :email ],

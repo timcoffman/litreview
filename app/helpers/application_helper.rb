@@ -18,6 +18,13 @@ module ApplicationHelper
 		content_tag :table, [thead_html, tbody_html, tfoot_html].join("\n"), :class => 'report'
 	end
 	
+	def link_to_task( title, url )
+		task_html = content_tag(:span, "", :class => "overlay") + content_tag(:span, title, :class => "title")
+		link_to_unless_current( task_html, url, :class => "task" ) do
+			content_tag( :span, task_html, :class => "task" )
+		end
+	end
+	
 	def link_to_tree(record,display,url)
 		return '' if record.nil?
 		if display.is_a?(Proc)
@@ -327,13 +334,17 @@ module ApplicationHelper
 		else
 			suffix = options_or_suffix
 			url = options_or_url
-			options = {}
+			options ||= {}
 		end
 		url ||= user_path(user)
 		subject = if not user.is_a?(User)
 			"#{user}"
 		elsif user == current_user
 			"You"
+		elsif options[:display].is_a?(Symbol)
+			user.send( options[:display] )
+		elsif options[:display]
+			options[:display]
 		elsif current_page?(url)
 			user.nickname
 		else

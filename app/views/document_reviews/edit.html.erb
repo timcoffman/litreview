@@ -4,6 +4,19 @@
 	<%= personal_link_to @document_review.stage_reviewer.user, '', user_path(@document_review.stage_reviewer.user) %></span>
 </h2>
 
+<p>
+<% unless @document_review.preceding_siblings.empty? %>
+	<%= link_to "Previous Review", edit_user_project_review_stage_stage_reviewer_document_review_path(@user,@project,@review_stage,@stage_reviewer,@document_review.preceding_siblings.first) %>
+<% end %>
+<% unless @document_review.following_siblings.empty? %>
+	<%= link_to "Skip to Next Review", edit_user_project_review_stage_stage_reviewer_document_review_path(@user,@project,@review_stage,@stage_reviewer,@document_review.following_siblings.first) %>
+<% end %>
+</p>
+
+<p>
+	<%= link_to "Potential Duplicate", match_duplicates_user_project_document_path( @user, @project, @document_review.document ) %>
+</p>
+
 <div class="side-by-side">
 	<div class="left-side">
 		<%= render :partial => 'documents/show', :locals => { :document => @document_review.document } %>

@@ -38,7 +38,40 @@ h3 {
 	border-bottom: 1px solid #559 ;
 	width: 60% ;
 }
+h3 :visited,
+h3 :link,
+h3 :active {
+	color: #ff7 ;
+}
+h3 :hover {
+	color: #ff9 ;
+}
 
+h3.reviewer:before,
+h3.reviewers:before {
+	content: url(/images/users_icon_20.png) ;
+	vertical-align: center ;
+}
+h3.manager:before,
+h3.managers:before {
+	content: url(/images/users_icon_20.png) ;
+	vertical-align: center ;
+}
+h3.user:before,
+h3.users:before {
+	content: url(/images/users_icon_20.png) ;
+	vertical-align: center ;
+}
+h3.stage:before,
+h3.stages:before {
+	content: url(/images/stages_icon_20.png) ;
+	vertical-align: center ;
+}
+h3.document:before,
+h3.documents:before {
+	content: url(/images/documents_icon_20.png) ;
+	vertical-align: center ;
+}
 h3:before {
 	content: '' ;
 	background: url(/images/h3.png) no-repeat left center ;
@@ -129,4 +162,70 @@ table.basic tbody td {
 
 .openid {
 	font-family: monospace
+}
+
+.topic {
+	margin-top: 4px ;
+	margin-bottom: 4px ;
+}
+
+.topic > * {
+	width: 96% ;
+	background-color: #559 ;
+	margin: 0 ;
+	padding-left: 2% ;
+	padding-right: 2% ;
+}
+
+.topic > * p {
+	margin: 0 ;
+}
+
+.topic > h3 {
+	background-color: transparent ;
+	border-bottom: 1px solid #
+}
+
+.task {
+	display: block ;
+	position: relative ;
+	margin: 12px ;
+}
+
+.task .title {
+	display: block ;
+	/* border: dashed 1px green ; */
+	padding: 4px ;
+}
+
+.task .overlay {
+	display: block ;
+	position: absolute ;
+	left: -24px ;
+	top: -18px ;
+	bottom: -18px ;
+	width: 72px ;
+	/* border: dashed 1px red ; */
+	background: transparent url(/images/task_overlay_24.png) no-repeat scroll center left ;
+	z-index: -1 ;
+}
+
+.owner {
+	font-size: smaller ;
+	font-style: italic ;
+	color: #777 ;
+}
+
+.owner:before { content: '[' ; }
+.owner:after { content: ']' ; }
+
+.owner {
+	color: #777 ;
+}
+
+.owner :link,
+.owner :active,
+.owner :visited,
+.owner :hover {
+	color: #777 ;
 }

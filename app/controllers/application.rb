@@ -57,7 +57,7 @@ class ApplicationController < ActionController::Base
 	if @current_user && ! current_project
 		favs = @current_user.favorite_projects(1)
 		unless favs.empty?
-			self.current_project = @current_user.favs.shift
+			self.current_project = favs.shift
 		end
 	end
   end

@@ -5,7 +5,17 @@
 	<div class="description"> <%= @project.description %> </div> <!-- note the lack of "h" here -->
 <% end %>
 
-<h3>Participants</h3>
+<% for review_stage in @project.review_stages do %>
+	<% for stage_reviewer in review_stage.stage_reviewers.find( :all, :conditions => { :user_id => @user.id } ) do %>
+		<% incomplete_review_count = stage_reviewer.incomplete_reviews.count %>
+		<% if incomplete_review_count > 0 %>
+			<% review_total = stage_reviewer.document_reviews.count %>
+			<%= link_to_task content_tag(:strong,incomplete_review_count) + " reviews to do for #{review_stage.name}", user_project_review_stage_stage_reviewer_path(@user,@project,review_stage,stage_reviewer) %>
+		<% end %>
+	<% end %>
+<% end %>
+
+<h3 class="users">Participants</h3>
 
 <div class="managers">
 	<% if @project.managers.empty? %>
@@ -39,22 +49,25 @@
 			<% end %>.</p>
 		<% end %>
 	<% end %>
-	<% form_tag invite_reviewer_user_project_path(@user,@project), :method => :post do %>
-	Invite someone to sign up for reviewing this project:
-	<input type="text" name="invitee_address" value="enter e-mail address"/>
-	<input type="submit" value="Send Invitation"/>
-	<% end %>
+	<p>
+		<%= link_to_function "Invite someone", "Effect.toggle('project-#{@project.id}-inviter', 'slide', { duration: 0.25 })" %> to sign up for reviewing this project
+		<% form_tag invite_reviewer_user_project_path(@user,@project), :method => :post, :id => "project-#{@project.id}-inviter", :style => "display: none;" do %>
+			Enter E-Mail Address: <input type="text" name="invitee_address"/>
+			<input type="submit" value="Send Invitation"/>
+			<%= link_to_function "Cancel", "Effect.toggle('project-#{@project.id}-inviter', 'slide', { duration: 0.25 })" %>
+		<% end %>
+	</p>
 </div>
 
 
-<h3>Documents</h3>
+<h3 class="documents">Documents</h3>
 
 <div class="sources">
 	<p>
 	This project contains
-	<span class="documents"> <%= link_to pluralize( @project.document_sources.inject(0) { |c,ds| c += ds.documents.count }, "documents" ), user_project_documents_path(@user,@project) %> </span>
+	<span class="documents"> <%= link_to pluralize( @project.document_sources.inject(0) { |c,ds| c += ds.documents.count }, "document" ), user_project_documents_path(@user,@project) %> </span>
 	from
-	<span class="sources"> <%= link_to pluralize( @project.document_sources.count, "sources" ), user_project_document_sources_path(@user,@project) %></span>:
+	<span class="sources"> <%= link_to pluralize( @project.document_sources.count, "source" ), user_project_document_sources_path(@user,@project) %></span>:
 	</p>
 	<table class="basic">
 		<thead><tr>
@@ -68,7 +81,7 @@
 	</table>
 </div>
 
-<h3>Stages</h3>
+<h3 class="stages">Stages</h3>
 
 <table class="stages">
 	<thead>

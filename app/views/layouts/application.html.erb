@@ -9,6 +9,7 @@
   <%= stylesheet_link_tag "skins/#{skin}/application"  %>
   <%= stylesheet_link_tag "skins/#{skin}/#{controller.controller_name.pluralize}"  %>
   <%= javascript_include_tag 'prototype' %>
+  <%= javascript_include_tag 'effects' %>
 </head>
 <body>
 
@@ -30,7 +31,7 @@
 			Systematic  LitReview Tracker
 		</div>
 		<div class="title">
-			<%=h current_project.title %>
+			<%= link_to current_project.title, user_project_path(@user || current_user, current_project) %>
 		</div>
 	<% end %>
 </div>
@@ -39,7 +40,7 @@
 	<% if current_user.blank? %>
 		<span> <%= link_to_unless_current "Log In", :controller => 'session', :action => 'new' %> </span>
 	<% else %>
-		<span class="user"> <%= link_to_unless_current current_user.nickname, user_path(current_user) %> </span>
+		Signed in as <span class="user"><%= link_to_unless_current current_user.nickname, user_path(current_user) %></span>
 		<span> <%= link_to_unless_current "Switch User...", :controller => 'session', :action => 'new' %> </span>
 		<span> <%= link_to_unless_current "Log Out", :controller => 'session', :action => 'destroy' %> </span>
 	<% end %>
@@ -89,14 +90,14 @@
 	<% tree() do |t|
 		t.tag             :show => :words, :index => 'All Tags'
 		t.user            :show => :full_name, :index => 'People'
-		t.project         :show => :title, :nodes => [ :managers, :review_stages ]
+		t.project         :show => :title
 		t.document_source :show => :name
 		t.document        :show => Proc.new { |d| '"' + abbreviate(d.title) + '"' }
 		t.manager         :show => Proc.new { |m| "Manager (#{m.user.nickname})" }
-		t.review_stage    :show => :name, :nodes => [ :stage_reviewers ]
-		t.stage_reviewer  :show => Proc.new { |sr| "Reviewer (#{sr.user.nickname})" }
+		t.review_stage    :show => :name
+		t.stage_reviewer  :show => Proc.new { |sr| sr.user ? "Reviewer (#{sr.user.nickname})" : "New Reviewer" }
 		t.document_review :show => Proc.new { |dr| '"' + abbreviate(dr.document.title) + '"' }
-		t.node @tag||@tags
+		t.node :tag
 		t.node :user do |u|
 			u.node :project do |p|
 				p.node :document
@@ -114,6 +115,9 @@
 </div>
 
 <div id="main">
+<% if flash[:error] %>
+	<p class="flash error"><%= flash[:error] %></p>
+<% end %>
 <% if flash[:notice] %>
 	<p class="flash notice"><%= flash[:notice] %></p>
 <% end %>

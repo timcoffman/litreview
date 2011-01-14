@@ -297,15 +297,20 @@ a.switch:before {
 	padding-bottom: 0.25em ;
 }
 
+.flash.error {
+	background-color: #fff7f7 ;
+	color: #070000 ;
+	border: 2px solid #C00000 ;
+}
 .flash.notice {
-	background-color: white ;
-	color: black ;
-	border: 2px solid red ;
+	background-color: #f7f7ff ;
+	color: #000007 ;
+	border: 2px solid #0000C0 ;
 }
 .flash.followup {
-	background-color: white ;
-	color: black ;
-	border: 2px solid yellow ;
+	background-color: #fffff7 ;
+	color: #070700 ;
+	border: 2px solid #c0c000 ;
 }
 
 #main .main h2:before {
