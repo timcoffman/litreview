@@ -21,12 +21,12 @@ ActiveRecord::Schema.define(:version => 20081201165809) do
   create_table "document_reviews", :force => true do |t|
     t.integer  "document_id"
     t.integer  "stage_reviewer_id"
+    t.integer  "reviewer_sequence", :default => 0
+    t.integer  "reviewer_snooze",   :default => 0
     t.string   "disposition"
     t.datetime "when_reviewed"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "reviewer_sequence", :default => 0, :null => false
-    t.integer  "reviewer_snooze",   :default => 0, :null => false
   end
 
   create_table "document_sources", :force => true do |t|
@@ -40,12 +40,12 @@ ActiveRecord::Schema.define(:version => 20081201165809) do
   end
 
   create_table "document_tags", :force => true do |t|
-    t.integer  "tag_id",                     :null => false
-    t.integer  "document_id",                :null => false
+    t.integer  "tag_id"
+    t.integer  "document_id"
+    t.integer  "applied_by_user_id"
+    t.integer  "applied_in_review_stage_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "applied_by_user_id",         :null => false
-    t.integer  "applied_in_review_stage_id", :null => false
   end
 
   create_table "documents", :force => true do |t|
@@ -53,62 +53,15 @@ ActiveRecord::Schema.define(:version => 20081201165809) do
     t.string   "pub_ident"
     t.string   "title"
     t.string   "authors"
+    t.string   "journal"
     t.string   "when_published"
     t.text     "abstract"
     t.integer  "duplicate_of_document_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "journal",                  :limit => 256
   end
 
-  add_index "documents", ["document_source_id", "pub_ident"], :name => "pub_ident", :unique => true
-
-  create_table "import", :primary_key => "PubId", :force => true do |t|
-    t.string "DuplicateOf",       :limit => 64
-    t.string "Source",            :limit => 16,  :null => false
-    t.string "Author",            :limit => 512, :null => false
-    t.string "Date",              :limit => 16,  :null => false
-    t.string "Title",             :limit => 512, :null => false
-    t.string "Journal",           :limit => 512, :null => false
-    t.text   "Keyword"
-    t.text   "Abstract",                         :null => false
-    t.string "OfInterest_U1",     :limit => 32
-    t.string "OfInterest_U2",     :limit => 32
-    t.string "Tags_U1_R1",        :limit => 32
-    t.string "Reason_U1_R1",      :limit => 64
-    t.string "ReasonOther_U1_R1", :limit => 256
-    t.string "Tags_U2_R1",        :limit => 32
-    t.string "Reason_U2_R1",      :limit => 64
-    t.string "ReasonOther_U2_R1", :limit => 256
-    t.string "Tags_U1_R2",        :limit => 32
-    t.string "Reason_U1_R2",      :limit => 64
-    t.string "ReasonOther_U1_R2", :limit => 256
-    t.string "Tags_U2_R2",        :limit => 32
-    t.string "Reason_U2_R2",      :limit => 64
-    t.string "ReasonOther_U2_R2", :limit => 256
-  end
-
-  create_table "import_reasons", :id => false, :force => true do |t|
-    t.integer "review_stage_id",                             :null => false
-    t.integer "stage_reviewer_id",                           :null => false
-    t.integer "created_by_stage_reviewer_id"
-    t.integer "document_id",                                 :null => false
-    t.string  "Reason",                       :limit => 256, :null => false
-  end
-
-  add_index "import_reasons", ["stage_reviewer_id", "document_id", "created_by_stage_reviewer_id", "Reason"], :name => "stage_reviewer_id", :unique => true
-
-  create_table "import_reviews", :id => false, :force => true do |t|
-    t.integer "review_stage_id",                  :null => false
-    t.integer "stage_reviewer_id",                :null => false
-    t.integer "document_id",                      :null => false
-    t.string  "Tags",              :limit => 32
-    t.string  "Reason",            :limit => 64
-    t.string  "ReasonOther",       :limit => 256
-  end
-
-  create_table "import_tags", :primary_key => "PubId", :force => true do |t|
-  end
+  add_index "documents", ["document_source_id", "pub_ident"], :name => "index_documents_on_document_source_id_and_pub_ident", :unique => true
 
   create_table "managers", :force => true do |t|
     t.integer  "project_id"
@@ -143,10 +96,10 @@ ActiveRecord::Schema.define(:version => 20081201165809) do
     t.integer  "review_stage_id"
     t.integer  "created_by_stage_reviewer_id"
     t.string   "title"
+    t.integer  "sequence"
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "sequence"
   end
 
   create_table "review_stages", :force => true do |t|
@@ -162,7 +115,6 @@ ActiveRecord::Schema.define(:version => 20081201165809) do
   create_table "stage_reviewers", :force => true do |t|
     t.integer  "review_stage_id"
     t.integer  "user_id"
-    t.boolean  "is_project_manager"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -186,13 +138,15 @@ ActiveRecord::Schema.define(:version => 20081201165809) do
   create_table "users", :force => true do |t|
     t.string   "full_name"
     t.string   "nickname"
-    t.string   "identity_url",                    :null => false
+    t.string   "identity_url",                          :null => false
     t.string   "email"
-    t.boolean  "is_admin",     :default => false, :null => false
+    t.boolean  "is_admin",           :default => false, :null => false
+    t.integer  "current_project_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "users", ["identity_url"], :name => "index_users_on_identity_url", :unique => true
+  add_index "users", ["nickname"], :name => "index_users_on_nickname", :unique => true
 
 end
