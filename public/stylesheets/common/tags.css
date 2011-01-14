@@ -29,7 +29,7 @@ a.tag:hover {
 }
 
 .tag:before {
-	content: url(/images/tag.png) ;
+	content: url(../../images/tag.png) ;
 	vertical-align: middle ;
 }
 

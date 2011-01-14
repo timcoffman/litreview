@@ -32,7 +32,7 @@ h3 {
 
 	padding-left: 4pt ;
 	padding-right: 4pt ;
-	background: transparent url(/images/h3.png) no-repeat right top ;
+	background: transparent url(../../../images/h3.png) no-repeat right top ;
 	color: #ff7 ;
 
 	border-bottom: 1px solid #559 ;
@@ -49,36 +49,36 @@ h3 :hover {
 
 h3.reviewer:before,
 h3.reviewers:before {
-	content: url(/images/users_icon_20.png) ;
+	content: url(../../../images/users_icon_20.png) ;
 	vertical-align: center ;
 }
 h3.manager:before,
 h3.managers:before {
-	content: url(/images/users_icon_20.png) ;
+	content: url(../../../images/users_icon_20.png) ;
 	vertical-align: center ;
 }
 h3.user:before,
 h3.users:before {
-	content: url(/images/users_icon_20.png) ;
+	content: url(../../../images/users_icon_20.png) ;
 	vertical-align: center ;
 }
 h3.stage:before,
 h3.stages:before {
-	content: url(/images/stages_icon_20.png) ;
+	content: url(../../../images/stages_icon_20.png) ;
 	vertical-align: center ;
 }
 h3.document:before,
 h3.documents:before {
-	content: url(/images/documents_icon_20.png) ;
+	content: url(../../../images/documents_icon_20.png) ;
 	vertical-align: center ;
 }
 h3:before {
 	content: '' ;
-	background: url(/images/h3.png) no-repeat left center ;
+	background: url(../../../images/h3.png) no-repeat left center ;
 }
 h3:after {
 	content: '' ;
-	background: url(/images/h3.png) no-repeat right center ;
+	background: url(../../../images/h3.png) no-repeat right center ;
 }
 
 h2 :active, h2 :visited, h2 :link, h2 :hover,
@@ -206,7 +206,7 @@ table.basic tbody td {
 	bottom: -18px ;
 	width: 72px ;
 	/* border: dashed 1px red ; */
-	background: transparent url(/images/task_overlay_24.png) no-repeat scroll center left ;
+	background: transparent url(../../../images/task_overlay_24.png) no-repeat scroll center left ;
 	z-index: -1 ;
 }
 

@@ -77,7 +77,7 @@ a.flowstep:hover   { color: #000 ; text-decoration: none ; background-color: #f0
 	margin: 0 ;
 	margin-left: 0.25em ;
 	margin-right: 0.25em ;
-	background: transparent url(/images/step.png) no-repeat center center ;
+	background: transparent url(../../../images/step.png) no-repeat center center ;
 }
 
 .flowstep.complete   { border-color: #373 ; background-color: #ded ; }
@@ -88,10 +88,10 @@ a.flowstep.complete:hover   { border-color: #373 ; background-color: #bcb ; }
 a.flowstep.partial:hover    { border-color: #357 ; background-color: #bbc0cc ; }
 a.flowstep.incomplete:hover { border-color: #733 ; background-color: #cbb ; }
 
-.flowstep.none       .icon:before { content: url(/images/flowstep_status_none.png) ; }
-.flowstep.complete   .icon:before { content: url(/images/flowstep_status_complete.png) ; }
-.flowstep.incomplete .icon:before { content: url(/images/flowstep_status_incomplete.png) ; }
-.flowstep.partial    .icon:before { content: url(/images/flowstep_status_partial.png) ; }
+.flowstep.none       .icon:before { content: url(../../../images/flowstep_status_none.png) ; }
+.flowstep.complete   .icon:before { content: url(../../../images/flowstep_status_complete.png) ; }
+.flowstep.incomplete .icon:before { content: url(../../../images/flowstep_status_incomplete.png) ; }
+.flowstep.partial    .icon:before { content: url(../../../images/flowstep_status_partial.png) ; }
 
 .flowstep .icon {
 	padding: 0 ;

@@ -1,7 +1,7 @@
 @import url(tags.css) ;
 
 .document {
-	background: transparent url(/images/document_bg.png) top right no-repeat ;
+	background: transparent url(../../images/document_bg.png) top right no-repeat ;
 	border: 0 ;
 	border-left: 2px solid #bbb ;
 	border-bottom: 2px solid #bbb ;
@@ -50,7 +50,7 @@
 }
 
 .document .duplicate:before {
-        content: url(/images/duplicate-tag.png) ;
+        content: url(../../images/duplicate-tag.png) ;
         vertical-align: middle ;
 }
 
