@@ -103,8 +103,16 @@ body {
 #header #title .title {
 	
 }
+#header #title .title img {
+	height: 36px ;
+	vertical-align: text-top ;
+}
 #header #title .subtitle {
 	font-size: 12pt ;
+}
+#header #title .subtitle img {
+	height: 16px ;
+	vertical-align: text-top ;
 }
 
 #header #context1,
@@ -234,6 +242,9 @@ body {
 	margin: 2px ;
 	margin-right: 6px ;
 	}
+#tree .tree.leaf .text:before {
+	content: "\00bb" ;
+}
 
 #tree a.tree.leaf:visited { color: #337 ; text-decoration: none ; }
 #tree a.tree.leaf:link    { color: #337 ; text-decoration: none ; }

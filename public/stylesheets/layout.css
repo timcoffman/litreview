@@ -82,3 +82,9 @@
 	width: 45% ;
 	right: 0 ;
 }
+
+.separator {
+	width: 60% ;
+	padding: 20% ;
+	text-align: middle ;
+}

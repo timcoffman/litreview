@@ -63,6 +63,15 @@
 <h3 class="documents">Documents</h3>
 
 <div class="sources">
+<% if @project.document_sources.size == 0 %>
+	<p>
+	This project contains no
+	<%= link_to('documents',user_project_documents_path(@user,@project)) %>
+	or
+	<%= link_to( 'document sources', user_project_document_sources_path(@user,@project) ) %>.
+	You can <%= link_to('add a new source',new_user_project_document_source_path(@user,@project)) %>
+	</p>
+<% else %>
 	<p>
 	This project contains
 	<span class="documents"> <%= link_to pluralize( @project.document_sources.inject(0) { |c,ds| c += ds.documents.count }, "document" ), user_project_documents_path(@user,@project) %> </span>
@@ -79,9 +88,23 @@
 			<%= @project.document_sources.collect { |ds| content_tag :td, number_with_delimiter(ds.documents.count) }.join %>
 		</tr></tbody>
 	</table>
+<% end %>
 </div>
 
 <h3 class="stages">Stages</h3>
+
+<% if @project.review_stages.size == 0 %>
+	<p>
+	This project contains no
+	<%= link_to('review stages',user_project_review_stages_path(@user,@project)) %>.
+	You can <%= link_to('add a new one' ,new_user_project_review_stage_path(@user,@project))  %>
+		</td>
+	</p>
+<% else %>
+	<p>
+	This project contains
+	<span class="stages"> <%= link_to pluralize( @project.review_stages.count, "review stage" ), user_project_review_stages_path(@user,@project) %></span>:
+	</p>
 
 <table class="stages">
 	<thead>
@@ -92,7 +115,6 @@
 		</tr>
 	</thead>
 	<tbody>
-	
 <% for review_stage in @project.review_stages do %>
 	<tr class="stage">
 		<th class="sequence">
@@ -117,6 +139,7 @@
 <% end %>
 	</tbody>
 </table>
+<% end %>
 
 <h3>Reports</h3>
 

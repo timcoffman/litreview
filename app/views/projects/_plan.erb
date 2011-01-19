@@ -11,9 +11,7 @@
 	<tr class="role">
 		<th/>
 		<th class="odd"><%=h pluralize(project.managers.count,"Project Manager") %></th>
-		<% unless project_users.empty? %>
-			<th class="even" colspan="<%= project_users.size %>"> <%=h pluralize(project_users.size,"Reviewer") %> </th>
-		<% end %>
+		<th class="even" colspan="<%= [project_users.size,1].max %>"> <%=h pluralize(project_users.size,"Reviewer") %> </th>
 	</tr>	
 	<tr class="username">
 		<th/>
@@ -32,6 +30,11 @@
 				<span> <%= personal_link_to user, '', user_path(user) %> </span>
 			</th>
 		<% end %>
+		<% if project_users.size == 0 %>
+			<th class="<%=h cycle('even','odd') %>">
+				<span> <%= link_to 'Signup 1<sup>st</sup> Reviewer', users_path() %> </span>
+			</th>
+		<% end %>
 	</tr>
 	</thead>
 	<tbody>
@@ -40,7 +43,7 @@
 		<td class="odd">
 			<%= flow.step("Assign Manager", :status => ! project.managers.empty?, :url => new_user_project_manager_path(user,project) ) %>
 			<%= flow.step("Write Mission") do |fs|
-				fs.url edit_user_project_path(user,@project)
+				fs.url edit_user_project_path(user,@project) if project.managed_by?( current_user )
 				fs.given("Assign Manager", true ) do
 					wc = (project.description || "").split(/\s+/).length
 					fs.achievement "Words", :count => wc
@@ -68,6 +71,11 @@
 				<%= flow_step("Sign Up") { |fs| fs.complete } %>
 			</td>
 		<% end %>
+		<% if project_users.size == 0 %>
+			<td class="<%=h cycle('even','odd') %>">
+				<%= flow_step("Sign Up") { |fs| fs.incomplete ; fs.url users_path } %>
+			</td>
+		<% end %>
 	</tr>
 	<% for review_stage in project.review_stages %>
 		<tr class="iteration <%=h "iteration-#{review_stage.sequence}" %>">
@@ -93,8 +101,10 @@
 			</td>
 			<% reset_cycle %>
 			<% for user in project_users %>
-				<td class="<%=h cycle('even','odd') %>">
-				</td>
+				<td class="<%=h cycle('even','odd') %>"/>
+			<% end %>
+			<% if project_users.size == 0 %>
+				<td class="<%=h cycle('even','odd') %>"/>
 			<% end %>
 		</tr>
 		<tr>
@@ -112,6 +122,9 @@
 					<% end %>
 				</td>
 			<% end %>
+			<% if project_users.size == 0 %>
+				<td class="<%=h cycle('even','odd') %>"/>
+			<% end %>
 		</tr>
 	<% end %>
 	<tr class="final">
@@ -124,6 +137,9 @@
 			<td class="<%=h cycle('even','odd') %>">
 				<%= flow_step "Wrap-up", :final => true %> <!-- complete if all previous stages are complete -->
 			</td>
+		<% end %>
+		<% if project_users.size == 0 %>
+			<td class="<%=h cycle('even','odd') %>"/>
 		<% end %>
 	</tr>
 	</tbody>

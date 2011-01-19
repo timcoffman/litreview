@@ -33,6 +33,37 @@ table.box.inset tr.middle td.middle input {
 	background-color: #fff ;
 }
 
+table.box.level2 tr.top td,
+table.box.level2 tr.bottom td {
+	height: 9px ;
+}
+
+table.box.level2 td.left,
+table.box.level2 td.right {
+	width: 9px ;
+}
+
+table.box.level2 tr.top    td.left   { background: url(../../../images/box/level2/level2-0-0.png) top left no-repeat ; }
+table.box.level2 tr.top    td.middle { background: url(../../../images/box/level2/level2-1-0.png) top center repeat-x ; }
+table.box.level2 tr.top    td.right  { background: url(../../../images/box/level2/level2-2-0.png) top right no-repeat ; }
+table.box.level2 tr.middle td.left   { background: url(../../../images/box/level2/level2-0-1.png) center left repeat-y ; }
+table.box.level2 tr.middle td.middle { background: #f7f7f7 ; }
+table.box.level2 tr.middle td.right  { background: url(../../../images/box/level2/level2-2-1.png) center right repeat-y ; }
+table.box.level2 tr.bottom td.left   { background: url(../../../images/box/level2/level2-0-2.png) bottom left no-repeat ; }
+table.box.level2 tr.bottom td.middle { background: url(../../../images/box/level2/level2-1-2.png) bottom center repeat-x ; }
+table.box.level2 tr.bottom td.right  { background: url(../../../images/box/level2/level2-2-2.png) bottom right no-repeat ; }
+
+table.box.level2 tr.middle td.middle textarea,
+table.box.level2 tr.middle td.middle input {
+	margin: 0 ;
+	padding: 0 ;
+}
+
+.box.level2 {
+	margin-right: 10px ;
+	margin-bottom: 10px ;
+}
+
 .box .actions {
 	float: right ;
 	width: 50% ;

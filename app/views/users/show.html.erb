@@ -1,3 +1,4 @@
+<% box(:level2) do %>
 <h2> User: <%=h @user.full_name %> </h2>
 
 <% for manager in @user.managers %>
@@ -28,8 +29,13 @@
 	<% end %>
 <% end %>
 
-<%= render :partial => 'show', :locals => { :user => @user } %>
+<% end %>
 
+<% box(:level2) do %>
+<%= render :partial => 'show', :locals => { :user => @user } %>
+<% end %>
+
+<% box(:level2) do %>
 <h2>Tags</h2>
 <p>
 	<% if @user.custom_tags.empty? %>
@@ -40,25 +46,42 @@
 		<% end %>
 	<% end %>
 </p>
+<% end %>
 
+
+<% box(:level2) do %>
 <h2>Projects</h2>
 
-<h3>Manging:</h3>
+<h3>Managing:</h3>
 
-<ul>
+<% (does_manage_projects, could_manage_projects) = Project.find( :all ).partition { |project| project.managed_by?(@user) } %>
 
-<% if current_user.is_admin %>
-	<% for project in Project.find( :all ) %>
-		<% unless project.managed_by?( @user ) %>
+<% if does_manage_projects.empty? %>
+	<p class="missing">Not managing any projects.</p>
+<% else %>
+	<ul>
+		<% does_manage_projects.each do |project| %>
+		<li>
+			Managing <%= link_to project.title, user_project_manager_path( @user, project ) %>
+		</li>
+		<% end %>
+	</ul>
+<% end %>
+
+<% if current_user.is_admin? %>
+<% if could_manage_projects.empty? %>
+	<p class="missing">No projects available for managing.</p>
+<% else %>
+	<ul>
+		<% could_manage_projects.each do |project| %>
 		<li>
 			<%= link_to "Assign as Manager for #{project.title}", new_user_project_manager_path( @user, project ) %>
 		</li>
 		<% end %>
-	<% end %>
+	</ul>
 <% end %>
 
-
-</ul>
+<% end %>
 
 <h3>Reviewing:</h3>
 
@@ -66,6 +89,7 @@
 
 
 </ul>
+<% end %>
 
 <%= link_to 'Edit', edit_user_path(@user) %> |
 <%= link_to 'Back', users_path %>

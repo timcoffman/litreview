@@ -4,7 +4,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-  <title><%= controller.controller_name.titlecase %>: <%= controller.action_name.titlecase %></title>
+  <title>
+    Minnow
+    <% if current_project %>
+      - <%= current_project.title %>
+    <% end %>
+    - <%= controller.controller_name.titlecase %>
+  </title>
   <% skin = User.preference(current_user,'skin', :default => 'blue' ) %>
   <%= stylesheet_link_tag "skins/#{skin}/application"  %>
   <%= stylesheet_link_tag "skins/#{skin}/#{controller.controller_name.pluralize}"  %>
@@ -23,11 +29,11 @@
 			No Project
 		</div>
 		<div class="title">
-			Systematic  LitReview Tracker
+			Minnow <%= image_tag 'minnow.png' %> Systematic  LitReview Tracker
 		</div>
 	<% else %>
 		<div class="subtitle">
-			Systematic  LitReview Tracker
+			Minnow <%= image_tag 'minnow.png' %> Systematic  LitReview Tracker
 		</div>
 		<div class="title">
 			<%= link_to current_project.title, user_project_path(@user || current_user, current_project) %>
