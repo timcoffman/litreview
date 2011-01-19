@@ -1,24 +1,61 @@
-<h1>Listing reasons</h1>
+<h2>
+	Project <span class="title"><%= link_to @project.title, user_project_path(@user,@project) %></span>,
+	<span class="title"><%= link_to @review_stage.name, user_project_review_stage_path(@user,@project,@review_stage) %></span>,
+	<span class="reasons">All Exclusion Reasons</span>
+</h2>
 
-<table>
-  <tr>
-    <th>Stage reviewer</th>
-    <th>Title</th>
-    <th>Description</th>
-  </tr>
-
-<% for reason in @reasons %>
-  <tr>
-    <td><%=h reason.stage_reviewer_id %></td>
-    <td><%=h reason.title %></td>
-    <td><%=h reason.description %></td>
-    <td><%= link_to 'Show', reason %></td>
-    <td><%= link_to 'Edit', edit_reason_path(reason) %></td>
-    <td><%= link_to 'Destroy', reason, :confirm => 'Are you sure?', :method => :delete %></td>
-  </tr>
+<table class="reasons">
+	<thead>
+		<tr>
+			<% if @project.managed_by?( current_user ) %>
+				<th>Action</th>
+			<% end %>
+			<th>Reason</th>
+			<th>Details</th>
+		</tr>
+	</thead>
+	<tbody id="reasons-list">
+<% if @reasons.empty? %>
+	<tr>
+		<th/>
+		<% if @project.managed_by?( current_user ) %><td/><% end %>
+		<td colspan="2"><span class="missing">no exclusion reasons</span></td>
 <% end %>
+<% for reason in @reasons.sort { |a,b| (a.sequence || 0) <=> (b.sequence ||0) } do %>
+	<tr class="reason <%= cycle('even','odd') %>" id="reason_<%= reason.id %>">
+		<% if @project.managed_by?( current_user ) %>
+			<td class="actions">
+				<%= link_to 'Edit', edit_user_project_review_stage_reason_path(@user,@project,@review_stage,reason) %>
+				<%= link_to 'Remove', user_project_review_stage_reason_path(@user,@project,@review_stage,reason), :confirm => 'Are you sure?', :method => :delete %>
+			</td>
+		<% end %>
+		<td>
+			<%= link_to reason.title, user_project_review_stage_reason_path(@user,@project,@review_stage,reason) %>
+		</td>
+		<td>
+			<% box(:inset) do %> <%= reason.description %> <% end %>
+			<% unless reason.created_by_stage_reviewer.nil? && reason.document_reviews.empty? %>
+				<p>			
+					<% unless reason.created_by_stage_reviewer.nil? %>
+						Added by <%= personal_link_to(reason.created_by_stage_reviewer.user ) %>.
+					<% end %>
+					<% unless reason.document_reviews.empty? %>
+						Applied to
+						<%= link_to pluralize(reason.document_reviews.count,'review'), user_project_review_stage_document_reviews_path(@user,@project,@review_stage, :reason => reason) %>
+					<% end %>
+				</p>
+			<% end %>
+		</td>
+	</tr>
+<% end %>
+	<% if @project.managed_by?( current_user ) %>
+		<tr>
+			<td rowspan="3">
+				<%= link_to 'Add New Exclusion Reason', new_user_project_review_stage_reason_path(@user,@project,@review_stage) %>
+			</td>
+		</tr>
+	<% end %>
+	</tbody>
 </table>
 
-<br />
-
-<%= link_to 'New reason', new_reason_path %>
+<%= sortable_element('reasons-list', :tag => :tr, :url => sort_user_project_review_stage_reasons_path(@user,@project,@review_stage) ) %>

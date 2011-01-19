@@ -1,7 +1,8 @@
-<p>
-  <b>Stage reviewer:</b>
-  <%=h @reason.stage_reviewer_id %>
-</p>
+<h2>
+	Project <span class="title"><%= link_to @project.title, user_project_path(@user,@project) %></span>,
+	<span class="title"><%= link_to @review_stage.name, user_project_review_stage_path(@user,@project,@review_stage) %></span>,
+	<span class="reason">"<%= @reason.title %>"</span>
+</h2>
 
 <p>
   <b>Title:</b>
@@ -10,9 +11,13 @@
 
 <p>
   <b>Description:</b>
-  <%=h @reason.description %>
+  <% box(:inset) do %>
+  	<%=h @reason.description %>
+	<% end %>
 </p>
 
 
-<%= link_to 'Edit', edit_reason_path(@reason) %> |
-<%= link_to 'Back', reasons_path %>
+<% if @project.managed_by?( current_user ) %>
+	<%= link_to 'Edit', edit_user_project_review_stage_reason_path(@user,@project,@review_stage,@reason) %> |
+<% end %>
+<%= link_to 'Back', user_project_review_stage_reasons_path(@user,@project,@review_stage) %>

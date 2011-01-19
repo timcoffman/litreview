@@ -8,10 +8,11 @@ ActionController::Routing::Routes.draw do |map|
       projects.resources :documents, :member => { :match_duplicates => :get, :new_tags => :post }
       projects.resources :managers
       projects.resources :review_stages, :as => 'stages', :member => { :report => :get, :auto_assign => :post } do |stages|
-        stages.resources :reasons
+        stages.resources :reasons, :collection => { :sort => :post }
         stages.resources :stage_reviewers, :as => 'reviewers' do |reviewers|
-		  reviewers.resources :document_reviews, :as => 'reviews', :member => { :new_reason => :get, :add_reason => :put }
-		end
+          reviewers.resources :document_reviews, :as => 'reviews', :member => { :new_reason => :get, :add_reason => :put }
+        end
+        stages.resources :document_reviews, :as => 'reviews', :only => [ :index ] 
       end
     end
   end

@@ -1,12 +1,23 @@
 class DocumentReviewsController < ApplicationController
-  # GET /document_reviews
-  # GET /document_reviews.xml
+  
+  before_filter { |controller| controller.load_context }
+
+  def load_context
+    @user = User.find( params[:user_id] )
+    @project = Project.find( params[:project_id] )
+    @review_stage = @project.review_stages.find( params[:review_stage_id] )
+    @stage_reviewer = @review_stage.stage_reviewers.find( params[:stage_reviewer_id] ) if params[:stage_reviewer_id]
+    @reason = @review_stage.reasons.find( params[:reason] ) if params[:reason] 
+  end
+  
   def index
-    @user = User.find(params[:user_id])
-    @project = Project.find(params[:project_id])
-    @review_stage = ReviewStage.find(params[:review_stage_id])
-    @stage_reviewer = StageReviewer.find(params[:stage_reviewer_id])
-    @document_reviews = DocumentReview.find(:all, :limit => 20)
+    if @reason
+      conditions = {}
+      conditions[:stage_reviewer_id] = @stage_reviewer.id if @stage_reviewer
+      @document_reviews = @reason.document_reviews.find(:all, :conditions => conditions, :limit => 20)
+    else
+      @document_reviews = (@stage_reviewer || @review_stage).document_reviews.find(:all, :conditions => conditions,  :limit => 20)
+    end
 
     respond_to do |format|
       format.html # index.html.erb

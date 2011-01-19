@@ -46,12 +46,26 @@ class DocumentSource < ActiveRecord::Base
 	
 	def import_file_column_names
 		return []  unless self.has_import_file?
-		header_line = nil
 		File.open( self.import_file_path, "r" ) do |file|
 			header_line = file.gets
-		end
-		return []  unless header_line
-		return header_line.rstrip.split("\t") ;
+      header_line = file.gets while header_line =~ /^\s*$/
+  		return []  unless header_line
+      if header_line =~ /^([A-Z]+)\s*[-]\s+\S+/
+        column_names = Set.new [ $1 ]
+        header_line = file.gets
+        while header_line =~ /\S/
+          if header_line =~ /^([A-Z]+)\s*[-]\s+\S+/
+            column_names << $1
+          end
+          header_line = file.gets
+        end
+        return column_names
+      elsif header_line =~ /^[^\t]+(\t[^\t]*)*$/
+  		  return header_line.rstrip.split("\t") ;
+  		else
+        return []  
+      end
+    end  
 	end
 	
 	def self.importable_attributes
@@ -69,7 +83,7 @@ class DocumentSource < ActiveRecord::Base
 		best_matches = {}
 		column_names.each do |column_name|
 			best_match = importable_attributes.keys.max { |a,b| column_name.longest_subsequence_similar(a) <=> column_name.longest_subsequence_similar(b) }
-			best_matches[column_name] = best_match # should select from self.importable_attributes
+			best_matches[column_name] = best_match if column_name.longest_subsequence_similar(best_match) > 0.1
 		end
 		return best_matches
 	end
