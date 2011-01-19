@@ -1,6 +1,6 @@
 class ReviewStagesController < ApplicationController
-  # GET /review_stages
-  # GET /review_stages.xml
+  before_filter :require_login
+
   def index
     @user = User.find(params[:user_id])
     @project = Project.find( params[:project_id] )

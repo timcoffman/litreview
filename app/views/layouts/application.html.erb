@@ -8,8 +8,7 @@
   <% skin = User.preference(current_user,'skin', :default => 'blue' ) %>
   <%= stylesheet_link_tag "skins/#{skin}/application"  %>
   <%= stylesheet_link_tag "skins/#{skin}/#{controller.controller_name.pluralize}"  %>
-  <%= javascript_include_tag 'prototype' %>
-  <%= javascript_include_tag 'effects' %>
+  <%= javascript_include_tag :defaults %>
 </head>
 <body>
 
@@ -97,6 +96,7 @@
 		t.review_stage    :show => :name
 		t.stage_reviewer  :show => Proc.new { |sr| sr.user ? "Reviewer (#{sr.user.nickname})" : "New Reviewer" }
 		t.document_review :show => Proc.new { |dr| '"' + abbreviate(dr.document.title) + '"' }
+		t.reason          :show => Proc.new { |r| '"' + abbreviate(r.title) + '"' }
 		t.node :tag
 		t.node :user do |u|
 			u.node :project do |p|
@@ -104,6 +104,7 @@
 				p.node :document_source
 				p.node :manager
 				p.node :review_stage do |rs|
+					rs.node :reason
 					rs.node :stage_reviewer do |sr|
 						sr.node :document_review
 					end

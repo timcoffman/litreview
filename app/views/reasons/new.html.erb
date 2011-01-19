@@ -1,23 +1,25 @@
-<h1>New reason</h1>
+<h2>
+	Project <span class="title"><%= link_to @project.title, user_project_path(@user,@project) %></span>,
+	<span class="title"><%= link_to @review_stage.name, user_project_review_stage_path(@user,@project,@review_stage) %></span>,
+	<span class="reason">New Exclusion Reason</span>
+</h2>
 
-<% form_for(@reason) do |f| %>
+<% form_for([ @user, @project, @review_stage, @reason]) do |f| %>
   <%= f.error_messages %>
 
   <p>
-    <%= f.label :stage_reviewer_id %><br />
-    <%= f.text_field :stage_reviewer_id %>
-  </p>
-  <p>
     <%= f.label :title %><br />
-    <%= f.text_field :title %>
+    <%= f.text_field :title, :size => 60 %>
   </p>
   <p>
     <%= f.label :description %><br />
-    <%= f.text_area :description %>
+	<% box(:inset) do %>
+    	<%= f.text_area :description, :rows => 4, :cols => 60  %>
+	<% end %>
   </p>
   <p>
+  	<%= link_to 'Cancel', user_project_review_stage_reasons_path(@user,@project,@review_stage) %>
     <%= f.submit "Create" %>
   </p>
 <% end %>
 
-<%= link_to 'Back', reasons_path %>

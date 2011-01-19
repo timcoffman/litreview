@@ -1,8 +1,13 @@
 <h2>
-        Project <span class="title"><%= link_to @stage_reviewer.review_stage.project.title, user_project_path(@user,@stage_reviewer.review_stage.project) %></span>,
-        <span class="stage"><%= link_to @stage_reviewer.review_stage.name, user_project_review_stage_path(@user,@project,@review_stage) %></span>:
-        <%= personal_link_to @stage_reviewer.user %>:
+        Project <span class="title"><%= link_to @review_stage.project.title, user_project_path(@user,@review_stage.project) %></span>,
+        <span class="stage"><%= link_to @review_stage.name, user_project_review_stage_path(@user,@project,@review_stage) %></span>:
+		<% if @stage_reviewer %>
+        	<%= personal_link_to @stage_reviewer.user %>:
+		<% end %>
 	<span class="reviews"><%=h @document_reviews.size %> Reviews</span>
+	<% if @reason %>
+		<span class="reason">excluded for "<%=link_to @reason.title, user_project_review_stage_reason_path(@user,@project,@review_stage,@reason) %>"</span>
+	<% end %>
 </h2>
 
 <p>
@@ -37,6 +42,9 @@
 		<td>
 			<%= DocumentReview.disposition( document_review.disposition ) %>
 			<%=h time_ago_in_words( document_review.when_reviewed ) %> ago
+			<% unless @stage_reviewer %>
+				by <%= personal_link_to document_review.stage_reviewer.user %>
+			<% end %>
 		</td>
 	</tr>
 <% end %>
