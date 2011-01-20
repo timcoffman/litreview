@@ -25,7 +25,7 @@
 <h3>Exclusion Reasons</h3>
 
 <div class="reasons">
-	<p>This review stage supplies <%= link_to "#{@review_stage.reasons.count} exclusion reasons", user_project_review_stage_reasons_path(@user,@project,@review_stage) %>.</p>
+	<p>This review stage supplies <%= link_to pluralize(@review_stage.reasons.count, "exclusion reason"), user_project_review_stage_reasons_path(@user,@project,@review_stage) %>.</p>
 	<% unless @review_stage.reasons.empty? %>
 		A project manager created <%= @review_stage.reasons.count - @review_stage.custom_reasons.count %> of those reasons.
 		<% for stage_reviewer in @review_stage.stage_reviewers %>
