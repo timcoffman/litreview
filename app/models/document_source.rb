@@ -105,11 +105,20 @@ class DocumentSource < ActiveRecord::Base
 					field_value = fields.shift
 					attribute_name = column_mapping[column_name]
 					details[attribute_name] = field_value unless attribute_name.nil? || attribute_name.empty?
-				end
-				original_document = self.documents.find_by_pub_ident( details[:pub_ident] )
-				if not original_document.nil?
-					result[:duplicates] << self.documents.build( details.merge( :duplicate_of_document => original_document ) )
-				elsif dry_run
+			  end
+      
+        duplicate_of_documents = Document.find( :all, details['title'], :order => 'created_at ASC', :conditions => [
+          'duplicate_of_document_id IS NULL AND (pub_ident = :pub_ident OR title = :title OR abstract = :abstract )',
+          {
+            :pub_ident => details['pub_ident'],
+            :title => details['title'],
+            :abstract => details['abstract'],
+          }
+        ] )
+        
+        details[:duplicate_of_document] = duplicate_of_documents.first
+        
+				if dry_run
 					result[:documents] << self.documents.build( details )
 				else
 					result[:documents] << self.documents.create( details )

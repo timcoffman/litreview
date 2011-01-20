@@ -116,7 +116,7 @@ class DocumentSourcesController < ApplicationController
     @document_source = DocumentSource.find(params[:id])
     result = @document_source.import(params[:column_mapping])
     respond_to do |format|
-      flash[:notice] = "Successfully imported #{result[:documents].length} documents."
+      flash[:notice] = "Successfully imported #{result[:documents].length} documents (#{result[:documents].count(&:duplicate_of_document)} were duplicates of existing documents)."
       format.html { redirect_to([@user,@project,@document_source]) }
       format.xml  { head :ok }
     end
