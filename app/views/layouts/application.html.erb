@@ -136,7 +136,7 @@
 	<% elsif flash[:followup][:post] %>
 		<% form_tag flash[:followup][:post][:url], :method => :post, :class => "flash followup" do |f| %>
 			<% flash[:followup][:post][:params].each_pair do |k,v| %>
-				<%= hidden_field_tag k.to_s, :value => v %>
+				<%= hidden_field_tag k.to_s, v %>
 			<% end %>
 			<%= flash[:followup][:message] %>
 			<%= submit_tag flash[:followup][:post][:commit] %>
