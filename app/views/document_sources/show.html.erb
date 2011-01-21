@@ -49,7 +49,7 @@ This document source contains <%= link_to pluralize( @document_source.documents.
 <% if @document_source.has_import_file? %>
 <% form_for @document_source, :url => import_user_project_document_source_path(@user,@project,@document_source), :html => { :method => :post } do |f| %>
 	<% column_names = @document_source.import_file_column_names %>
-	<% column_best_matches = DocumentSource.import_column_name_best_matches( column_names ) %>
+	<% column_best_matches = @document_source.import_column_name_best_matches( column_names ) %>
 	<table>
 		<tr> <th>Import From</th> <th>Import To</th> </tr>
 	<% for column_name in column_names %>

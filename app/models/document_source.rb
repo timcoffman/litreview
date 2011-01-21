@@ -3,7 +3,8 @@ require 'amatch'
 
 class DocumentSource < ActiveRecord::Base
 	belongs_to :project
-	has_many :documents, :dependent => :delete_all
+	has_many :documents, :dependent => :destroy
+  has_many :import_mappings, :dependent => :delete_all
 	
 	def import_file_location
 		"#{APPLICATION_DATA_LOCATION}/document_source/#{self.id}"
@@ -73,19 +74,29 @@ class DocumentSource < ActiveRecord::Base
 			'Title' => :title,
 			'Authors' => :authors,
 			'Identifier' => :pub_ident,
-			'When Published' => :when_published,
+      'When Published' => :when_published,
 			'Abstract' => :abstract,
-			'Journal' => :journal
+      'Journal' => :journal,
 			}
 	end
 	
-	def self.import_column_name_best_matches( column_names )
-		best_matches = {}
-		column_names.each do |column_name|
-			best_match = importable_attributes.keys.max { |a,b| column_name.longest_subsequence_similar(a) <=> column_name.longest_subsequence_similar(b) }
-			best_matches[column_name] = best_match if column_name.longest_subsequence_similar(best_match) > 0.1
-		end
-		return best_matches
+	def import_column_name_best_matches( column_names )
+    if self.import_mappings.empty? 
+  		best_matches = {}
+  		column_names.each do |column_name|
+  			best_match = DocumentSource.importable_attributes.keys.max { |a,b| column_name.longest_subsequence_similar(a) <=> column_name.longest_subsequence_similar(b) }
+  			best_matches[column_name] = best_match if column_name.longest_subsequence_similar(best_match) > 0.1
+  		end
+  		return best_matches
+    else
+      reverse_importable_attributes = DocumentSource.importable_attributes.invert
+      return column_names.inject( Hash.new ) do |best_matches,column_name|
+        if import_mapping =   self.import_mappings.find( :first, :conditions => { :column_heading => column_name } )
+          best_matches[column_name] = reverse_importable_attributes[import_mapping.document_attribute.to_sym]
+        end
+        best_matches
+      end
+    end
 	end
 	
 	def import( column_mapping, action = :merge, dry_run =nil )
@@ -125,7 +136,13 @@ class DocumentSource < ActiveRecord::Base
 				end
 			end
 			result[:status] = :success
-		end
+	  end
+  
+    self.import_mappings.clear
+    column_mapping.reject { |k,v| v.blank? }.each do |column_name,document_attribute|
+      self.import_mappings.create(:column_heading => column_name, :document_attribute => document_attribute )
+    end
+  
 		return result ;
 	end
 end
