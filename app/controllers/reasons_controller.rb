@@ -10,7 +10,7 @@ class ReasonsController < ApplicationController
   end
   
   def index
-    @reasons = @review_stage.reasons.sort { |a,b| (a.sequence <=> b.sequence) || (a.created_on <=> b.created_on) }
+    @reasons = @review_stage.reasons.sort { |a,b| ((a.sequence || 0) <=> (b.sequence || 0)) || ((a.created_on || 0) <=> (b.created_on || 0)) }
 
     respond_to do |format|
       format.html # index.html.erb

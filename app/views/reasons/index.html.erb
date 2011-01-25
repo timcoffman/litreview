@@ -8,26 +8,29 @@
 	<thead>
 		<tr>
 			<% if @project.managed_by?( current_user ) %>
-				<th>Action</th>
+				<th class="reorder"/>
 			<% end %>
 			<th>Reason</th>
 			<th>Details</th>
+			<% if @project.managed_by?( current_user ) %>
+				<th/>
+			<% end %>
 		</tr>
 	</thead>
 	<tbody id="reasons-list">
 <% if @reasons.empty? %>
 	<tr>
-		<th/>
 		<% if @project.managed_by?( current_user ) %><td/><% end %>
 		<td colspan="2"><span class="missing">no exclusion reasons</span></td>
+		<th class="reorder"/>
 <% end %>
 <% for reason in @reasons.sort { |a,b| (a.sequence || 0) <=> (b.sequence ||0) } do %>
 	<tr class="reason <%= cycle('even','odd') %>" id="reason_<%= reason.id %>">
 		<% if @project.managed_by?( current_user ) %>
-			<td class="actions">
-				<%= link_to 'Edit', edit_user_project_review_stage_reason_path(@user,@project,@review_stage,reason) %>
-				<%= link_to 'Remove', user_project_review_stage_reason_path(@user,@project,@review_stage,reason), :confirm => 'Are you sure?', :method => :delete %>
-			</td>
+			<th class="reorder">
+				<%= image_tag 'reorder.png' %>
+				<%= reason.sequence %>
+			</th>
 		<% end %>
 		<td>
 			<%= link_to reason.title, user_project_review_stage_reason_path(@user,@project,@review_stage,reason) %>
@@ -46,11 +49,16 @@
 				</p>
 			<% end %>
 		</td>
+		<% if @project.managed_by?( current_user ) %>
+			<td class="actions">
+				<%= link_to image_tag('flowstep_status_incomplete.png'), user_project_review_stage_reason_path(@user,@project,@review_stage,reason), :confirm => 'Are you sure?', :method => :delete %>
+			</td>
+		<% end %>
 	</tr>
 <% end %>
 	<% if @project.managed_by?( current_user ) %>
 		<tr>
-			<td rowspan="3">
+			<td rowspan="4">
 				<%= link_to 'Add New Exclusion Reason', new_user_project_review_stage_reason_path(@user,@project,@review_stage) %>
 			</td>
 		</tr>
