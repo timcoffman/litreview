@@ -118,7 +118,7 @@ class DocumentSource < ActiveRecord::Base
 					details[attribute_name] = field_value unless attribute_name.nil? || attribute_name.empty?
 			  end
       
-        duplicate_of_documents = Document.find( :all, details['title'], :order => 'created_at ASC', :conditions => [
+        duplicate_of_documents = self.project.documents.find( :all, :order => 'created_at ASC', :conditions => [
           'duplicate_of_document_id IS NULL AND (pub_ident = :pub_ident OR title = :title OR abstract = :abstract )',
           {
             :pub_ident => details['pub_ident'],
