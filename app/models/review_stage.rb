@@ -3,10 +3,11 @@ class ReviewStage < ActiveRecord::Base
 	has_many :stage_reviewers, :dependent => :delete_all
 	has_many :users, :through => :stage_reviewers
 	has_many :reviewers, :class_name => 'User', :source => :user, :through => :stage_reviewers
-	has_many :reasons, :dependent => :delete_all
+	has_many :reasons, :dependent => :delete_all, :order => 'sequence ASC, created_at ASC'
 	has_many :custom_reasons, :class_name => 'Reason', :conditions => [ 'created_by_stage_reviewer_id IS NOT NULL' ]
 	has_many :document_reviews, :through => :stage_reviewers
 	has_many :document_tags, :class_name => 'DocumentTag', :foreign_key => :applied_in_review_stage_id, :dependent => :nullify
+  has_one :form, :class_name => 'ReviewForm', :dependent => :destroy
 	
 	has_many :included_documents, :class_name => 'Document', :finder_sql => <<-EOT
 		SELECT * FROM documents d
@@ -29,9 +30,10 @@ class ReviewStage < ActiveRecord::Base
 		
 	def reviewable_documents
 		if self.gate_function == 'ANY'
-			return []
-		elsif self.gate_function == 'ALL'
-			return []
+      return self.document_reviews.find( :all, :conditions => { :disposition => 'I' }, :group => "document_id HAVING count(*) > 0" ).collect(&:document)
+    elsif self.gate_function == 'ALL'
+      n = self.stage_reviewers.size 
+			return self.document_reviews.find( :all, :conditions => { :disposition => 'I' }, :group => "document_id HAVING count(*) = #{n}" ).collect(&:document)
 		else
 			return []
 		end
@@ -58,7 +60,7 @@ class ReviewStage < ActiveRecord::Base
 		else
 			self.project.document_sources.each { |ds| docs.concat ds.documents }
 		end
-		for doc in docs
+		docs.reject(&:nil?).each do |doc|
 			for sr in self.stage_reviewers
 				dr = doc.document_reviews.find( :first, :conditions => { :stage_reviewer_id => sr.id } )
 				if dr

@@ -10,9 +10,16 @@ ActionController::Routing::Routes.draw do |map|
       projects.resources :review_stages, :as => 'stages', :member => { :report => :get, :auto_assign => :post } do |stages|
         stages.resources :reasons, :collection => { :sort => :post }
         stages.resources :stage_reviewers, :as => 'reviewers' do |reviewers|
-          reviewers.resources :document_reviews, :as => 'reviews', :member => { :new_reason => :get, :add_reason => :put }
+          reviewers.resources :document_reviews, :as => 'reviews', :member => { :new_reason => :get, :add_reason => :put } do |review|
+            review.resources :review_form_answers, :only => [ :create, :destroy ], :collection => { :retract => :delete }
+          end
         end
         stages.resources :document_reviews, :as => 'reviews', :only => [ :index ] 
+        stages.resource :review_form do |form|
+          form.resources :review_form_questions, :as => 'questions', :collection => { :sort => :post }, :member => { :update_attribute =>:put }, :except => [ :index ] do |question|
+            question.resources :review_form_possible_answers, :as => 'answers', :collection => { :sort => :post }, :member => { :update_attribute =>:put }, :except => [ :index ]
+          end
+        end
       end
     end
   end

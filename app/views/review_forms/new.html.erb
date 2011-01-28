@@ -1,0 +1,20 @@
+<h2>
+	Project <span class="title"><%= link_to @project.title, user_project_path(@user,@project) %></span>,
+	Questionnaire for <span class="Questionnaire"><%= link_to @review_stage.name, user_project_review_stage_path(@user,@project,@review_stage) %></span>:
+</h2>
+
+<% form_for(@review_form, :url => user_project_review_stage_review_form_url(@user,@project,@review_stage)) do |f| %>
+  <%= f.error_messages %>
+
+<h3>Notes</h3>
+
+<% box(:inset) do %>
+  <p><%= f.text_area :notes, :rows => 4, :cols => 60  %></p>
+<% end %>
+
+  <p>
+    <%= f.submit "Create" %>
+  </p>
+<% end %>
+
+<%= link_to 'Cancel', user_project_review_stage_path(@user,@project,@review_stage) %>

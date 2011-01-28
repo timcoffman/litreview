@@ -1,0 +1,57 @@
+<h2>
+	Project <span class="title"><%= link_to @project.title, user_project_path(@user,@project) %></span>,
+	Questionnaire for <span class="Questionnaire"><%= link_to @review_stage.name, user_project_review_stage_path(@user,@project,@review_stage) %></span>:
+</h2>
+
+<% form_for(@review_form, :url => user_project_review_stage_review_form_url(@user,@project,@review_stage)) do |f| %>
+  <%= f.error_messages %>
+
+<h3>Notes</h3>
+
+<% box(:inset) do %>
+  <p><%= f.text_area :notes, :rows => 4, :cols => 60 %></p>
+<% end %>
+
+  <p>
+    <%= f.submit "Save" %>
+  </p>
+<% end %>
+
+<%= link_to 'Cancel', user_project_review_stage_review_form_path(@user,@project,@review_stage) %>
+
+<h3>Questions</h3>
+
+<div class="questions" id='question-list'>
+	<div style="display:none;" id="empty-list-notice" class="notices"><span class="missing">no questions have been added</span></div>
+	<% @review_form.questions.each do |question| %>
+		<%= render :partial => 'question', :locals => { :question => question } %>
+	<% end %>
+	<div id="end-of-list-notice" class="notices"><span class="missing">end of questions</span></div>
+</div>
+
+<div>
+	<%= link_to_remote 'Add a New Question',
+		:url => new_user_project_review_stage_review_form_review_form_question_path(@user,@review_stage.project,@review_stage),
+		:method => :get,
+		:update => 'end-of-list-notice',
+		:position => :before
+	%>
+</div>
+</div>
+
+<%= sortable_element('question-list', :ghosting => false, :handle => 'handle', :tag => :table, :only => 'question', :url => sort_user_project_review_stage_review_form_review_form_questions_path(@user,@project,@review_stage) ) %>
+
+<script type="text/javascript">
+	function synchronizeEmptyListNotice() {
+		var noQuestions = $$('#question-list .question').length == 0 ;
+		if ( $('empty-list-notice').visible() != noQuestions ) {			
+			if ( noQuestions )
+				$('empty-list-notice').style.display = 'none' ;
+			else
+				delete $('empty-list-notice').style.display ;
+		}
+	}
+	$('question-list').observe('DOMSubtreeModified',synchronizeEmptyListNotice) ;
+	synchronizeEmptyListNotice() ;
+</script>
+

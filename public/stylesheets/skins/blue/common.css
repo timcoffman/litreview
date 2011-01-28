@@ -2,6 +2,14 @@
 @import url(box.css);
 @import url(common/report.css);
 
+table {
+	border-collapse: collapse ;
+}
+
+li form {
+	display: inline ;
+}
+
 :link img,
 :visited img,
 :active img,

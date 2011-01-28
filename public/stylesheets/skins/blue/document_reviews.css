@@ -3,3 +3,37 @@
 li.reason:hover {
 	background-color: #cc9 ;
 }
+
+.question td,
+.question th {
+	vertical-align: top ;
+}
+
+.question {
+	clear: left ;
+}
+
+.question .answer {
+	float: left ;
+	padding: 2px 7px 2px 1px;
+}
+
+.question .answer:hover {
+	background-color: #cc9 ;
+}
+
+.question img {
+	vertical-align: text-top ;
+}
+
+.question .answer img.active-indicator,
+.question .answer img.inactive-indicator,
+.question .answer img.processing-indicator {
+	display: none ;
+}
+
+.question .answer.active     img.active-indicator,
+.question .answer.inactive   img.inactive-indicator,
+.question .answer.processing img.processing-indicator {
+	display: inline ;
+}

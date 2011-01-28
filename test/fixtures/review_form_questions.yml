@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  review_form_id: 
+  sequence: 
+  question: MyString
+  answer_type: MyString
+
+two:
+  review_form_id: 
+  sequence: 
+  question: MyString
+  answer_type: MyString

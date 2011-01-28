@@ -1,6 +1,10 @@
 <h2>
         Project <%= link_to @project.title, user_project_path(@user,@project) %>:
         All <%=h number_with_delimiter @documents_count %> Documents
+		<% if params[:source] %>
+			from
+			<%= document_source = DocumentSource.find(params[:source]) ; link_to document_source.name, user_project_document_source_path(@user,document_source.project,document_source) %>
+		<% end %>
 </h2>
 <% if @pages > 1 %>
 <p>
@@ -52,16 +56,16 @@
 
 <table>
   <tr>
-    <th>Source</th>
+    <% unless params[:source] %><th>Source</th><% end %>
     <th>Document</th>
     <th>Duplication</th>
   </tr>
 
 <% for document in @documents %>
   <tr>
-    <td>
+    <% unless params[:source] %><td>
 		<%= link_to document.document_source.name, user_project_document_source_path(@user,document.document_source.project,document.document_source) %>
-	</td>
+	</td><% end %>
 	<td class="document">
 		<div class="head">
 			<div class="title">
@@ -82,7 +86,7 @@
 				<p>Duplicate exists from <%= link_to document.duplicate_of_document.document_source.name, user_project_document_path(@user,@project,document.duplicate_of_document) %></p>
 			<% end %>
 			<% for duplicate_document in document.duplicate_documents %>
-				<p>Duplicated by document from <%= link_to duplicate_document.document_source.name, user_project_document_path(@user,@project,duplicate_document) %></p>
+				<p>Duplicated by <%= link_to "document from #{duplicate_document.document_source.name}", user_project_document_path(@user,@project,duplicate_document) %></p>
 			<% end %>
 		<% else %>
 			<span class="missing">none</span>

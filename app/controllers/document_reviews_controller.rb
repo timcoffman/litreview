@@ -1,6 +1,7 @@
 class DocumentReviewsController < ApplicationController
   
-  before_filter { |controller| controller.load_context }
+  before_filter :require_login
+  before_filter :load_context
 
   def load_context
     @user = User.find( params[:user_id] )
@@ -9,6 +10,7 @@ class DocumentReviewsController < ApplicationController
     @stage_reviewer = @review_stage.stage_reviewers.find( params[:stage_reviewer_id] ) if params[:stage_reviewer_id]
     @reason = @review_stage.reasons.find( params[:reason] ) if params[:reason] 
   end
+  private :load_context
   
   def index
     if @reason
@@ -28,11 +30,8 @@ class DocumentReviewsController < ApplicationController
   # GET /document_reviews/1/new_reason
   # GET /document_reviews/1.xml
   def new_reason
-    @user = User.find(params[:user_id])
-    @project = Project.find(params[:project_id])
-    @review_stage = ReviewStage.find(params[:review_stage_id])
-    @document_review = DocumentReview.find(params[:id])
-	@reason = @document_review.stage_reviewer.custom_reasons.build( :title => 'new reason' )
+    @document_review = @stage_reviewer.document_reviews.find(params[:id])
+    @reason = @document_review.stage_reviewer.custom_reasons.build( :title => 'new reason' )
 
     respond_to do |format|
       format.html { render :layout => false } # new_reason.html.erb
@@ -43,11 +42,7 @@ class DocumentReviewsController < ApplicationController
   # GET /document_reviews/1
   # GET /document_reviews/1.xml
   def show
-    @user = User.find(params[:user_id])
-    @project = Project.find(params[:project_id])
-    @review_stage = ReviewStage.find(params[:review_stage_id])
-    @stage_reviewer = StageReviewer.find(params[:stage_reviewer_id])
-    @document_review = DocumentReview.find(params[:id], :include => :reasons)
+    @document_review = @stage_reviewer.document_reviews.find(params[:id], :include => :reasons)
 
     respond_to do |format|
       format.html # show.html.erb
@@ -58,11 +53,7 @@ class DocumentReviewsController < ApplicationController
   # GET /document_reviews/new
   # GET /document_reviews/new.xml
   def new
-    @user = User.find(params[:user_id])
-    @project = Project.find(params[:project_id])
-    @review_stage = ReviewStage.find(params[:review_stage_id])
-    @stage_reviewer = StageReviewer.find(params[:stage_reviewer_id])
-    @document_review = DocumentReview.new
+    @document_review = @stage_reviewer.document_reviews.build
 
     respond_to do |format|
       format.html # new.html.erb
@@ -72,21 +63,13 @@ class DocumentReviewsController < ApplicationController
 
   # GET /document_reviews/1/edit
   def edit
-    @user = User.find(params[:user_id])
-    @project = Project.find(params[:project_id])
-    @review_stage = ReviewStage.find(params[:review_stage_id])
-    @stage_reviewer = StageReviewer.find(params[:stage_reviewer_id])
-    @document_review = DocumentReview.find(params[:id], :include => :reasons)
+    @document_review = @stage_reviewer.document_reviews.find(params[:id], :include => :reasons)
   end
 
   # POST /document_reviews
   # POST /document_reviews.xml
   def create
-    @user = User.find(params[:user_id])
-    @project = Project.find(params[:project_id])
-    @review_stage = ReviewStage.find(params[:review_stage_id])
-    @stage_reviewer = StageReviewer.find(params[:stage_reviewer_id])
-    @document_review = DocumentReview.new(params[:document_review])
+    @document_review = @stage_reviewer.document_reviews.new(params[:document_review])
 
     respond_to do |format|
       if @document_review.save
@@ -103,11 +86,7 @@ class DocumentReviewsController < ApplicationController
   # PUT /document_reviews/1
   # PUT /document_reviews/1.xml
   def update
-    @user = User.find(params[:user_id])
-    @project = Project.find(params[:project_id])
-    @review_stage = ReviewStage.find(params[:review_stage_id])
-    @stage_reviewer = StageReviewer.find(params[:stage_reviewer_id])
-    @document_review = DocumentReview.find(params[:id])
+    @document_review = @stage_reviewer.document_reviews.find(params[:id])
 
     respond_to do |format|
       if @document_review.update_attributes(params[:document_review])
@@ -124,11 +103,7 @@ class DocumentReviewsController < ApplicationController
   # DELETE /document_reviews/1
   # DELETE /document_reviews/1.xml
   def destroy
-    @user = User.find(params[:user_id])
-    @project = Project.find(params[:project_id])
-    @review_stage = ReviewStage.find(params[:review_stage_id])
-    @stage_reviewer = StageReviewer.find(params[:stage_reviewer_id])
-    @document_review = DocumentReview.find(params[:id])
+    @document_review = @stage_reviewer.document_reviews.find(params[:id])
     @document_review.destroy
 
     respond_to do |format|
@@ -136,4 +111,5 @@ class DocumentReviewsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+  
 end

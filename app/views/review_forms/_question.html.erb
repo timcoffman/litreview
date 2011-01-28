@@ -1,0 +1,74 @@
+<table class="question <%= cycle('even','odd') %>" id="question_<%=question.id%>">
+	<tbody><tr>
+		<td class="action">
+			<%= link_to_remote image_tag('flowstep_status_incomplete.png'),
+				:url => user_project_review_stage_review_form_review_form_question_path(@user,question.form.stage.project,question.form.stage,question),
+				:method => :delete,
+				:confirm => 'Really delete this question?',
+				:success => "Effect.BlindUp('question-#{question.id}', { duration: 0.5, afterFinish: function(effect) { effect.element.remove ; } } )" 
+			%>
+		</td>
+		<th class="sequence">
+			<%= image_tag 'reorder.png', :class => 'handle'  %>
+			Q<%= question.sequence %>
+		</th>
+		<td class="question" id="question-<%=question.id%>-question">
+			<span id="edit-question-<%=question.id%>-question"><%=h question.question %></span>
+			<% javascript_tag do %>withLoadedDocument( function() {
+				new Ajax.InPlaceEditor(
+					'edit-question-<%=question.id%>-question',
+					'<%= update_attribute_user_project_review_stage_review_form_review_form_question_path(@user,question.form.stage.project,question.form.stage,question) %>',
+					{
+						 'rows': 3,
+						 'cols': 40,
+						 'callback': function(form,value) {
+						 	return "attribute=question&value=" + encodeURIComponent(value) + "&_method=put&authenticity_token=<%=form_authenticity_token%>" ;
+						 },
+					}
+				) ;
+			} ) ;<% end %>
+		</td>
+		
+		<td class="possible-answers">
+			<ul id="question-<%=question.id%>-possible-answers">
+				<% question.possible_answers.each do |possible_answer| %>
+					<%= render :partial => 'review_forms/possible_answer', :locals => { :possible_answer => possible_answer }%>
+				<% end %>
+				<li id="question-<%=question.id%>-end-of-possible-answers">
+					<%= link_to_remote 'Add an Answer',
+						:url => new_user_project_review_stage_review_form_review_form_question_review_form_possible_answer_path(@user,@review_stage.project,@review_stage,question),
+						:method => :get,
+						:update => "question-#{question.id}-end-of-possible-answers",
+						:position => :before
+					%>
+				</div>
+			</ul>
+			<%= sortable_element("question-#{question.id}-possible-answers", :handle => 'handle', :tag => :li, :url => sort_user_project_review_stage_review_form_review_form_question_review_form_possible_answers_path(@user,@project,@review_stage,question) ) %>
+		</td>
+	</tr></tbody>
+	<tfoot><tr>
+		<th colspan="2"/>
+		<td  colspan="3" class="notes">
+			<% box(:inset) do %>
+				<span id="edit-question-<%=question.id%>-notes"><%=h question.notes %></span>
+				<div><%= link_to_function 'Edit Notes', "", :id => "start-editing-question-#{question.id}-notes" %></div>
+			<% end %>
+			<% javascript_tag do %>withLoadedDocument( function() {
+				var editor = new Ajax.InPlaceEditor(
+					'edit-question-<%=question.id%>-notes',
+					'<%= update_attribute_user_project_review_stage_review_form_review_form_question_path(@user,question.form.stage.project,question.form.stage,question) %>',
+					{
+						 'rows': 5,
+						 'cols': 40,
+						 'callback': function(form,value) {
+						 	return "attribute=notes&value=" + encodeURIComponent(value) + "&_method=put&authenticity_token=<%=form_authenticity_token%>" ;
+						 },
+						 'externalControl': 'start-editing-question-<%= question.id%>-notes',
+					}
+				) ;
+				$('start-editing-question-<%=question.id%>-notes').observe('click',function() { editor.enterEditMode('click'); } ) ;
+			} ) ;<% end %>
+		</td>
+	
+	</tr></tfoot>
+</table>

@@ -1,4 +1,4 @@
-<h2> Project <%=h @document.document_source.project.title %>: <%=h @document.document_source.name %> Document</h2>
+<h2> Project <%=h @document.document_source.project.title %>: <%=link_to @document.document_source.name, user_project_document_source_path(@user,@document.document_source.project,@document.document_source) %> Document</h2>
 
 <div class="side-by-side">
 <div class="right-side">

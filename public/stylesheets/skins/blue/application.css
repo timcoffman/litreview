@@ -235,7 +235,12 @@ body {
 	color: #397 ;
 	background: #ddb ;
 }
-
+/*
+#tree .tree.leaf {
+	background: transparent url(../../../images/tree_bg.png) center left no-repeat;
+	padding: 7px ;
+}
+*/
 #tree .tree.leaf .category { display: none ; }
 #tree .tree.leaf .text {
 	font-size: 12pt ;

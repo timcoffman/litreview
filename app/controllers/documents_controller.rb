@@ -1,15 +1,24 @@
 class DocumentsController < ApplicationController
   # GET /documents
   # GET /documents.xml
+  
+  before_filter :load_context
+  
+  def load_context
+    @user = User.find(params[:user_id])
+    @project = Project.find(params[:project_id])
+  end
+  private :load_context
+  
   def index
-	@user = User.find(params[:user_id])
-	@project = Project.find(params[:project_id])
+  conditions = {}
+  conditions[:document_source_id] = params[:source] if params[:source]
 	@limit = params[:limit] || current_user.preferred_documents_page_limit || 10
 	@limit = @limit.to_i
 	@offset = params[:offset] || 0
 	@offset = @offset.to_i
-    @documents = @project.documents.find(:all,:limit => @limit, :offset => @offset, :include => :document_source )
-    @document_count = @project.documents.count(:all)
+    @documents = @project.documents.find(:all,:limit => @limit, :offset => @offset, :include => [ :document_source, :duplicate_of_document, :duplicate_documents ], :conditions => conditions )
+    @document_count = @project.documents.count(:all, :conditions => conditions)
 	@page = ( @offset / @limit ).floor
 	@pages = ( @document_count / @limit ).ceil
 	current_user.preferred_documents_page_limit = @limit 
@@ -23,9 +32,7 @@ class DocumentsController < ApplicationController
   # GET /documents/1
   # GET /documents/1.xml
   def show
-	@user = User.find(params[:user_id])
-	@project = Project.find(params[:project_id])
-    @document = Document.find(params[:id])
+    @document = @project.documents.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -36,9 +43,7 @@ class DocumentsController < ApplicationController
   # GET /documents/new
   # GET /documents/new.xml
   def new
-	@user = User.find(params[:user_id])
-	@project = Project.find(params[:project_id])
-    @document = Document.new
+    @document = @project.documents.build
 
     respond_to do |format|
       format.html # new.html.erb
@@ -48,17 +53,13 @@ class DocumentsController < ApplicationController
 
   # GET /documents/1/edit
   def edit
-	@user = User.find(params[:user_id])
-	@project = Project.find(params[:project_id])
-    @document = Document.find(params[:id])
+    @document = @project.documents.find(params[:id])
   end
 
   # POST /documents
   # POST /documents.xml
   def create
-	@user = User.find(params[:user_id])
-	@project = Project.find(params[:project_id])
-    @document = Document.new(params[:document])
+    @document = @project.documents.new(params[:document])
 
     respond_to do |format|
       if @document.save
@@ -75,9 +76,7 @@ class DocumentsController < ApplicationController
   # PUT /documents/1
   # PUT /documents/1.xml
   def update
-	@user = User.find(params[:user_id])
-	@project = Project.find(params[:project_id])
-    @document = Document.find(params[:id])
+    @document = @project.documents.find(params[:id])
 
     respond_to do |format|
       if @document.update_attributes(params[:document])
@@ -92,8 +91,6 @@ class DocumentsController < ApplicationController
   end
 
   def new_tags
-    @user = User.find(params[:user_id])
-    @project = Project.find(params[:project_id])
     @document = @project.documents.find(params[:id])
     result = { :status => :ok, :document_tags => [ ], :tags => [ ] }
     for words in (params[:tag_words] || "").split( /\s/ )
@@ -117,9 +114,7 @@ class DocumentsController < ApplicationController
   # DELETE /documents/1
   # DELETE /documents/1.xml
   def destroy
-	@user = User.find(params[:user_id])
-	@project = Project.find(params[:project_id])
-    @document = Document.find(params[:id])
+    @document = @project.documents.find(params[:id])
     @document.destroy
 
     respond_to do |format|
@@ -129,9 +124,7 @@ class DocumentsController < ApplicationController
   end
   
   def match_duplicates
-	@user = User.find(params[:user_id])
-	@project = Project.find(params[:project_id])
-    @document = Document.find(params[:id])
+    @document = @project.documents.find(params[:id])
 
     respond_to do |format|
       format.html # match_duplicates.html.erb

@@ -10,7 +10,7 @@ class ReasonsController < ApplicationController
   end
   
   def index
-    @reasons = @review_stage.reasons.sort { |a,b| ((a.sequence || 0) <=> (b.sequence || 0)) || ((a.created_on || 0) <=> (b.created_on || 0)) }
+    @reasons = @review_stage.reasons.find(:all)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -19,15 +19,17 @@ class ReasonsController < ApplicationController
   end
 
   def sort
-    @reasons = []
-    params['reasons-list'].each_with_index do |reason_id,index|
-      @reasons << reason = @review_stage.reasons.find(reason_id)
-      reason.sequence = 1+index
-    end
+    @reasons = params['reasons-list'].reject(&:blank?).collect { |rid| @review_stage.reasons.find(rid) }
     
     Reason.transaction do
-      results = @reasons.collect(&:save)
-      raise ActiveRecord::Rollback unless results.all?
+      @reasons.each_with_index do |reason,index|
+        reason.update_attributes( :sequence => -1-index )
+      end
+
+      @reasons.each do |reason|
+        reason.update_attributes( :sequence => -reason.sequence )
+      end
+    
     end
 
     if request.xhr?

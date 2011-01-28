@@ -24,11 +24,11 @@
 		<td colspan="2"><span class="missing">no exclusion reasons</span></td>
 		<th class="reorder"/>
 <% end %>
-<% for reason in @reasons.sort { |a,b| (a.sequence || 0) <=> (b.sequence ||0) } do %>
+<% @reasons.each do |reason| %>
 	<tr class="reason <%= cycle('even','odd') %>" id="reason_<%= reason.id %>">
 		<% if @project.managed_by?( current_user ) %>
 			<th class="reorder">
-				<%= image_tag 'reorder.png' %>
+				<%= image_tag 'reorder.png', :class => 'handle'  %>
 				<%= reason.sequence %>
 			</th>
 		<% end %>
@@ -66,4 +66,4 @@
 	</tbody>
 </table>
 
-<%= sortable_element('reasons-list', :tag => :tr, :url => sort_user_project_review_stage_reasons_path(@user,@project,@review_stage) ) %>
+<%= sortable_element('reasons-list', :handle => 'handle', :tag => :tr, :url => sort_user_project_review_stage_reasons_path(@user,@project,@review_stage) ) %>

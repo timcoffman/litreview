@@ -1,0 +1,38 @@
+@import url(../../common/review_forms.css) ;
+
+table.question {
+	width: 100% ;
+}
+
+table.question td,
+table.question th {
+	vertical-align: top ;
+	text-align: left ;
+}
+
+table.question .sequence {
+	width: 3em ;
+}
+
+table.question .question {
+	width: 40% ;
+}
+
+table.question .action {
+	width: 3em ;
+}
+
+table.question .notes {
+	padding-left: auto ;
+	padding-right: auto ;
+}
+
+table.question ul {
+	margin: 0 ;
+	list-style: lower-latin ;
+}
+
+table.question li img {
+	height: 12pt ;
+	vertical-align: text-top ;
+}

@@ -1,0 +1,22 @@
+<li id="possible-answer_<%=possible_answer.id%>" class="possible-answer <%= cycle('even','odd') %>">
+	<%= image_tag 'reorder.png', :class => 'handle'  %>
+	<%= link_to_remote image_tag('flowstep_status_incomplete.png'),
+		:url => user_project_review_stage_review_form_review_form_question_review_form_possible_answer_path(@user,possible_answer.question.form.stage.project,possible_answer.question.form.stage,possible_answer.question,possible_answer),
+		:method => :delete,
+		:success => "Effect.BlindUp('possible-answer-#{possible_answer.id}', { duration: 0.5, afterFinish: function(effect) { effect.element.remove ; } } )" 
+	%>
+	<span id="edit-possible-answer-<%=possible_answer.id%>"><%=h possible_answer.possible_answer %></span>
+	<% javascript_tag do %>withLoadedDocument( function() {
+		new Ajax.InPlaceEditor(
+			'edit-possible-answer-<%= possible_answer.id%>',
+			'<%= update_attribute_user_project_review_stage_review_form_review_form_question_review_form_possible_answer_path(@user,possible_answer.question.form.stage.project,possible_answer.question.form.stage,possible_answer.question,possible_answer) %>',
+			{
+				 'rows': 1,
+				 'cols': 30,
+				 'callback': function(form,value) {
+				 	return "attribute=possible_answer&value=" + encodeURIComponent(value) + "&_method=put&authenticity_token=<%=form_authenticity_token%>" ;
+				 },
+			}
+		) ;
+	} ) ;<% end %>
+</li>

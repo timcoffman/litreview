@@ -1,0 +1,128 @@
+<% review_form = document_review.stage_reviewer.review_stage.form %>
+
+<% javascript_tag do %>
+	function activateAnswer( answerElement ) {
+		if ( $(answerElement) == null ) return ;
+		$(answerElement).addClassName( 'active' ).removeClassName( 'inactive' ) ;
+	}
+	function deactivateAnswer( answerElement ) {
+		if ( $(answerElement) == null ) return ;
+		$(answerElement).addClassName( 'inactive' ).removeClassName( 'active' )
+	}
+	function togglePossibleAnswer( answerElement, options ) {
+		if ( answerElement.hasClassName('inactive') ) {
+			new Ajax.Request( options.create.url, {
+				parameters: $H(options.create.parameters).merge( { authenticity_token: '<%=form_authenticity_token%>' } ),
+				method: 'post',
+				onCreate: function(){ answerElement.removeClassName('inactive').addClassName('processing') ; },
+				onComplete: function(){ answerElement.removeClassName('processing') ; },
+				onSuccess: function(){ answerElement.addClassName('active') ; },
+				onFailure: function(){ answerElement.addClassName('inactive') ; },
+			} ) ;
+		} else if ( answerElement.hasClassName('active') ) {
+			new Ajax.Request( options.destroy.url, {
+				parameters: $H(options.destroy.parameters).merge( { authenticity_token: '<%=form_authenticity_token%>' } ),
+				method: 'delete',
+				onCreate: function(){ answerElement.removeClassName('active').addClassName('processing') ; },
+				onComplete: function(){ answerElement.removeClassName('processing') ; },
+				onSuccess: function(){ answerElement.addClassName('inactive') ; },
+				onFailure: function(){ answerElement.addClassName('active') ; },
+			} ) ;
+		}
+	}
+<% end %>
+
+<% review_form.questions.each do |question| %>
+	<table id="question-<%= question.id %>" class="question"><tbody>
+		<tr>
+			<th rowspan="2">
+				Q<%=h question.sequence %>
+			</th>
+			<td>
+			 <%=h question.question %>
+			</td>
+		</tr>
+		<tr><td>
+			<% question.possible_answers.each do |possible_answer| %>
+				<div id="question-<%= question.id %>-possible-answer-<%= possible_answer.id %>" class="answer possible-answer inactive">
+					<span class="icon">
+						<%= image_tag 'active-indicator.png', :class => 'active-indicator' %>
+						<%= image_tag 'inactive-indicator.png', :class => 'inactive-indicator' %>
+						<%= image_tag 'processing-indicator.png', :class => 'processing-indicator' %>
+					</span>
+					<span class="text"><%=h possible_answer.possible_answer %></span>
+				</div>
+				<% javascript_tag do %>
+					$('question-<%= question.id %>-possible-answer-<%= possible_answer.id %>').observe('click', function(evt) {
+						togglePossibleAnswer( evt.element().up('.answer'), {
+								create: {
+									url: '<%= user_project_review_stage_stage_reviewer_document_review_review_form_answers_path(@user, document_review.stage_reviewer.review_stage.project, document_review.stage_reviewer.review_stage, document_review.stage_reviewer, document_review) %>',
+									parameters: {
+										'review_form_answer[review_form_question_id]': <%= question.id %>, 
+										'review_form_answer[review_form_possible_answer_id]': <%= possible_answer.id %>, 
+										},
+									},
+								destroy: {
+									url: '<%= retract_user_project_review_stage_stage_reviewer_document_review_review_form_answers_path(@user, document_review.stage_reviewer.review_stage.project, document_review.stage_reviewer.review_stage, document_review.stage_reviewer, document_review) %>',
+									parameters: {
+										'review_form_answer[review_form_question_id]': <%= question.id %>, 
+										'review_form_answer[review_form_possible_answer_id]': <%= possible_answer.id %>, 
+										},
+									},
+							} ) ;
+						} ) ;
+				<% end %>
+			<% end %>
+			<% @document_review.form_answers.each do |answer| %>
+				<% if answer.possible_answer %>
+					<% javascript_tag do %>
+						withLoadedDocument( activateAnswer, $('question-<%= question.id %>-possible-answer-<%= answer.possible_answer.id %>') ) ;
+					<% end %>
+				<% elsif not answer.impromptu_answer.blank? %>
+					<div id="answer-<%= answer.id %>" class="answer impromptu-answer active">
+						<span class="icon">
+							<%= image_tag 'active-indicator.png', :class => 'active-indicator' %>
+							<%= image_tag 'inactive-indicator.png', :class => 'inactive-indicator' %>
+							<%= image_tag 'processing-indicator.png', :class => 'processing-indicator' %>
+						</span>
+						<span class="text"><%=h answer.impromptu_answer %></span>
+					</div>
+					<% javascript_tag do %>
+						$('answer-<%= answer.id %>').observe('click', function(evt) {
+							togglePossibleAnswer( evt.element().up('.answer'), {
+									create: {
+										url: '<%= user_project_review_stage_stage_reviewer_document_review_review_form_answers_path(@user, document_review.stage_reviewer.review_stage.project, document_review.stage_reviewer.review_stage, document_review.stage_reviewer, document_review) %>',
+										parameters: {
+											'review_form_answer[review_form_question_id]': <%= question.id %>, 
+											'review_form_answer[impromptu_answer]': '<%=h answer.impromptu_answer %>', 
+											},
+										},
+									destroy: {
+										url: '<%= user_project_review_stage_stage_reviewer_document_review_review_form_answers_path(@user, document_review.stage_reviewer.review_stage.project, document_review.stage_reviewer.review_stage, document_review.stage_reviewer, document_review, answer) %>',
+										parameters: { },
+										},
+								} ) ;
+							} ) ;
+					<% end %>
+				<% end %>
+			<% end %>
+			
+			<div id="question-<%= question.id %>-impromptu-answer" class="answer impromptu-answer inactive">
+				<span class="icon">
+					<%= image_tag 'active-indicator.png', :class => 'active-indicator' %>
+					<%= image_tag 'inactive-indicator.png', :class => 'inactive-indicator' %>
+					<%= image_tag 'processing-indicator.png', :class => 'processing-indicator' %>
+				</span>
+				<span class="text"><%= text_field_tag :impromptu_answer, '', :size => 40 %></span>
+				<% javascript_tag do %>
+					$('question-<%= question.id %>-impromptu-answer').observe('click', function(evt) {
+						} ) ;
+				<% end %>
+			</div>
+			
+		</td></tr>
+		
+	</tbody></table>
+<% end %>
+
+
