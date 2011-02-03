@@ -232,7 +232,7 @@ module ApplicationHelper
 						frac = @achievement[:count].to_f / @achievement[:total]
 						self.partial frac
 						if frac < 0.10 || @achievement[:count] < 20
-							@achievement[:value] ||= "#{@achievement[:count]}/#{@achievement[:total]}"
+							@achievement[:value] ||= "#{number_with_delimiter @achievement[:count]}/#{number_with_delimiter @achievement[:total]}"
 						else
 							@achievement[:value] ||= (100 * frac).to_i.to_s + '<span class="units">%</span>'
 						end
