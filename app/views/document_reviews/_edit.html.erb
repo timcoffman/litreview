@@ -1,5 +1,7 @@
 <% form_for [@user,@project,@review_stage,@stage_reviewer,document_review] do |f| %>
 
+<%= f.error_messages %>
+
 <fieldset id="disposition include">
 <label class="disposition">
 	<%= f.radio_button :disposition, 'I' %> Include
@@ -18,29 +20,22 @@
 	possible_reasons.sort! { |a,b| (a.sequence || 0)  <=> (b.sequence || 0) }
 	possible_reasons.sort! { |a,b| a.created_by_stage_reviewer.nil? ? 0 : 1 <=> b.created_by_stage_reviewer.nil? ? 0 : 1 }
 %>
+<%= hidden_field_tag 'document_review[reason_ids][]', '' %>
 <% for reason in possible_reasons %>
-	<li class="reason <%= cycle('even','odd') %>">
-	<label>
-	<%= check_box_tag 'document_review[reason_ids][]', reason.id, document_review.includes_reason?(reason) %>
-	<%=h reason.title %>
-	</label>
-	<% if reason.created_by_stage_reviewer %>
-		<span class="owner"><%= personal_link_to reason.created_by_stage_reviewer.user, '', user_project_review_stage_stage_reviewer_path(@user,@project,@review_stage,reason.created_by_stage_reviewer), :display => :nickname %></span>
-	<% end %>
-	</li>
+	<%= render :partial => 'reason', :locals => { :reason => reason, :document_review => document_review } %>
 <% end %>
 
 <li class="reason <%= cycle('even','odd')%>" id='new-reason'>
 	<%= check_box_tag '_null', -1, true, :disabled => true %>
-	<%= text_field_tag 'document_review[reason_ids][][title]', "", :size => 20, :id => 'new-reason-title' %>
-	<%= observe_field 'new-reason-title', :on => 'focus', :function => "element.getValue() ? $('new-reason-details').show() : $('new-reason-details').hide() ;" %>
+	<%= text_field_tag 'custom_reason[title]', "", :size => 20, :id => 'new-reason-title' %>
+	<%= observe_field 'new-reason-title', :function => "element.getValue() ? $('new-reason-details').show() : $('new-reason-details').hide() ;" %>
 	<span class="owner"><%= personal_link_to @user, '', user_project_review_stage_stage_reviewer_path(@user,@project,@review_stage,@user), :display => :nickname %></span>
 	<div style="display: none" id='new-reason-details'>
 		<label>
 			Description:
-			<%= text_area_tag 'document_review[reasons][][description]', "", :rows => 3, :cols => 20 %>
+			<%= text_area_tag 'custom_reason[description]', "", :rows => 3, :cols => 20, :id => 'new-reason-description' %>
 		</label>
-		<%= link_to_remote 'Add', :update => "new-reason", :method => :get, :url => new_reason_user_project_review_stage_stage_reviewer_document_review_path(@user,@project,@review_stage,@stage_reviewer) %>
+		<%= link_to_function 'Add', 'add_reason()' %>
 	</div>
 </li>
 
@@ -54,21 +49,25 @@
 
 <% end %>
 
-<div class="reason new" id="new-reason" style="display: none;">
-	<% reason = @review_stage.reasons.build( :created_by_stage_reviewer_id => @stage_reviewer.id ) %>
-	<% form_remote_for [@user,@project,@review_stage,reason] do |f| %>
-		New Reason <%= f.submit "Add" %>
-		<p>Created By:
-		<%= personal_link_to reason.created_by_stage_reviewer.user, '', user_project_review_stage_stage_reviewer_path(@user,@project,@review_stage,reason.created_by_stage_reviewer) %>
-		</p>
-		<p>Reason:
-		<%= text_field_tag 'document_review[reasons][][title]', reason.title %>
-		</p>
-		<p>Description:
-		<%= text_area_tag 'document_review[reasons][][description]', reason.description %> 
-		</p>
-	<% end %>
-</div>
+<% javascript_tag do %>
+function add_reason() {
+	new Ajax.Updater( 'new-reason', '<%= add_reason_user_project_review_stage_stage_reviewer_document_review_path(@user,@project,@review_stage,@stage_reviewer) %>', {
+	insertion: 'before',
+	method: 'put',
+	parameters: {
+		'authenticity_token': '<%= form_authenticity_token %>',
+		'custom_reason[title]': $F('new-reason-title'),
+		'custom_reason[description]': $F('new-reason-description'),
+		},
+	onComplete: function() {
+			$('new-reason').previous('li').select('input').first().checked = true ;
+			$('new-reason-title').clear() ;
+			$('new-reason-description').clear() ;
+			$('new-reason-details').hide() ;
+		}
+	} ) ;
+}
+<% end %>
 
 <%= javascript_tag "function decorate_fieldsets() { decorate_fieldset_for_radio($('document_review_disposition_i')); decorate_fieldset_for_radio($('document_review_disposition_e')); }" %>
 <%= javascript_tag "function decorate_fieldset_for_radio(r) { r.getValue() ? r.up('fieldset').addClassName('active') : r.up('fieldset').removeClassName('active') } " %>

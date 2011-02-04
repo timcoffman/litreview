@@ -10,7 +10,7 @@ ActionController::Routing::Routes.draw do |map|
       projects.resources :review_stages, :as => 'stages', :member => { :report => :get, :auto_assign => :post } do |stages|
         stages.resources :reasons, :collection => { :sort => :post }
         stages.resources :stage_reviewers, :as => 'reviewers' do |reviewers|
-          reviewers.resources :document_reviews, :as => 'reviews', :member => { :new_reason => :get, :add_reason => :put } do |review|
+          reviewers.resources :document_reviews, :as => 'reviews', :member => { :add_reason => :put } do |review|
             review.resources :review_form_answers, :only => [ :create, :destroy ], :collection => { :retract => :delete }
           end
         end

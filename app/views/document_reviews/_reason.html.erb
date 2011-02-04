@@ -1,0 +1,10 @@
+
+	<li class="reason <%= cycle('even','odd') %>">
+	<label>
+	<%= check_box_tag 'document_review[reason_ids][]', reason.id, document_review.includes_reason?(reason), :id => "reason-#{reason.id}" %>
+	<%=h reason.title %>
+	</label>
+	<% if reason.created_by_stage_reviewer %>
+		<span class="owner"><%= personal_link_to reason.created_by_stage_reviewer.user, '', user_project_review_stage_stage_reviewer_path(@user,@project,@review_stage,reason.created_by_stage_reviewer), :display => :nickname %></span>
+	<% end %>
+	</li>

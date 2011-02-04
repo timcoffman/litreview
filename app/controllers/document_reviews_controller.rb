@@ -29,12 +29,12 @@ class DocumentReviewsController < ApplicationController
   
   # GET /document_reviews/1/new_reason
   # GET /document_reviews/1.xml
-  def new_reason
+  def add_reason
     @document_review = @stage_reviewer.document_reviews.find(params[:id])
-    @reason = @document_review.stage_reviewer.custom_reasons.build( :title => 'new reason' )
+    @reason = @document_review.stage_reviewer.custom_reasons.create( params[:custom_reason] )
 
     respond_to do |format|
-      format.html { render :layout => false } # new_reason.html.erb
+      format.html { render :partial => 'reason', :locals => { :reason => @reason, :document_review => @document_review } }
       format.xml  { render :xml => @reason }
     end
   end
@@ -89,7 +89,7 @@ class DocumentReviewsController < ApplicationController
     @document_review = @stage_reviewer.document_reviews.find(params[:id])
 
     respond_to do |format|
-      if @document_review.update_attributes(params[:document_review])
+      if @document_review.update_attributes(params[:document_review].reject { |k,v| k == 'reasons' })
         flash[:notice] = 'DocumentReview was successfully updated.'
         format.html { redirect_to([@user,@project,@review_stage,@stage_reviewer,@document_review]) }
         format.xml  { head :ok }

@@ -11,6 +11,14 @@ class DocumentReview < ActiveRecord::Base
   has_many :form_questions, :class_name => 'ReviewFormQuestion', :through => :form
   has_many :form_answers, :class_name => 'ReviewFormAnswer', :dependent => :destroy
 	
+	validates_inclusion_of :disposition, :in => [ 'I', 'E' ], :allow_nil => true
+	validates_presence_of :reasons, :if => Proc.new { |dr| dr.disposition == 'E' }
+	validate :abscence_of_reasons, :if => Proc.new { |dr| dr.disposition == 'I' }
+
+	def abscence_of_reasons
+		errors.add_to_base("Document Review must not have exclusion reasons if it is included") if !reasons.empty?
+	end
+
 	def when_assigned
 		self.created_at
 	end
