@@ -128,27 +128,32 @@ class ReviewStage < ActiveRecord::Base
 		report
 	end
 	
-	def report_x( name )
-		sql = <<-EOT
-			SELECT
-				dr1.disposition u1,
-				dr2.disposition u2,
-				COUNT(d.id)
-				FROM review_stages rs
-				LEFT JOIN stage_reviewers sr1 ON sr1. review_stage_id = rs.id AND sr1.id = 399
-				LEFT JOIN stage_reviewers sr2 ON sr2. review_stage_id = rs.id AND sr1.id = 401
-				LEFT JOIN document_reviews dr1 ON dr1.stage_reviewer_id = sr1.id
-				LEFT JOIN document_reviews dr2 ON dr2.stage_reviewer_id = sr2.id
-				LEFT JOIN documents d ON d.id IN (
-					dr1.document_id,
-					dr2.document_id
-					)
-				WHERE rs.id = 214
-				GROUP BY
-					dr1.disposition,
-					dr2.disposition
-				;
-		EOT
-		rows = self.connection.select_rows( sql )
-	end
+  def report_disposition_matrix
+    srs = [] + self.stage_reviewers
+    sr_ids = srs.collect(&:id)
+    ds_ids = self.project.document_sources.collect(&:id)
+    sql = [
+      "SELECT", ( srs.collect { |sr| "dr#{sr.id}.disposition" } + [ "COUNT(*)" ]  ).join(", "),
+      "FROM documents",
+      sr_ids.collect { |srid| "LEFT JOIN document_reviews dr#{srid} on dr#{srid}.stage_reviewer_id = #{srid} and dr#{srid}.document_id = documents.id" }.join(" "),
+      "WHERE document_source_id in (#{ds_ids.join(',')})",
+      "GROUP BY", sr_ids.collect { |srid| "dr#{srid}.disposition" }.join(", ")
+    ].join(' ')
+    rows = self.connection.select_rows( sql )
+    agreement_report = {}
+    disagreement_report = {}
+    rows.each do |row|
+      h = Hash[ (srs + [ :count ]).zip( row ) ]
+      srs.combination(2).each do |sr1,sr2|
+        if h[sr1] == h[sr2]
+          d = h[sr1]
+          agreement_report[sr1][sr2][d] = agreement_report[sr2][sr1][d] = h[:count]
+        else
+          disagreement_report[sr1][sr2][ [row[sr1],row[sr2]] ] = h[:count]
+          disagreement_report[sr2][sr1][ [row[sr2],row[sr1]] ] = h[:count]
+        end
+      end
+    end
+    { :agreement => agreement_report, :disagreement => disagreement_report }
+  end
 end
