@@ -83,7 +83,7 @@ Generate an <%=link_to 'Agreement Report', report_user_project_review_stage_path
 	<p>
 		You can assign reviews to be performed by your reviewers.
 		<% if @review_stage.previous_stage %>
-			<%= pluralize( @review_stage.previous_stage.reviewable_documents.count, 'document' ) %>  passed <%= @review_stage.previous_stage.name %> and <%= review_stage.previous_stage.reviewable_documents.count == 1 ? 'is' : 'are' %> eligible for review.
+			<%= pluralize( @review_stage.previous_stage.reviewable_documents.count, 'document' ) %>  passed <%= @review_stage.previous_stage.name %> and <%= @review_stage.previous_stage.reviewable_documents.count == 1 ? 'is' : 'are' %> eligible for review.
 		<% else %>
 			<%= pluralize( @review_stage.project.documents.count, 'document is', 'documents are' ) %> imported and eligible for review.
 		<% end %>

@@ -58,7 +58,7 @@ class ReviewStage < ActiveRecord::Base
 		if self.previous_stage
 			docs.concat self.previous_stage.reviewable_documents
 		else
-			self.project.documents.find( :all, :conditions => 'duplicate_of_document_id IS NOT NULL' )
+			docs.concat self.project.documents.find( :all, :conditions => 'duplicate_of_document_id IS NULL' )
 		end
 		docs.reject(&:nil?).each do |doc|
 			for sr in self.stage_reviewers

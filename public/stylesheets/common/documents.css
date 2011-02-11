@@ -186,3 +186,7 @@ table .document .authors {
 table .document .abstract {
 	font-size: 19pt ;
 }
+
+.document.mini img {
+	height: 9pt ;
+}
