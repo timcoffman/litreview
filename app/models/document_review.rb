@@ -11,6 +11,8 @@ class DocumentReview < ActiveRecord::Base
   has_many :form_questions, :class_name => 'ReviewFormQuestion', :through => :form
   has_many :form_answers, :class_name => 'ReviewFormAnswer', :dependent => :destroy
 	
+	before_validation :remove_blank_fields
+	
 	validates_inclusion_of :disposition, :in => [ 'I', 'E' ], :allow_nil => true
 	validates_presence_of :reasons, :if => Proc.new { |dr| dr.disposition == 'E' }
 	validate :abscence_of_reasons, :if => Proc.new { |dr| dr.disposition == 'I' }
@@ -33,6 +35,10 @@ class DocumentReview < ActiveRecord::Base
 	
 	def includes_reason?( reason )
 		return self.reasons.include?( reason )
+	end
+
+	def remove_blank_fields
+		self.disposition = nil if self.disposition.blank?
 	end
 	
 	def self.disposition( code )

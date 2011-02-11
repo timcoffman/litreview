@@ -110,3 +110,16 @@ table.stages tbody tr th {
 	padding-left: 0.5em ;
 	padding-right: 0.5em ;
 }
+
+ul.keywords {
+	font-size: smaller ;
+	margin: 0 ;
+	padding: 0 ;
+	list-style-position: inside ;
+	list-style-type: circle ;
+}
+ul.keywords li {
+	float: left ;
+	margin-left: 0.5em ;
+}
+

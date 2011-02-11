@@ -33,10 +33,6 @@ class Project < ActiveRecord::Base
 		end
 	end
 	
-	def keywords
-		return [ 'workflow', 'workflow analysis', 'workflow analyses', 'workflow system' ]
-	end
-	
 	def search( params, *args )
 		phrases = []
 		bindings = {}

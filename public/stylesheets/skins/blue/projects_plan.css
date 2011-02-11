@@ -136,3 +136,11 @@ a.flowstep.incomplete:hover { border-color: #733 ; background-color: #cbb ; }
 .legend table {
 	border: 1px solid #444 ;
 }
+
+.fraction {
+	font-size: 50%;
+	position: relative ;
+	bottom: 0.5em ;
+	color: #555 ;
+}
+

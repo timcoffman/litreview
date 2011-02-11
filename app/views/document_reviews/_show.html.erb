@@ -1,11 +1,20 @@
 <p>
-Disposition: <%=h DocumentReview.disposition( document_review.disposition ) %>
+Disposition:
+<% if document_review.disposition %>
+	<%=h DocumentReview.disposition( document_review.disposition ) %>
+<% else %>
+	<span class="missing">unreviewed</span>
+<% end %>
 </p>
 
 <p>
 Exclusion Reasons:
+<% unless document_review.reasons.empty? %>
 <ul>
 	<% for reason in document_review.reasons %> <li><%= reason.title %></li> <% end %>
 </ul>
+<% else %>
+	<span class="missing">no reasons given</span>
+<% end %>
 </p>
 

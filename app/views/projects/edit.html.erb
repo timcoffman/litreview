@@ -11,6 +11,12 @@
 		<%= f.text_area :description, :size => '90% x 10' %>
 	<% end %>
 	
+	<h3>Keywords</h3>
+	<p>Keywords entered here will be hilighted in abstracts during review.</p>
+	<% box(:inset) do%>
+		<%= f.text_area :keywords, :size => '90% x 2' %>
+	<% end %>
+	
 	<h3>Done</h3>
     <%= f.submit "Save Changes" %>
 	<%= link_to 'Cancel Changes', user_project_path(@user,@project) %>
