@@ -109,7 +109,7 @@ class ReasonsController < ApplicationController
     @reason.destroy
 
     respond_to do |format|
-      format.html { redirect_to(reasons_url) }
+      format.html { redirect_to(user_project_review_stage_reasons_path(@user,@project,@review_stage)) }
       format.xml  { head :ok }
     end
   end

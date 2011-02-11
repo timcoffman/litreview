@@ -5,11 +5,11 @@
 </h2>
 
 <p>
-<% unless @document_review.preceding_siblings.empty? %>
-	<%= link_to "Previous Review", edit_user_project_review_stage_stage_reviewer_document_review_path(@user,@project,@review_stage,@stage_reviewer,@document_review.preceding_siblings.first) %>
+<% if @document_review.preceding_siblings.first %>
+	<%= link_to "&laquo; Previous (#{abbreviate(@document_review.preceding_siblings.first.document.title)})", edit_user_project_review_stage_stage_reviewer_document_review_path(@user,@project,@review_stage,@stage_reviewer,@document_review.preceding_siblings.first) %>
 <% end %>
-<% unless @document_review.following_siblings.empty? %>
-	<%= link_to "Skip to Next Review", edit_user_project_review_stage_stage_reviewer_document_review_path(@user,@project,@review_stage,@stage_reviewer,@document_review.following_siblings.first) %>
+<% if @document_review.following_siblings.first %>
+	<%= link_to "(#{abbreviate(@document_review.following_siblings.first.document.title)}) Next &raquo;", edit_user_project_review_stage_stage_reviewer_document_review_path(@user,@project,@review_stage,@stage_reviewer,@document_review.following_siblings.first) %>
 <% end %>
 </p>
 
@@ -22,9 +22,6 @@
 		<%= render :partial => 'documents/show', :locals => { :document => @document_review.document } %>
 	</div>
 	<div class="right-side">
-		<% if @project.managed_by?( current_user ) %>
-			<%= link_to "Unassign review from #{@document_review.stage_reviewer.user.nickname}", user_project_review_stage_stage_reviewer_document_review_path(@user,@project,@review_stage,@stage_reviewer,@document_review), :method => :delete, :confirm => "Are yous sure you want to cancel the assignment of #{@stage_reviewer.user.full_name} to review \"#{@document_review.document.title}\"?" %>
-		<% end %>
 		<%= render :partial => 'edit', :locals => { :document_review => @document_review } %>
 		
 		<% if @document_review.stage_reviewer.review_stage.form %>
@@ -33,3 +30,8 @@
 		
 	</div>
 </div>
+
+<% if @project.managed_by?( current_user ) %>
+<h2>Management</h2>
+<%= link_to "Unassign review from #{@document_review.stage_reviewer.user.nickname}", user_project_review_stage_stage_reviewer_document_review_path(@user,@project,@review_stage,@stage_reviewer,@document_review), :method => :delete, :confirm => "Are yous sure you want to cancel the assignment of #{@stage_reviewer.user.full_name} to review \"#{@document_review.document.title}\"?" %>
+<% end %>

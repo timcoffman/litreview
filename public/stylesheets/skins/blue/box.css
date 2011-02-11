@@ -82,6 +82,15 @@ table.box.level2 tr.middle td.middle input {
 	line-height: 18pt ;
 	padding-top: 4pt ;
 }
+/*
+.box .action:before {
+	content: url(../../../images/1297371258_desktop.png) ;
+}
+*/
+
+.box a.action:after {
+	content: '\00bb' ; 
+}
 
 .box .actions a:link,
 .box .actions a:visited,

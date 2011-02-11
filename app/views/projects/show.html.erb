@@ -3,6 +3,22 @@
 
 <% box(:inset) do %>
 	<div class="description"> <%= @project.description %> </div> <!-- note the lack of "h" here -->
+	<% if @project.managed_by?(current_user) %>
+		<p>
+		<% if @project.keywords.blank? %>
+			<span class="missing">no keywords assigned</span>
+		<% else %>
+			Keywords:
+			<ul class="keywords">
+				<% @project.keywords.scan(/([^\s,;"']+)|'([^']*)'|"([^"]*)"/).collect{ |x| x.reject(&:nil?).first }.each do |keyword| %>
+					<li><%=h keyword %></li>
+				<% end %>
+		<% end %>
+		</p>
+		<div class="actions">
+			<%= link_to "Modify", edit_user_project_path(@user,@project), :class => 'action' %>
+		</div>
+	<% end %>
 <% end %>
 
 <% for review_stage in @project.review_stages do %>

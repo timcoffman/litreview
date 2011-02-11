@@ -58,7 +58,7 @@
 <% end %>
 	<% if @project.managed_by?( current_user ) %>
 		<tr>
-			<td rowspan="4">
+			<td colspan="4">
 				<%= link_to 'Add New Exclusion Reason', new_user_project_review_stage_reason_path(@user,@project,@review_stage) %>
 			</td>
 		</tr>

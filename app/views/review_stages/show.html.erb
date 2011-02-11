@@ -2,6 +2,11 @@
 
 <% box(:inset) do %>
 	<div class="description"> <%= @review_stage.description %> </div> <!-- note the lack of "h" here -->
+	<% if @review_stage.project.managed_by?(current_user) %>
+		<div class="actions">
+			<%= link_to "Modify", edit_user_project_review_stage_path(@user,@review_stage.project,@review_stage), :class => 'action' %>
+		</div>
+	<% end %>
 <% end %>
 
 <h3>Participants</h3>

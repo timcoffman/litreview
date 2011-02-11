@@ -22,7 +22,7 @@ assigned reviews
 	<%= link_to_task content_tag(:strong,incomplete_review_count) + " reviews to do for #{@stage_reviewer.review_stage.name}", edit_user_project_review_stage_stage_reviewer_document_review_path(@user,@project,@stage_reviewer.review_stage,@stage_reviewer,@stage_reviewer.incomplete_reviews.first) %>
 <% end %>
 
-<h3>Next <%=h @incomplete_reviews.size %>  Reviews</h3>
+<h3>Next <%=h pluralize(@incomplete_reviews.size,'Review') %></h3>
 <table class="reviews">
 	<thead>
 		<th>Document</th>
@@ -42,7 +42,8 @@ assigned reviews
 	</tbody>
 </table>
 
-<h3>Last <%=h @completed_reviews.size %>  Reviews</h3>
+<% unless @completed_reviews.empty? %>
+<h3>Last <%=h pluralize(@completed_reviews.size,'Review') %></h3>
 <table class="reviews">
 	<thead>
 		<th>Result</th>
@@ -73,6 +74,9 @@ assigned reviews
 		<% end %>
 	</tbody>
 </table>
+<% end %>
 
+<% if @project.managed_by?( current_user ) %>
 <h2>Management</h2>
 <%= link_to "Unassign #{@stage_reviewer.user.nickname}", user_project_review_stage_stage_reviewer_path(@user,@project,@review_stage,@stage_reviewer), :method => :delete, :confirm => "Are you sure you want to unassign #{@stage_reviewer.user.full_name} from #{@review_stage.name}?" %> from <%= @review_stage.name %>
+<% end %>

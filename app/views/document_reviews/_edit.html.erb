@@ -2,6 +2,12 @@
 
 <%= f.error_messages %>
 
+<fieldset id="disposition">
+<label class="disposition">
+	<%= f.radio_button :disposition, '' %> Unreviewed
+</label>
+</fieldset>
+
 <fieldset id="disposition include">
 <label class="disposition">
 	<%= f.radio_button :disposition, 'I' %> Include
@@ -45,7 +51,7 @@
 
 <%= link_to "Discard Changes", user_project_review_stage_stage_reviewer_document_review_path(@user,@project,@review_stage,@stage_reviewer,@document_review) %>
 
-<%= f.submit "Save Changes" %>
+<%= f.submit "Save and Proceed &raquo;" %>
 
 <% end %>
 
@@ -74,4 +80,19 @@ function add_reason() {
 <%= observe_form "edit_document_review_#{@document_review.id}", :function => 'decorate_fieldsets()' %>
 <%= javascript_tag "decorate_fieldsets();" %>
 
+<% javascript_tag do %>withLoadedDocument( function() {
+	var f = $('edit_document_review_<%=document_review.id%>') ;
+	var autocheck = function () {
+		if ( $A(f['document_review[reason_ids][]']).any(function(e) { return e.checked ; }) ) {
+			$('document_review_disposition_e').checked = true ;
+		} else {
+			$('document_review_disposition_').checked = true ;
+		}
+	} ;
+	var observe = function () {
+		$A(f['document_review[reason_ids][]']).each( function(reasonInput) { reasonInput.observe('change', autocheck ) } ) ;
+	} ;
+	f.observe('DOMSubtreeModified', observe ) ;
+	observe() ;
+} ) ;<% end %>
 
