@@ -232,7 +232,7 @@ module ApplicationHelper
 						frac = @achievement[:count].to_f / @achievement[:total]
 						self.partial frac
 						if frac < 0.10 || @achievement[:count] < 20
-							@achievement[:value] ||= "#{number_with_delimiter @achievement[:count]}/#{number_with_delimiter @achievement[:total]}"
+							@achievement[:value] ||= "#{number_with_delimiter @achievement[:count]}<span class='fraction'>of</span>#{number_with_delimiter @achievement[:total]}"
 						else
 							@achievement[:value] ||= (100 * frac).to_i.to_s + '<span class="units">%</span>'
 						end
@@ -376,6 +376,8 @@ module ApplicationHelper
 	end
 	
 	def hilite_keywords( text, keywords )
+		return h(text) if keywords.blank?
+		keywords = keywords.scan(/([^\s,;"']+)|'([^']*)'|"([^"]*)"/).collect{ |x| x.reject(&:nil?).first } unless keywords.is_a?(Array)
 		re = Regexp.new( "(" + keywords.sort { |a,b| b.length <=> a.length }.join("|") + ")", Regexp::IGNORECASE )
 		return h(text).gsub( re, '<span class="keyword">\1</span>' )
 	end
