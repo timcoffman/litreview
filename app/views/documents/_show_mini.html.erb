@@ -1,13 +1,11 @@
 <div class="head">
 	<div class="title">
-		<%= link_to document.title, url %>
+		<%= link_to abbreviate(document.title,50), url %>
 	</div>
-	<div class="authors">
-		<%=h document.authors %>
-	</div>
+	<div class="authors"><%= image_tag '1296768074_kuser.png' %><%=h abbreviate(document.authors,30) %></div>
 	<div>
-		<span class="journal"> <%=h document.journal %> </span>
-		<span class="date"> <%=h document.when_published %> </span>
+		<span class="journal"> <%=h abbreviate(document.journal,30) %> </span>
+		<span class="date"><%= image_tag '1296767863_calendar_month.png' %><%=h document.when_published %></span>
 	</div>
 </div>
 <% unless document.tags.empty? %>

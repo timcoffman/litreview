@@ -319,7 +319,7 @@ module ApplicationHelper
 	
 	def abbreviate(text, words =3)
 		w = text.split(' ')
-		return w.length > 2 ? w[0..2].join(' ') + '...' : text
+		return w.length > words ? w[0..words].join(' ') + '...' : text
 	end
 
 	def personal_link_to( user, options_or_suffix =nil, options_or_url =nil, options =nil )

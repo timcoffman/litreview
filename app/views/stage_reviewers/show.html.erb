@@ -31,9 +31,9 @@ assigned reviews
 	<tbody>
 		<% for document_review in @incomplete_reviews %>
 			<tr class="review">
-				<td class="document">
+				<td><div class="document mini">
 					<%= render :partial => 'documents/show_mini', :locals => { :document => document_review.document, :url => edit_user_project_review_stage_stage_reviewer_document_review_path(@user,@project,@review_stage,@stage_reviewer,document_review) } %>
-				</td>
+				</div></td>
 				<td>
 					<%=h document_review.when_assigned.nil? ? 'never' : time_ago_in_words( document_review.when_assigned ) + " ago" %>
 				</td>
