@@ -9,6 +9,32 @@
 
 <h3>Reports</h3>
 
+<h2>Agreement</h2>
+<table>
+	<thead>
+		<tr>
+			<th></th>
+			<% @review_stage.stage_reviewers[1..-1].each do |col| %>
+				<th><%= col.user.nickname %></th>
+			<% end %>
+		</tr>
+	</thead>
+	<tbody>
+		<% @review_stage.stage_reviewers[0..-2].each do |row| %>
+			<tr>
+				<th><%= row.user.nickname %></th>
+				<% @review_stage.stage_reviewers[1..-1].each do |col| %>
+					<td>
+						<div>I: <%= @report[:aggreement][row][col]['I'] %></div>
+						<div>E: <%= @report[:aggreement][row][col]['E'] %></div>
+					</td>
+				<% end %>
+			</tr>
+		<% end %>
+	</tbody>
+	
+</table>
+
 <div id="report_agreement_1">
 <%= link_to_remote 'Calculate Agreement Report', :url => report_user_project_review_stage_path(@user,@project,@review_stage), :method => :get, :update => 'report_agreement_1' %>
 </div>
