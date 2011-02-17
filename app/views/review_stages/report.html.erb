@@ -162,6 +162,10 @@
 <% end %>
 
 <h2>Inter-rater Reliability</h2>
+
+<%= link_to_function 'Show All Work', 'toggle_work(true);', :class => 'work-revealer' %>
+<%= link_to_function 'Hide All Work', 'toggle_work(false);', :class => 'work-concealer' %>
+
 <% @review_stage.stage_reviewers.combination(2).each do |sr1,sr2| %>
 <h3><%= personal_link_to sr1.user %> (<%= sr1.user.nickname %>) vs. <%= personal_link_to sr2.user %> (<%= sr2.user.nickname %>) </h3>
 	<%
@@ -175,7 +179,8 @@
 		t2 = {}
 		a.each { |v| t2[v] = @report[:all][sr2][v].reject { |k,v| !k.all? }.values.sum }
 	%>
-	<p class="math">
+	<p class="math work">
+		<span class="work">
 		P<sub>o</sub> = (
 		<%= a.collect { |v| "[ #{n1} &amp; #{n2} ]<sub>#{v}</sub>" }.join(' + ') %>
 		) / Total
@@ -184,9 +189,11 @@
 		<%= a.collect { |v| @report[:agreement][sr1][sr2][v] }.join(' + ') %>
 		) / <%=h total %>
 		<br/>
-		P<sub>o</sub> = <%= "%0.3f" % po = ( ( a.collect { |v| @report[:agreement][sr1][sr2][v] }.sum ).to_f / total ) %>
+		</span>
+		<span class="result">P<sub>o</sub> = <%= "%0.3f" % po = ( ( a.collect { |v| @report[:agreement][sr1][sr2][v] }.sum ).to_f / total ) %></span>
 	</p>
-	<p class="math">
+	<p class="math work">
+		<span class="work">
 		P<sub>e</sub> = (
 		<%= a.collect { |v| "#{n1}<sub>#{v}</sub> x #{n2}<sub>#{v}</sub>" }.join(' + ') %>
 		) / total<sup>2</sup>
@@ -199,15 +206,65 @@
 		<%= a.collect { |v| ( t1[v] * t2[v] )  }.sum %>
 		/ <%= total  * total %>
 		<br/>
-		P<sub>e</sub> = <%= "%0.3f" % pe = ( ( a.collect { |v| t1[v] * t2[v]  }.sum ).to_f / ( total * total ) ) %>
+		</span>
+		<span class="result">P<sub>e</sub> = <%= "%0.3f" % pe = ( ( a.collect { |v| t1[v] * t2[v]  }.sum ).to_f / ( total * total ) ) %></span>
 	</p>
 	<p class="math">
+		<span class="work">
 		Kappa = ( P<sub>o</sub> - P<sub>e</sub> ) / ( 1 - P<sub>e</sub> )
 		<br/>
 		Kappa = ( <%= "%0.3f" % po %> - <%= "%0.3f" % pe %> ) / ( 1 - <%= "%0.3f" % pe %> )
 		<br/>
 		Kappa = <%= "%0.3f" % ( po - pe ) %> / <%=  "%0.3f" % ( 1.0 - pe ) %>
 		<br/>
-		Kappa = <span class="result"><%= "%0.3f" % ( (po - pe).to_f / (1.0 - pe) ) %></result>
+		</span>
+		<span class="result">Kappa = <span class="result"><%= "%0.3f" % ( (po - pe).to_f / (1.0 - pe) ) %></span></span>
 	</p>
+	<hr/>
+	<p class="math work">
+		<span class="work">
+		OddsRatio = (
+		<%= a.collect { |v| "[#{n1} &amp; #{n2}]<sub>#{v}</sub>" }.join(' x ') %>
+		) / (
+		<%= d.collect { |c| [n1,n2].zip(c).collect { |nv| "#{nv[0]}<sub>#{nv[1]}</sub>" }.join('') }.join(' x ') %>
+		)
+		<br/>
+		OddsRatio = (
+		<%= a.collect { |v| @report[:agreement][sr1][sr2][v] }.join(' x ') %>
+		) / (
+		<%= d.collect { |v| @report[:disagreement][sr1][sr2][v] }.join(' x ') %>
+		)
+		<br/>
+		<span class="result">OddsRatio = 
+		<%= "%0.3f" % odds_ratio = ( a.collect { |v| @report[:agreement][sr1][sr2][v] }.inject(1) { |p,n| p*n  }.to_f / d.collect { |v| @report[:disagreement][sr1][sr2][v] }.inject(1) { |p,n| p*n }.to_f ) %></span>
+	</p>
+	<p class="math">
+		<span class="work">
+		Yule's Q = ( OddsRatio - 1.0 ) / ( OddsRatio + 1.0 )
+		<br/>
+		Yule's Q = ( <%= "%0.3f" % odds_ratio %> - 1.0 ) / ( <%= "%0.3f" % odds_ratio %> + 1.0 )
+		<br/>
+		</span>
+		<span class="result">Yule's Q = <span class="result"><%= "%0.3f" % ( ( odds_ratio - 1.0 ) / ( odds_ratio + 1.0) ) %></span></span>
+	</p>
+	
 <% end %>
+
+<% javascript_tag do %>
+	function toggle_work( should_show, immediately ) {
+		if ( immediately ) {
+			$$('.work').each( should_show ? Element.show : Element.hide);
+		} else {
+			$$('.work').each( function (e) {
+				if ( should_show )
+					new Effect.BlindDown(e,{duration:0.5}) ;
+				else
+					new Effect.BlindUp(e,{duration:0.5}) ;
+			} ) ;
+		}
+		$$('.work-revealer').each( should_show ? Element.hide : Element.show) ;
+		$$('.work-concealer').each( should_show ? Element.show : Element.hide ) ;
+	}
+	withLoadedDocument( toggle_work, false, true );
+<% end %>
+
