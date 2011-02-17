@@ -51,14 +51,23 @@ class ReviewStage < ActiveRecord::Base
 	end
 	
 	def auto_assign( options ={} )
-		{ :confirm => false }.merge( options || {} )
+		options = { :confirm => false }.merge( options || {} )
+		limit = options[:limit] || {}
 		result = { :status => :ok, :reviewers => { }, :added => [], :existing => [] }
 		self.stage_reviewers.each { |sr| result[:reviewers][sr.id] = [] }
 		docs = []
 		if self.previous_stage
 			docs.concat self.previous_stage.reviewable_documents
 		else
-			docs.concat self.project.documents.find( :all, :conditions => 'duplicate_of_document_id IS NULL' )
+			if per_source_limit = limit[:source]
+				self.project.document_sources.each do |document_source|
+					per_source_docs = document_source.documents.find( :all, :conditions => 'duplicate_of_document_id IS NULL').partition { |d| d.document_reviews.empty? }
+					docs.concat per_source_docs[1]
+					docs.concat per_source_docs[0].first( [per_source_limit.to_i - per_source_docs[1].size,0].max )
+				end
+			else
+				docs.concat self.project.documents.find( :all, :conditions => 'duplicate_of_document_id IS NULL' )
+			end
 		end
 		docs.reject(&:nil?).each do |doc|
 			for sr in self.stage_reviewers
@@ -137,23 +146,32 @@ class ReviewStage < ActiveRecord::Base
       "FROM documents",
       sr_ids.collect { |srid| "LEFT JOIN document_reviews dr#{srid} on dr#{srid}.stage_reviewer_id = #{srid} and dr#{srid}.document_id = documents.id" }.join(" "),
       "WHERE document_source_id in (#{ds_ids.join(',')})",
+      "AND (",
+	sr_ids.collect { |srid| "dr#{srid}.id IS NOT NULL" }.join(" OR "),
+      ")",
       "GROUP BY", sr_ids.collect { |srid| "dr#{srid}.disposition" }.join(", ")
     ].join(' ')
     rows = self.connection.select_rows( sql )
-    agreement_report = {}
-    disagreement_report = {}
-    rows.each do |row|
-      h = Hash[ (srs + [ :count ]).zip( row ) ]
+    agreement_report = Hash.new { |h,k| h[k] = Hash.new { |h,k| h[k] = Hash.new(0) } }
+    disagreement_report = Hash.new { |h,k| h[k] = Hash.new { |h,k| h[k] = Hash.new(0) } }
+    all_report = Hash.new { |h,k| h[k] = Hash.new { |h,k| h[k] = Hash.new(0) } }
+    total = 0
+    query_result = rows.collect { |row| Hash[ (srs + [ :count ]).zip( row ) ] }
+    query_result.each do |h|
+      total += h[:count].to_i
+      srs.each do |sr|
+        all_report[sr][ h[sr] ][ h.reject { |k,v| k == :count || k == sr }.values ] += h[:count].to_i
+      end
       srs.combination(2).each do |sr1,sr2|
         if h[sr1] == h[sr2]
           d = h[sr1]
-          agreement_report[sr1][sr2][d] = agreement_report[sr2][sr1][d] = h[:count]
+          agreement_report[sr1][sr2][d] = agreement_report[sr2][sr1][d] = h[:count].to_i
         else
-          disagreement_report[sr1][sr2][ [row[sr1],row[sr2]] ] = h[:count]
-          disagreement_report[sr2][sr1][ [row[sr2],row[sr1]] ] = h[:count]
+          disagreement_report[sr1][sr2][ [h[sr1],h[sr2]] ] = h[:count].to_i
+          disagreement_report[sr2][sr1][ [h[sr2],h[sr1]] ] = h[:count].to_i
         end
       end
     end
-    { :agreement => agreement_report, :disagreement => disagreement_report }
+    { :total => total, :agreement => agreement_report, :disagreement => disagreement_report, :all => all_report }
   end
 end

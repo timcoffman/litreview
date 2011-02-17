@@ -41,10 +41,18 @@ h3 {
 	padding-left: 4pt ;
 	padding-right: 4pt ;
 	background: transparent url(../../../images/h3.png) no-repeat right top ;
-	color: #ff7 ;
 
 	border-bottom: 1px solid #559 ;
 	width: 60% ;
+}
+
+h3,
+h3 :active, h3 :visited, h3 :link {
+	color: #ff7 ;
+}
+
+h3 :hover {
+	color: #aaf ;
 }
 
 h3:before {
@@ -56,6 +64,7 @@ h3:after {
 	background: url(../../../images/h3.png) no-repeat right center ;
 }
 
+h3 :active, h3 :visited, h3 :link, h3 :hover,
 h2 :active, h2 :visited, h2 :link, h2 :hover,
 h1 :active, h1 :visited, h1 :link, h1 :hover {
 	text-decoration: none ;

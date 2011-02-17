@@ -1,0 +1,11 @@
+
+<div class="observation">
+	<%= image_tag '1297718949_bug.png' %>
+	<%= link_to_function abbreviate(observation.description,30), "Effect.toggle('observation-#{observation.id}-detail','blind', { duration: 0.5 } )" %>
+	<div id="observation-<%=observation.id%>-detail" style="display:none;">
+		<span class="status"><%= observation.status %></span>
+		<span class="classification"><%= observation.classification %></span>
+		<span class="description"><%= observation.description %></span>
+	</div>
+</div>
+

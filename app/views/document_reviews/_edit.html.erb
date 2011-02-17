@@ -2,6 +2,10 @@
 
 <%= f.error_messages %>
 
+<%= link_to "Discard Changes", user_project_review_stage_stage_reviewer_document_review_path(@user,@project,@review_stage,@stage_reviewer,@document_review) %>
+
+<%= f.submit "Save and Proceed &raquo;" %>
+
 <fieldset id="disposition">
 <label class="disposition">
 	<%= f.radio_button :disposition, '' %> Unreviewed

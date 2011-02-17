@@ -1,0 +1,15 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  location: MyString
+  description: MyText
+  criticality: 1
+  classification: MyString
+  status: MyString
+
+two:
+  location: MyString
+  description: MyText
+  criticality: 1
+  classification: MyString
+  status: MyString

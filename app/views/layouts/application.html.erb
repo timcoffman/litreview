@@ -84,6 +84,9 @@
 		<span class="tab"> <span class="missing">Home</missing> </span> <!-- "Home" tab for non-registered users goes here -->
 	<% end %>
 	<span class="tab"> <%= link_to_unless_current( "Tags", tags_path ) { |name| content_tag(:span,name,:class=>'here') } %> </span>
+	<% if ENV['RAILS_ENV'] == 'development' %>
+		<span class="tab"> <%= link_to( image_tag('1297718949_bug.png'), '#observations' ) %> </span>
+	<% end %>
 
 	<span class="tab aux"> <span class="missing">Help</span> </span>
 	<span class="tab aux"> <span class="missing">Contacts</span> </span>
@@ -148,6 +151,10 @@
 -->
 
 <div class="main"><%= yield  %></div>
+
+<% if ENV['RAILS_ENV'] == 'development' %>
+	<a name="observations"><%= render :partial => 'observations/index' %></a>
+<% end %>
 
 </div>
 

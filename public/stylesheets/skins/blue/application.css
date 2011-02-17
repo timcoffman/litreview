@@ -209,6 +209,10 @@ body {
 	background-color: #559 ;
 }
 
+#tabs .tab img {
+	height: 24px ;
+}
+
 #tabs a:visited { color: #ff7 ; text-decoration: none ; }
 #tabs a:link    { color: #ff7 ; text-decoration: none ; }
 #tabs a:active  { color: #ff7 ; text-decoration: none ; }
@@ -361,4 +365,14 @@ a.switch:before {
 	padding-left: 10px ;
 }
 
+#observations {
+	border: inset ;
+	margin: 1em ;
+	padding: 0.5em ;
+	background: white ;
+}
 
+#observations img {
+	height: 24px ;
+	vertical-align: middle ;
+}

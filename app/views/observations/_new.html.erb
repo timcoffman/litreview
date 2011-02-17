@@ -1,0 +1,13 @@
+
+<% remote_form_for(observation,
+		:update => 'new-observation',
+		:position => :after,
+		:html => { :id=>'new-observation' },
+		:loading => "$('new-observation-error').remove()",
+		:success => "$('new-observation').reset()"
+	) do |f| %>
+	<%= image_tag '1297718949_bug.png' %>
+	<%= f.hidden_field :location %>
+	<%= f.text_field :description, :size => '75%' %>
+	<%= f.submit 'Submit' %>
+<% end %>

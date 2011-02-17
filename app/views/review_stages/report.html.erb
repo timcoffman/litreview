@@ -7,10 +7,120 @@
 	<div class="description"> <%= @review_stage.description %> </div> <!-- note the lack of "h" here -->
 <% end %>
 
-<h3>Reports</h3>
+<h2>Reports</h2>
 
-<h2>Agreement</h2>
-<table>
+<% javascript_tag do %>
+	function post_highlight(effect) {
+		Effect.Highlight(effect.element) ;
+	}
+	function toggle_unreviewed(should_show,immediately) {
+		if ( immediately ) {
+			$$('.disposition-u').invoke(should_show?'show':'hide') ;
+		} else {
+			$$('.disposition-u').each( function(e) { should_show ? new Effect.BlindDown(e,{duration:0.5,afterFinish:function(eff){new Effect.Highlight(e);}}) : new Effect.BlindUp(e,{duration:0.5}) ; } ) ;
+		}
+		$$('.unreviewed-revealer').invoke(should_show?'hide':'show') ;
+		$$('.unreviewed-concealer').invoke(should_show?'show':'hide') ;
+	}
+	withLoadedDocument( function() { toggle_unreviewed(false,true); } ) ;
+<% end %>
+
+<p>
+	<%= link_to_function 'Show Unreviewed Statistics', "toggle_unreviewed(true)", :class => 'unreviewed-revealer' %>
+	<%= link_to_function 'Hide Unreviewed Statistics', "toggle_unreviewed(false)", :class => 'unreviewed-concealer' %>
+</p>
+
+<h3>Per Reviewer</h2>
+<table class="report">
+	<thead>
+		<tr>
+			<th/>
+			<% [ 'I', 'E', nil ].each do |col| %>
+				<th class="disposition-<%= col ? col.downcase : 'u' %>"><%=h DocumentReview.disposition(col) %></th>
+			<% end %>
+		</tr>
+	</thead>
+	<tbody>
+		<% @review_stage.stage_reviewers.each do |row| %>
+			<tr>
+				<th><%=h row.user.nickname %></th>
+				<% [ 'I', 'E', nil ].each do |col| %>
+					<td class="disposition-<%= col ? col.downcase : 'u' %>"><ul>
+					<% @report[:all][row][col].each do |dispositions,count| %>
+						<li> vs.
+							<%=h dispositions.collect { |v| DocumentReview.disposition(v) }.join(", ") %>:
+							<span class="count"><%=h count %></count>
+						</li>
+					<% end %>
+					</ul></td>
+				<% end %>
+			</tr>
+		<% end %>
+	</body>
+</table>
+
+
+<% { 'Reviewer Data' => [ 'I', 'E' ], 'Reviewer Data (Including Unreviewed)' => [ 'I', 'E', nil ] }.each do |title,disps|%>
+<h3><%=h title %></h3>
+<table class="report">
+	<thead>
+		<tr>
+			<th colspan="2"/>
+			<% @review_stage.stage_reviewers[1..-1].each do |sr_col| %>
+				<th colspan="<%= disps.size %>">
+					<%=h sr_col.user.nickname %>
+				</th>
+			<% end %>
+		</tr>
+		<tr>
+			<th colspan="2"/>
+			<% @review_stage.stage_reviewers[1..-1].each do |sr_col| %>
+				<% disps.each do |disp_col| %>
+					<th>
+						<%=h DocumentReview.disposition(disp_col) %>
+					</th>
+				<% end %>
+			<% end %>
+		</tr>
+	</thead>
+	<tbody>
+		<% @review_stage.stage_reviewers[0..-2].each do |sr_row| %>
+			<% first_col = true %>
+			<% disps.each do |disp_row| %>
+				<tr>
+					<% if first_col ; first_col = false %>
+						<th rowspan="<%= disps.size %>">
+							<%=h sr_row.user.nickname %>
+						</th>
+					<% end %>
+					<th>
+						<%=h DocumentReview.disposition(disp_row) %>
+					</th>
+					<% @review_stage.stage_reviewers[1..-1].each do |sr_col| %>
+						<% disps.each do |disp_col| %>
+							<td>
+								<span class="count">
+								<% if sr_row == sr_col %>
+								<% elsif disp_row == disp_col %>
+									<%=h @report[:agreement][sr_row][sr_col][disp_row] %>
+								<% else %>
+									<%=h @report[:disagreement][sr_row][sr_col][ [disp_row,disp_col] ] %>
+								<% end %>
+								</span>
+							</td>
+						<% end %>
+					<% end %>
+				</tr>
+			<% end %>
+		<% end %>
+	</tbody>
+</table>
+<% end %>
+
+<% [ :agreement, :disagreement ].each do |style| %>
+<h3><%=h style.to_s.titlecase %></h3>
+
+<table class="report">
 	<thead>
 		<tr>
 			<th></th>
@@ -21,12 +131,25 @@
 	</thead>
 	<tbody>
 		<% @review_stage.stage_reviewers[0..-2].each do |row| %>
-			<tr>
+			<tr class="<%= cycle('even','odd') %>">
 				<th><%= row.user.nickname %></th>
 				<% @review_stage.stage_reviewers[1..-1].each do |col| %>
 					<td>
-						<div>I: <%= @report[:aggreement][row][col]['I'] %></div>
-						<div>E: <%= @report[:aggreement][row][col]['E'] %></div>
+						<ul>
+							<% @report[style][row][col].each do |disposition,count| %>
+								<% if disposition.is_a?(Array) %>
+									<li class="<%=h disposition.collect { |d| d.nil? ? 'disposition-u' : "disposition-#{d.downcase}" }.join(' ') %>">
+										<%=h disposition.collect { |d| DocumentReview.disposition(d) }.join( ' vs. ' ) %>:
+										<span class="count"><%=h count %></count>
+									</li>
+								<% else %>
+									<li class="disposition-<%=h disposition.nil? ? 'u' : disposition.downcase %>">
+										<%=h DocumentReview.disposition(disposition) %>:
+										<span class="count"><%=h count %></count>
+									</li>
+								<% end %>
+							<% end %>
+						</ul>
 					</td>
 				<% end %>
 			</tr>
@@ -35,7 +158,56 @@
 	
 </table>
 
-<div id="report_agreement_1">
-<%= link_to_remote 'Calculate Agreement Report', :url => report_user_project_review_stage_path(@user,@project,@review_stage), :method => :get, :update => 'report_agreement_1' %>
-</div>
+								
+<% end %>
 
+<h2>Inter-rater Reliability</h2>
+<% @review_stage.stage_reviewers.combination(2).each do |sr1,sr2| %>
+<h3><%= personal_link_to sr1.user %> (<%= sr1.user.nickname %>) vs. <%= personal_link_to sr2.user %> (<%= sr2.user.nickname %>) </h3>
+	<%
+		n1 = sr1.user.nickname
+		n2 = sr2.user.nickname
+		a = [ 'I', 'E' ] 
+		d = [ ['I','E'], ['E','I'] ]
+		total = a.collect { |v| @report[:agreement][sr1][sr2][v] }.sum + d.collect { |v| @report[:disagreement][sr1][sr2][v] }.sum
+		t1 = {}
+		a.each { |v| t1[v] = @report[:all][sr1][v].reject { |k,v| !k.all? }.values.sum }
+		t2 = {}
+		a.each { |v| t2[v] = @report[:all][sr2][v].reject { |k,v| !k.all? }.values.sum }
+	%>
+	<p class="math">
+		P<sub>o</sub> = (
+		<%= a.collect { |v| "[ #{n1} &amp; #{n2} ]<sub>#{v}</sub>" }.join(' + ') %>
+		) / Total
+		<br/>
+		P<sub>o</sub> = (
+		<%= a.collect { |v| @report[:agreement][sr1][sr2][v] }.join(' + ') %>
+		) / <%=h total %>
+		<br/>
+		P<sub>o</sub> = <%= "%0.3f" % po = ( ( a.collect { |v| @report[:agreement][sr1][sr2][v] }.sum ).to_f / total ) %>
+	</p>
+	<p class="math">
+		P<sub>e</sub> = (
+		<%= a.collect { |v| "#{n1}<sub>#{v}</sub> x #{n2}<sub>#{v}</sub>" }.join(' + ') %>
+		) / total<sup>2</sup>
+		<br/>
+		P<sub>e</sub> = (
+		<%= a.collect { |v| t1[v].to_s + " x  " + t2[v].to_s  }.join(' + ') %>
+		) / <%= total %><sup>2</sup>
+		<br/>
+		P<sub>e</sub> =
+		<%= a.collect { |v| ( t1[v] * t2[v] )  }.sum %>
+		/ <%= total  * total %>
+		<br/>
+		P<sub>e</sub> = <%= "%0.3f" % pe = ( ( a.collect { |v| t1[v] * t2[v]  }.sum ).to_f / ( total * total ) ) %>
+	</p>
+	<p class="math">
+		Kappa = ( P<sub>o</sub> - P<sub>e</sub> ) / ( 1 - P<sub>e</sub> )
+		<br/>
+		Kappa = ( <%= "%0.3f" % po %> - <%= "%0.3f" % pe %> ) / ( 1 - <%= "%0.3f" % pe %> )
+		<br/>
+		Kappa = <%= "%0.3f" % ( po - pe ) %> / <%=  "%0.3f" % ( 1.0 - pe ) %>
+		<br/>
+		Kappa = <span class="result"><%= "%0.3f" % ( (po - pe).to_f / (1.0 - pe) ) %></result>
+	</p>
+<% end %>

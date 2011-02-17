@@ -1,0 +1,12 @@
+
+
+<div id="observations" style="clear: both;">
+<h2>Bug Reports, Feature Requests, and Comments for <em>this type of page only</em></h2>
+<%= render  :partial => 'observations/new', :locals => { :observation => Observation.new(@default_observation_data) } %>
+<% unless @observations.empty? %>
+<hr/>
+<% @observations.each do |obs| %>
+	<%= render  :partial => 'observations/show', :locals => { :observation => obs } %>
+<% end %>
+<% end %>
+</div>

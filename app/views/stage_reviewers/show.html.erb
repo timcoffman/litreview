@@ -56,17 +56,9 @@ assigned reviews
 				<td>
 					<%=h DocumentReview.disposition( document_review.disposition ) %>
 				</td>
-				<td class="document">
-					<div class="head">
-						<div class="title">
-							<%= link_to document_review.document.title, user_project_review_stage_stage_reviewer_document_review_path(@user,@project,@review_stage,@stage_reviewer,document_review) %>
-						</div>
-						<div>
-							<span class="journal"> <%=h document_review.document.journal %> </span>
-							<span class="date"> <%=h document_review.document.when_published %> </span>
-						</div>
-					</div>
-				</td>
+				<td><div class="document mini">
+					<%= render :partial => 'documents/show_mini', :locals => { :document => document_review.document, :url => edit_user_project_review_stage_stage_reviewer_document_review_path(@user,@project,@review_stage,@stage_reviewer,document_review) } %>
+				</div></td>
 				<td>
 					<%=h document_review.when_reviewed.nil? ? 'never' : time_ago_in_words( document_review.when_reviewed) + " ago" %>
 				</td>

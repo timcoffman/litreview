@@ -91,7 +91,13 @@ class DocumentReviewsController < ApplicationController
     respond_to do |format|
       if @document_review.update_attributes(params[:document_review].reject { |k,v| k == 'reasons' })
         flash[:notice] = 'DocumentReview was successfully updated.'
-        format.html { redirect_to edit_user_project_review_stage_stage_reviewer_document_review_path(@user,@project,@review_stage,@stage_reviewer,@document_review.following_siblings.first) }
+        format.html {
+		if next_review = @document_review.following_siblings.detect { |dr| dr.disposition.nil? }
+			redirect_to edit_user_project_review_stage_stage_reviewer_document_review_path(@user,@project,@review_stage,@stage_reviewer,next_review)
+		else
+			redirect_to user_project_review_stage_stage_reviewer_path(@user,@project,@review_stage,@stage_reviewer)
+		end
+	}
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }

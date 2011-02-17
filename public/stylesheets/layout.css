@@ -92,3 +92,8 @@ h2,
 h3 {
 	clear: both ;
 }
+
+.math {
+	font-family: monospace ;
+}
+

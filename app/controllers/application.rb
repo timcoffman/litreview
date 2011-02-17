@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
 
   before_filter :translate_familiar_names
+  before_filter :load_observations
  
   def translate_familiar_names
 	if params[:fn_project]
@@ -87,5 +88,11 @@ class ApplicationController < ActionController::Base
 		redirect_to :controller => 'session', :action => 'unauthorized'
 	end
   end
-  
+ 
+  def load_observations
+	my_location = "#{controller_path}\##{action_name}"
+	@observations =  Observation.find(:all, :conditions => { :location => my_location  } )
+	@default_observation_data = { :location => my_location }
+  end
+ 
 end

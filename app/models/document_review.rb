@@ -13,6 +13,7 @@ class DocumentReview < ActiveRecord::Base
 	
 	before_validation :remove_blank_fields
 	
+	validates_uniqueness_of :document_id, :scope => [ :stage_reviewer_id ]
 	validates_inclusion_of :disposition, :in => [ 'I', 'E' ], :allow_nil => true
 	validates_presence_of :reasons, :if => Proc.new { |dr| dr.disposition == 'E' }
 	validate :abscence_of_reasons, :if => Proc.new { |dr| dr.disposition == 'I' }
@@ -47,6 +48,8 @@ class DocumentReview < ActiveRecord::Base
 				'Included'
 			when 'E'
 				'Excluded'
+			when nil
+				'Unreviewed'
 			else
 				code
 		end

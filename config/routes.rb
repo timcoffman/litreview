@@ -1,5 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
   map.resources :tags
+
+  map.resources :observations
   
   map.resources :users do |users|
     users.resources :managers
