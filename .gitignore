@@ -1,4 +1,5 @@
 .DS_Store
 .loadpath
 .project
-
+migration
+tmp
