@@ -12,6 +12,8 @@
     - <%= controller.controller_name.titlecase %>
   </title>
   <% skin = User.preference(current_user,'skin', :default => 'blue' ) %>
+  <link rel="icon" type="image/vnd.microsoft.icon" href="<%= image_path 'minnow-icon.ico' %>" />
+  <link rel="icon" type="image/png" href="<%= image_path 'minnow-icon.png' %>" />
   <%= stylesheet_link_tag "skins/#{skin}/application"  %>
   <%= stylesheet_link_tag "skins/#{skin}/#{controller.controller_name.pluralize}"  %>
   <%= javascript_include_tag :defaults %>
