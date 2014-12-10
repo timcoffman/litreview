@@ -8,7 +8,6 @@ gem 'rake', '0.9.2.2'
 gem 'rails', '2.1.1'
 # Use postgresql as the database for Active Record
 gem 'pg'
-gem 'activerecord-postgresql-adapter'
 
 gem 'ruby-openid'
 

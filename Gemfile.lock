@@ -7,8 +7,6 @@ GEM
       activesupport (= 2.1.1)
     activerecord (2.1.1)
       activesupport (= 2.1.1)
-    activerecord-postgresql-adapter (0.0.1)
-      pg
     activeresource (2.1.1)
       activesupport (= 2.1.1)
     activesupport (2.1.1)
@@ -37,7 +35,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activerecord-postgresql-adapter
   amatch
   pg
   rails (= 2.1.1)

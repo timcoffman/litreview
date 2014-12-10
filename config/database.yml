@@ -34,9 +34,8 @@ test:
   socket: /tmp/mysql.sock
 
 production:
-  adapter: mysql
+  adapter: postgresql
   encoding: utf8
   database: litreview
   username: litreview
   password: litreview2010
-  socket: /tmp/mysql.sock
