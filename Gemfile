@@ -11,7 +11,7 @@ gem 'pg'
 
 gem 'ruby-openid'
 
-gem 'amatch'
+gem 'amatch', '0.3.0'
 
 # gem 'rails_12factor', group: :production
 # Use SCSS for stylesheets

@@ -35,7 +35,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  amatch
+  amatch (= 0.3.0)
   pg
   rails (= 2.1.1)
   rake (= 0.9.2.2)
