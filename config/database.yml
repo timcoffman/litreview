@@ -36,6 +36,6 @@ test:
 production:
   adapter: postgresql
   encoding: utf8
-  database: litreview
-  username: litreview
-  password: litreview2010
+  database: d2qulo81rd02rd
+  username: hkftjgvjxkignw
+  password: EvcGaTn_gKbtr1btjN660teGli
