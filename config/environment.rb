@@ -59,7 +59,7 @@ Rails::Initializer.run do |config|
   # config.action_controller.session_store = :active_record_store
 
   # support postgres
-  config.gem 'pg'
+  config.gem 'pg', '0.13.2'
 
   # Use SQL instead of Active Record's schema dumper when creating the test database.
   # This is necessary if your schema can't be completely dumped by the schema dumper,

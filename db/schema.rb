@@ -11,21 +11,6 @@
 
 ActiveRecord::Schema.define(:version => 20110214212423) do
 
-  create_table "delayed_jobs", :force => true do |t|
-    t.integer  "priority",   :default => 0
-    t.integer  "attempts",   :default => 0
-    t.text     "handler"
-    t.text     "last_error"
-    t.datetime "run_at"
-    t.datetime "locked_at"
-    t.datetime "failed_at"
-    t.string   "locked_by"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "delayed_jobs", ["priority", "run_at"], :name => "delayed_jobs_priority"
-
   create_table "document_review_reasons", :force => true do |t|
     t.integer  "document_review_id"
     t.integer  "reason_id"
@@ -44,10 +29,10 @@ ActiveRecord::Schema.define(:version => 20110214212423) do
     t.datetime "updated_at"
   end
 
-  add_index "document_reviews", ["document_id", "stage_reviewer_id"], :name => "document_and_stage_reviewer", :unique => true
   add_index "document_reviews", ["disposition"], :name => "disposition"
-  add_index "document_reviews", ["stage_reviewer_id"], :name => "stage_reviewer"
   add_index "document_reviews", ["document_id"], :name => "document"
+  add_index "document_reviews", ["document_id", "stage_reviewer_id"], :name => "document_and_stage_reviewer", :unique => true
+  add_index "document_reviews", ["stage_reviewer_id"], :name => "stage_reviewer"
 
   create_table "document_sources", :force => true do |t|
     t.integer  "project_id"
@@ -83,31 +68,6 @@ ActiveRecord::Schema.define(:version => 20110214212423) do
 
   add_index "documents", ["document_source_id", "pub_ident"], :name => "index_documents_on_document_source_id_and_pub_ident", :unique => true
 
-  create_table "import", :primary_key => "PubId", :force => true do |t|
-    t.string "DuplicateOf",       :limit => 64
-    t.string "Source",            :limit => 16,  :null => false
-    t.string "Author",            :limit => 512, :null => false
-    t.string "Date",              :limit => 16,  :null => false
-    t.string "Title",             :limit => 512, :null => false
-    t.string "Journal",           :limit => 512, :null => false
-    t.text   "Keyword"
-    t.text   "Abstract",                         :null => false
-    t.string "OfInterest_U1",     :limit => 32
-    t.string "OfInterest_U2",     :limit => 32
-    t.string "Tags_U1_R1",        :limit => 32
-    t.string "Reason_U1_R1",      :limit => 64
-    t.string "ReasonOther_U1_R1", :limit => 256
-    t.string "Tags_U2_R1",        :limit => 32
-    t.string "Reason_U2_R1",      :limit => 64
-    t.string "ReasonOther_U2_R1", :limit => 256
-    t.string "Tags_U1_R2",        :limit => 32
-    t.string "Reason_U1_R2",      :limit => 64
-    t.string "ReasonOther_U1_R2", :limit => 256
-    t.string "Tags_U2_R2",        :limit => 32
-    t.string "Reason_U2_R2",      :limit => 64
-    t.string "ReasonOther_U2_R2", :limit => 256
-  end
-
   create_table "import_mappings", :force => true do |t|
     t.integer  "document_source_id", :null => false
     t.string   "column_heading",     :null => false
@@ -116,29 +76,7 @@ ActiveRecord::Schema.define(:version => 20110214212423) do
     t.datetime "updated_at"
   end
 
-  add_index "import_mappings", ["document_source_id", "column_heading"], :name => "column_heading", :unique => true
-
-  create_table "import_reasons", :id => false, :force => true do |t|
-    t.integer "review_stage_id",                             :null => false
-    t.integer "stage_reviewer_id",                           :null => false
-    t.integer "created_by_stage_reviewer_id"
-    t.integer "document_id",                                 :null => false
-    t.string  "Reason",                       :limit => 256, :null => false
-  end
-
-  add_index "import_reasons", ["stage_reviewer_id", "document_id", "created_by_stage_reviewer_id", "Reason"], :name => "stage_reviewer_id", :unique => true
-
-  create_table "import_reviews", :id => false, :force => true do |t|
-    t.integer "review_stage_id",                  :null => false
-    t.integer "stage_reviewer_id",                :null => false
-    t.integer "document_id",                      :null => false
-    t.string  "Tags",              :limit => 32
-    t.string  "Reason",            :limit => 64
-    t.string  "ReasonOther",       :limit => 256
-  end
-
-  create_table "import_tags", :primary_key => "PubId", :force => true do |t|
-  end
+  add_index "import_mappings", ["column_heading", "document_source_id"], :name => "column_heading", :unique => true
 
   create_table "managers", :force => true do |t|
     t.integer  "project_id"
@@ -207,7 +145,7 @@ ActiveRecord::Schema.define(:version => 20110214212423) do
     t.datetime "updated_at"
   end
 
-  add_index "review_form_possible_answers", ["review_form_question_id", "sequence"], :name => "sequence", :unique => true
+  add_index "review_form_possible_answers", ["review_form_question_id", "sequence"], :name => "rf_pa_sequence", :unique => true
 
   create_table "review_form_questions", :force => true do |t|
     t.integer  "review_form_id",         :null => false
@@ -220,7 +158,7 @@ ActiveRecord::Schema.define(:version => 20110214212423) do
     t.datetime "updated_at"
   end
 
-  add_index "review_form_questions", ["review_form_id", "sequence"], :name => "sequence", :unique => true
+  add_index "review_form_questions", ["review_form_id", "sequence"], :name => "rf_q_sequence", :unique => true
 
   create_table "review_forms", :force => true do |t|
     t.integer  "review_stage_id", :null => false

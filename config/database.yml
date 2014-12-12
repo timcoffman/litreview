@@ -15,12 +15,12 @@
 # And be sure to use new-style password hashing:
 #   http://dev.mysql.com/doc/refman/5.0/en/old-client.html
 development:
-  adapter: mysql
+  adapter: postgresql # mysql
   encoding: utf8
   database: litreview_dev
   username: litreview
   password: litreview2010
-  socket: /tmp/mysql.sock
+  # socket: /tmp/mysql.sock
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".

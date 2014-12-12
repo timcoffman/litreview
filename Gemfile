@@ -7,7 +7,7 @@ gem 'rake', '0.9.2.2'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '2.1.1'
 # Use postgresql as the database for Active Record
-gem 'pg'
+gem 'pg', '0.13.2'
 
 gem 'ruby-openid'
 
@@ -49,5 +49,8 @@ gem 'unicorn'
 # gem 'capistrano-rails', group: :development
 
 # Use debugger
-# gem 'debugger', group: [:development, :test]
+#gem 'debugger', group: [:development, :test]
+group :development do
+	gem 'ruby-debug'
+end
 
