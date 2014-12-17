@@ -4,16 +4,12 @@
   <%= f.error_messages %>
 
   <p>
-    <%= f.label :project_id %><br />
-    <%= f.text_field :project_id %>
-  </p>
-  <p>
     <%= f.label :name %><br />
-    <%= f.text_field :name %>
+    <%= @name %>
   </p>
   <p>
     <%= f.label :identifier %><br />
-    <%= f.text_field :identifier %>
+    <%= @identifier %>
   </p>
   <p>
     <%= f.label :website %><br />
@@ -29,4 +25,5 @@
 <% end %>
 
 <%= link_to 'Show', user_project_document_source_path(@user,@project,@document_source) %> |
+<%= link_to 'Delete', user_project_document_source_path(@user,@project,@document_source), :method => :delete, :confirm => "Destroy this document source and all its documents and reviews?" %> |
 <%= link_to 'Back', user_project_document_sources_path(@user,@project) %>

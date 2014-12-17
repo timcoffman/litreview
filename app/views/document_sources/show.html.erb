@@ -20,6 +20,10 @@
   <%=h @document_source.query_url_template %>
 </p>
 
+<p>
+	<%= link_to "Edit", edit_user_project_document_source_path(@user,@project,@document_source) %>
+</p>
+
 <h3>Documents</h3>
 This document source contains <%= link_to pluralize( @document_source.documents.count, "documents" ), user_project_documents_path(@user,@project) %>.
 
