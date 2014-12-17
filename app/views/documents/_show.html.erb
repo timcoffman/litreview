@@ -16,6 +16,7 @@
 					<%= link_to_unless_current document.duplicate_of_document.document_source.name, user_project_document_source_path(@user,document.duplicate_of_document.document_source.project,document.duplicate_of_document.document_source) %>
 				</span>
 			</span>
+			<%= link_to "Remove Duplicate Flag", clear_duplicate_flag_user_project_document_path(@user,@project,document), :method => :post, :confirm => "This will remove the 'duplicate' flag from this document." %>
 		</div>
 	<% end %>
 

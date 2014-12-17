@@ -131,4 +131,20 @@ class DocumentsController < ApplicationController
       format.xml  { render :xml => @document }
     end
   end
+  
+  def clear_duplicate_flag
+    @document = @project.documents.find(params[:id])
+
+    respond_to do |format|
+      if @document.update_attribute( :duplicate_of_document_id, nil )
+        flash[:notice] = 'Document was successfully updated.'
+        format.html { redirect_to([@user,@project,@document]) }
+        format.xml  { head :ok }
+      else
+        format.html { render :action => "edit" }
+        format.xml  { render :xml => @document.errors, :status => :unprocessable_entity }
+      end
+    end
+  end
+  
 end

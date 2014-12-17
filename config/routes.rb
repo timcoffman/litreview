@@ -7,7 +7,7 @@ ActionController::Routing::Routes.draw do |map|
     users.resources :managers
     users.resources :projects, :member => { :report => :get, :invite_reviewer => :post, :search_documents => :get } do |projects|
       projects.resources :document_sources, :member => { :upload => :post, :import => :post }, :as => 'sources'
-      projects.resources :documents, :member => { :match_duplicates => :get, :new_tags => :post }
+      projects.resources :documents, :member => { :match_duplicates => :get, :new_tags => :post, :clear_duplicate_flag => :post }
       projects.resources :managers
       projects.resources :review_stages, :as => 'stages', :member => { :report => :get, :auto_assign => :post } do |stages|
         stages.resources :reasons, :collection => { :sort => :post }
