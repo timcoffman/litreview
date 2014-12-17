@@ -119,7 +119,7 @@ class DocumentSource < ActiveRecord::Base
 			  end
       
         duplicate_of_documents = self.project.documents.find( :all, :order => 'created_at ASC', :conditions => [
-          'duplicate_of_document_id IS NULL AND (pub_ident = :pub_ident OR title = :title OR abstract = :abstract )',
+          'duplicate_of_document_id IS NULL AND (pub_ident = :pub_ident OR title = :title OR ( abstract IS NOT NULL AND abstract = :abstract ) )',
           {
             :pub_ident => details['pub_ident'],
             :title => details['title'],
