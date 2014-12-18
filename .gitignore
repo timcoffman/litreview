@@ -4,4 +4,5 @@
 migration
 tmp
 log/*.log
+config/local_*.*
 

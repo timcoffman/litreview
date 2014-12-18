@@ -11,6 +11,13 @@ RAILS_GEM_VERSION = '2.1.1' unless defined? RAILS_GEM_VERSION
 require File.join(File.dirname(__FILE__), 'boot')
 
 Rails::Initializer.run do |config|
+  
+  # loads locally-specified environment variables from config/local_env.yml
+  env_file = File.join(Rails.root, 'config', 'local_env.yml')
+  YAML.load(File.open(env_file)).each do |key, value|
+    ENV[key.to_s] = value
+  end if File.exists?(env_file)
+  
   # Settings in config/environments/* take precedence over those specified here.
   # Application configuration should go into files in config/initializers
   # -- all .rb files in that directory are automatically loaded.
@@ -70,5 +77,15 @@ Rails::Initializer.run do |config|
   # config.active_record.observers = :cacher, :garbage_collector
 end
 
-ActionMailer::Base.delivery_method = :sendmail
+ActionMailer::Base.delivery_method = :smtp
 ActionMailer::Base.raise_delivery_errors = true
+
+ActionMailer::Base.smtp_settings = {
+  :address        => 'smtp.sendgrid.net',
+  :port           => '587',
+  :authentication => :plain,
+  :user_name      => ENV['SENDGRID_USERNAME'],
+  :password       => ENV['SENDGRID_PASSWORD'],
+  :domain         => 'heroku.com',
+  :enable_starttls_auto => true
+}
