@@ -24,6 +24,7 @@ config.action_view.cache_template_loading            = true
 #ActionController::AbstractRequest.relative_url_root = "/litreview"
 
 ActionMailer::Base.smtp_settings = {
+  :raise_delivery_errors => true,
   :address        => 'smtp.sendgrid.net',
   :port           => '587',
   :authentication => :plain,
