@@ -1,12 +1,12 @@
 <html><body>
 <p>
 	<%= @user.full_name %> has invited you to participate in
-	a <a href="http://68.53.137.228/litreview-dev/">Systematic Literature Review</a>.
+	a <%= link_to "Systematic Literature Review", root_url(:only_path => false) %>.
 </p>
 
 <p>
 The project is "<%= @project.title %>."
-To get started, <a href="http://68.53.137.228/litreview-dev/login">sign up for an account</a>.
+To get started, <%= link_to "sign up for an account", login_url(:only_path => false) %>.
 </p>
 
 <p>

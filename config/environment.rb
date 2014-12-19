@@ -79,6 +79,7 @@ end
 
 ActionMailer::Base.delivery_method = :smtp
 ActionMailer::Base.raise_delivery_errors = true
+ActionMailer::Base.default_url_options = { :host => ENV['WEB_HOST'], :port => ENV['WEB_PORT'] }
 
 ActionMailer::Base.smtp_settings = {
   :address        => 'smtp.sendgrid.net',
