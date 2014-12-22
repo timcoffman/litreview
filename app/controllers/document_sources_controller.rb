@@ -102,7 +102,8 @@ class DocumentSourcesController < ApplicationController
     @project = Project.find(params[:project_id])
     @document_source = DocumentSource.find(params[:id])
     uploaded_file = params[:import_file]
-    @document_source.store_import_file(uploaded_file)
+    format_conversion = params[:format_conversion]
+    @document_source.store_import_file(uploaded_file,format_conversion)
     respond_to do |format|
       flash[:notice] = 'Import file successfully uploaded.'
       format.html { redirect_to([@user,@project,@document_source]) }

@@ -45,6 +45,14 @@ This document source contains <%= link_to pluralize( @document_source.documents.
 		Upload a file containing document details for import:
 	<% end %>
 	<%= file_field_tag "import_file" %>
+	<select name="format_conversion">
+		<option value="" selected="selected">tab-delimited file</option>
+		<option value="pubmed">PubMed file</option>
+		<option value="isi">ISI file</option>
+		<option value="acm">ACM file</option>
+		<option value="ieee">IEEE file</option>
+		<option value="psycinfo">PyscInfo file</option>
+	</select>
 	<input type="submit" value="<%= @document_source.has_import_file? ? 'Replace' : 'Upload' %>"/>
 <% end %>
 </p>

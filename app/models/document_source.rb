@@ -23,10 +23,15 @@ class DocumentSource < ActiveRecord::Base
 		File.mtime( self.import_file_path )
 	end
 	
-	def store_import_file(contents)
+	def store_import_file(contents, format_conversion =nil )
 		File.makedirs( self.import_file_location )
 		File.open( self.import_file_path, "w" ) do |file|
 			file.write( contents.read ) if contents && contents.respond_to?(:read)
+		end
+		if format_conversion
+			system( File.expand_path( '../../script/citations2table.pl', __FILE__), format_conversion, self.import_file_path )
+			tab_path = self.import_file_path.sub( /\.[^.]+$/, '.tab' )
+			File.rename tab_path, self.import_file_path
 		end
 	end
 	
