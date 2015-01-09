@@ -158,17 +158,19 @@ class ReviewStage < ActiveRecord::Base
     total = 0
     query_result = rows.collect { |row| Hash[ (srs + [ :count ]).zip( row ) ] }
     query_result.each do |h|
+      c = h[:count].to_i
       total += h[:count].to_i
       srs.each do |sr|
-        all_report[sr][ h[sr] ][ h.reject { |k,v| k == :count || k == sr }.values ] += h[:count].to_i
+        all_report[sr][ h[sr] ][ h.reject { |k,v| k == :count || k == sr }.values ] += c
       end
       srs.combination(2).each do |sr1,sr2|
         if h[sr1] == h[sr2]
           d = h[sr1]
-          agreement_report[sr1][sr2][d] = agreement_report[sr2][sr1][d] = h[:count].to_i
+          agreement_report[sr1][sr2][d] += c
+          agreement_report[sr2][sr1][d] += c 
         else
-          disagreement_report[sr1][sr2][ [h[sr1],h[sr2]] ] = h[:count].to_i
-          disagreement_report[sr2][sr1][ [h[sr2],h[sr1]] ] = h[:count].to_i
+          disagreement_report[sr1][sr2][ [h[sr1],h[sr2]] ] += c
+          disagreement_report[sr2][sr1][ [h[sr2],h[sr1]] ] += c
         end
       end
     end
