@@ -31,6 +31,7 @@ class DocumentSource < ActiveRecord::Base
 		if format_conversion
 			system( File.expand_path( '../../script/citations2table.pl', __FILE__), format_conversion, self.import_file_path )
 			tab_path = self.import_file_path.sub( /\.[^.]+$/, '.tab' )
+			raise "Faile to convert \"#{format_conversion}\"-formatted file" unless File.exists? tab_path
 			File.rename tab_path, self.import_file_path
 		end
 	end
