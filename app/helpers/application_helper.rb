@@ -379,6 +379,7 @@ module ApplicationHelper
 		return h(text) if keywords.blank?
 		keywords = keywords.scan(/([^\s,;"']+)|'([^']*)'|"([^"]*)"/).collect{ |x| x.reject(&:nil?).first } unless keywords.is_a?(Array)
 		re = Regexp.new( "(" + keywords.sort { |a,b| b.length <=> a.length }.join("|") + ")", Regexp::IGNORECASE )
-		return h(text).gsub( re, '<span class="keyword">\1</span>' )
+		title = "Keywords: " + keywords.join(', ')
+		return h(text).gsub( re, "<span class=\"keyword\" title=\"#{title}\">\\1</span>" )
 	end
 end
